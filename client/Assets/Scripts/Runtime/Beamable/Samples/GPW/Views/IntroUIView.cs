@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Beamable.Samples.Core.Animation;
+using Beamable.Samples.Core.UI.DialogSystem;
 using Beamable.Samples.GPW.Data;
 using TMPro;
 using UnityEngine;
@@ -13,11 +14,14 @@ namespace Beamable.Samples.GPW.Views
    public class IntroUIView : MonoBehaviour
    {
       //  Properties -----------------------------------
-      public string AboutBodyText { set { _aboutBodyText.text = value; } }
+      public string TitleText { set { _titleText.text = value; } }
+      public string BodyText { set { _bodyText.text = value; } }
       public Button StartGameButton { get { return _startGameButton; } }
       public Button LeaderboardButton { get { return _leaderboardButton; } }
       public Button QuitButton { get { return _quitButton; } }
       public CanvasGroup ButtonsCanvasGroup { get { return _buttonsCanvasGroup; } }
+      
+      public DialogSystem DialogSystem { get { return _dialogSystem; } }
 
       //  Fields ---------------------------------------
       [SerializeField]
@@ -33,11 +37,17 @@ namespace Beamable.Samples.GPW.Views
       private Button _quitButton = null;
 
       [SerializeField]
-      private TMP_Text _aboutBodyText = null;
+      private TMP_Text _titleText = null;
+      
+      [SerializeField]
+      private TMP_Text _bodyText = null;
 
       [SerializeField]
       private CanvasGroup _buttonsCanvasGroup = null;
 
+      [SerializeField]
+      private DialogSystem _dialogSystem = null;
+      
       [Header ("Cosmetic Animation")]
       [SerializeField]
       private List<CanvasGroup> _canvasGroups = null;

@@ -17,6 +17,9 @@ namespace Beamable.Samples.GPW.Views
       public Button ChatButton { get { return _chatButton; } }
       public Button LeaderboardButton { get { return _leaderboardButton; } }
       public Button QuitButton { get { return _quitButton; } }
+      public Button TravelButton { get { return _travelButton; } }
+      public Button BankButton { get { return _bankButton; } }
+      public Button DebtButton { get { return _debtButton; } }
 
       public TMP_BufferedText BufferedText { get { return _bufferedText; } }
       public TMP_Text RoundText { get { return _roundText; } }
@@ -30,6 +33,17 @@ namespace Beamable.Samples.GPW.Views
 
       private TMP_Text _roundText = null;
 
+      [Header("Top Buttons")]
+      [SerializeField]
+      private Button _travelButton = null;
+
+      [SerializeField]
+      private Button _bankButton = null;
+
+      [SerializeField]
+      private Button _debtButton = null;
+      
+      [Header("Bottom Buttons")]
       [SerializeField]
       private Button _chatButton = null;
 

@@ -16,7 +16,7 @@ MonoBehaviour:
   title: 'Beamable Sample Project: Chat - Global Price Wars (GPW)'
   sections:
   - heading: What is "Global Price Wars"?
-    text: Buy Low, Sell High. This sample project demonstrates Beamable's Chat feature.
+    text: Buy low, sell high! Finish rich and be top on the Leaderboard. This sample project demonstrates Beamable's Chat feature.
     linkText: Chat GPW - Sample Project
     url: https://docs.beamable.com/docs/chat-gpw-sample-project
   - heading: What is Beamable?

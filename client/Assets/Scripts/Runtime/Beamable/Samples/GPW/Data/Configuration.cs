@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Beamable.Samples.GPW.Content;
 using UnityEngine;
 
 namespace Beamable.Samples.GPW.Data
@@ -31,6 +32,8 @@ namespace Beamable.Samples.GPW.Data
       public float DelayFadeInUI { get { return _delayFadeInUI; } }
       public float DelayGameBeforeMove { get { return _delayGameBeforeMove; } }
 
+      public RemoteConfigurationRef RemoteConfigurationRef { get { return _remoteConfigurationRef; } }
+      
       /// <summary>
       /// Duration in seconds
       /// </summary>
@@ -64,8 +67,10 @@ namespace Beamable.Samples.GPW.Data
       [SerializeField]
       private float _delayGameBeforeMove = 1;
 
-      [Header("Cosmetic Data")]
-
+      [Header("Content")] 
+      [SerializeField]
+      private RemoteConfigurationRef _remoteConfigurationRef = null;
+      
       [Header("Cosmetic Delays")]
       [SerializeField]
       private float _delayBeforeLoadScene = 0;

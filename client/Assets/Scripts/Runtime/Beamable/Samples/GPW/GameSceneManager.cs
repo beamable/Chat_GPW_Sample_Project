@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Beamable.Samples.Core.Audio;
-using Beamable.Samples.Core.UI;
+﻿using Beamable.Samples.Core.UI;
 using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Views;
 using UnityEngine;
@@ -38,56 +35,26 @@ namespace Beamable.Samples.GPW
       
 
       //  Other Methods  -----------------------------
-      private void DebugLog(string message)
+      private async void SetupBeamable()
       {
-         if (GPWConstants.IsDebugLogging)
-         {
-            Debug.Log(message);
-         }
-      }
-
-      private void SetupBeamable()
-      {
-         return;
+         _beamableAPI = await Beamable.API.Instance;
          
-         Beamable.API.Instance.Then(async beamableAPI =>
+         if (!RuntimeDataStorage.Instance.IsInitialized)
          {
-            try
-            {
-               _beamableAPI = beamableAPI;
+            await RuntimeDataStorage.Instance.Initialize(_configuration);
+         }
+         else
+         {
+         }
 
-               if (!RuntimeDataStorage.Instance.IsMatchmakingComplete)
-               {
-                  DebugLog($"Scene '{gameObject.scene.name}' was loaded directly. That is ok. Setting defaults.");
-                  RuntimeDataStorage.Instance.LocalPlayerDbid = _beamableAPI.User.id;
-                  RuntimeDataStorage.Instance.TargetPlayerCount = 1;
-               }
-               else
-               {
-                  DebugLog($"Scene '{gameObject.scene.name}' was loaded from lobby per production.");
-               }
-
-               // Optional: Stuff to use later when player moves incoming
-               long tbdIncomingPlayerDbid = 0;
-               DebugLog($"LocalPlayerDbid = {RuntimeDataStorage.Instance.LocalPlayerDbid}'");
-               DebugLog($"TargetPlayerCount = {RuntimeDataStorage.Instance.TargetPlayerCount}'");
-               DebugLog($"IsLocalPlayerDbid = {RuntimeDataStorage.Instance.IsLocalPlayerDbid(tbdIncomingPlayerDbid)}'");
-               DebugLog($"IsSinglePlayerMode = {RuntimeDataStorage.Instance.IsSinglePlayerMode}'");
-               
-               // Optional: Show queueable status text onscreen
-               SetStatusText(GPWConstants.StatusText_GameState_Playing, TMP_BufferedText.BufferedTextMode.Immediate);
-
-               // Optional: Add easily configurable delays
-               await Task.Delay(TimeSpan.FromSeconds(_configuration.DelayGameBeforeMove));
-               
-               // Optional: Play "damage" sound
-               SoundManager.Instance.PlayAudioClip(SoundConstants.HealthBarDecrement);
-            }
-            catch (Exception)
-            {
-               SetStatusText(GPWHelper.InternetOfflineInstructionsText, TMP_BufferedText.BufferedTextMode.Immediate);
-            }
-         });
+         Debug.Log("Products.Count: " + 
+                   RuntimeDataStorage.Instance.GameService.RemoteConfiguration.Products.Count);
+         
+         Debug.Log("Locations.Count: " + 
+                   RuntimeDataStorage.Instance.GameService.RemoteConfiguration.Locations.Count);
+         
+         Debug.Log("LocationCurrent: " + 
+                   RuntimeDataStorage.Instance.GameService.LocationCurrent.Title);
       }
 
       /// <summary>

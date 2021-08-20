@@ -277,7 +277,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 554290676, guid: 1b85b3a11dfa349b0933bc289d82af9f, type: 3}
       propertyPath: Leaderboard.Id
-      value: leaderboards.Leaderboard01
+      value: leaderboards.Leaderboard
       objectReference: {fileID: 0}
     - target: {fileID: 1228773914, guid: 1b85b3a11dfa349b0933bc289d82af9f, type: 3}
       propertyPath: m_SizeDelta.y

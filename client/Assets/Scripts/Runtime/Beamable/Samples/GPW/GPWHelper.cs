@@ -139,21 +139,20 @@ namespace Beamable.Samples.GPW
          {
             string text = "";
 
-            text += "Attack with power & dodge with speed! Last player alive, wins." + "\n\n";
+            text += "Buy low, sell high! Finish rich and be top on the Leaderboard." + "\n\n";
 
-            text += "This sample project demonstrates Beamable's Multiplayer feature.\n\n";
+            text += "This sample project demonstrates Beamable's Chat feature.\n\n";
             
             text += GPWHelper.GetBulletList("Resources", new List<string>
             {
-               "Overview: <u><link=https://docs.beamable.com/docs/multiplayer-kor-sample>Multiplayer (KOR) Sample</link></u>",
-               "Feature: <u><link=https://docs.beamable.com/docs/multiplayer-feature>Multiplayer</link></u>",
+               "Overview: <u><link=https://docs.beamable.com/docs/chat-gpw-sample-project>Chat (GPW) Sample</link></u>",
+               "Feature: <u><link=https://docs.beamable.com/docs/chat-feature>Chat</link></u>",
             });
 
 
             return text;
          }
       }
-
 
       private static string BeamableSDKInstallInstructionsText
       {

@@ -1,4 +1,6 @@
-﻿using Beamable.Samples.Core.Components;
+﻿using System.Threading.Tasks;
+using Beamable.Samples.Core.Components;
+using Beamable.Samples.GPW.Content;
 
 namespace Beamable.Samples.GPW.Data
 {
@@ -8,40 +10,24 @@ namespace Beamable.Samples.GPW.Data
 	public class RuntimeDataStorage : SingletonMonobehavior<RuntimeDataStorage>
 	{
 		//  Properties  ----------------------------------
-		public bool IsMatchmakingComplete { get { return _isMatchmakingComplete; } set { _isMatchmakingComplete = value; } }
-		public int TargetPlayerCount { get { return _targetPlayerCount; } set { _targetPlayerCount = value; } }
-		public string RoomId { get { return _roomId; } set { _roomId = value; } }
-		//
-		public long LocalPlayerDbid { get { return _localPlayerDbid; } set { _localPlayerDbid = value; } }
-		public bool IsLocalPlayerDbid (long dbid) { return LocalPlayerDbid == dbid; }
-		public bool IsSinglePlayerMode { get { return TargetPlayerCount == 1; } }
+		public bool IsInitialized { get { return _isInitialized; } set { _isInitialized = value; } }
+		public GameService GameService { get { return _gameService; } }
 
 		//  Fields  --------------------------------------
-		public const int UnsetPlayerCount = -1;
-		private bool _isMatchmakingComplete;
-		private long _localPlayerDbid;
-		private string _roomId;
-		private int _targetPlayerCount;
+		private GameService _gameService = new GameService();
+		private bool _isInitialized = false;
 
 		//  Unity Methods  --------------------------------
 
-		protected override void Awake()
-		{
-			base.Awake();
-			ClearData();
-		}
-
 		//  Other Methods  --------------------------------
-
-		/// <summary>
-		/// Demonstrates that the lifecycle of data is for runtime only
-		/// </summary>
-		private void ClearData()
-      {
-			_isMatchmakingComplete = false;
-			_localPlayerDbid = 0;
-			_roomId = "";
-			_targetPlayerCount = UnsetPlayerCount;
+		public async Task Initialize(Configuration configuration)
+		{
+			if (!_isInitialized)
+			{
+				IBeamableAPI beamableAPI = await Beamable.API.Instance;
+				await _gameService.Initialize(configuration);
+				_isInitialized = true;
+			}
 		}
-   }
+	}
 }

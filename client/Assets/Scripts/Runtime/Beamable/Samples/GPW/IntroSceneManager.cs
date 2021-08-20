@@ -26,7 +26,7 @@ namespace Beamable.Samples.GPW
       //  Unity Methods   ------------------------------
       protected void Start()
       {
-         _introUIView.AboutBodyText = "";
+         _introUIView.TitleText = "Beamable\nGlobal Price Wars";
          _introUIView.StartGameButton.onClick.AddListener(StartGameButton_OnClicked);
          _introUIView.LeaderboardButton.onClick.AddListener(LeaderboardButton_OnClicked);
          _introUIView.QuitButton.onClick.AddListener(QuitButton_OnClicked);
@@ -86,13 +86,13 @@ namespace Beamable.Samples.GPW
             dbid = _beamableAPI.User.id;
          }
 
-         string aboutBodyText = GPWHelper.GetIntroAboutBodyText(
+         string bodyText = GPWHelper.GetIntroAboutBodyText(
             _isConnected, 
             dbid, 
             _isBeamableSDKInstalled, 
             _isBeamableSDKInstalledErrorMessage);
 
-         _introUIView.AboutBodyText = aboutBodyText;
+         _introUIView.BodyText = bodyText;
          _introUIView.ButtonsCanvasGroup.interactable = _isConnected;
       }
 
@@ -123,7 +123,16 @@ namespace Beamable.Samples.GPW
       
       private void QuitButton_OnClicked()
       {
-         GPWHelper.QuitSafe();
+         _introUIView.DialogSystem.ShowDialogBoxConfirmation(
+            delegate
+            {
+               GPWHelper.QuitSafe();
+            });
+      }
+
+      private void ONButtonClicked()
+      {
+         throw new NotImplementedException();
       }
    }
 }

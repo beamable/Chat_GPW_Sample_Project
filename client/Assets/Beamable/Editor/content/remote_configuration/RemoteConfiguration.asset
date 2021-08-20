@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff623be42cad4c22b1098c0300df3536, type: 3}
+  m_Name: RemoteConfiguration
+  m_EditorClassIdentifier: 
+  _tags: []
+  DebtAmountInitial: 1000
+  DebtInterestMin: 0.01
+  DebtInterestMax: 0.1
+  CashAmountInitial: 1000
+  BankAmountInitial: 0
+  BankInterestMin: 0.01
+  BankInterestMax: 0.1
+  RandomSeed: 0.1
+  TurnsTotal: 30
+  Products:
+  - Id: items.product.Chocolate
+  - Id: items.product.Coffee
+  Locations:
+  - Id: location.NorthAmerica
+  - Id: location.SouthAmerica
