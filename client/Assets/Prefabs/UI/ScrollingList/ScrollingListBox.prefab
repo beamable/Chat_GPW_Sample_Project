@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 1060551248390193932}
   - component: {fileID: 1017288150538004305}
   - component: {fileID: 794771589559575305}
-  - component: {fileID: 2603948118037113004}
+  - component: {fileID: -7122234464559360560}
   m_Layer: 5
-  m_Name: ColorStrListBox
+  m_Name: ScrollingListBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,6 +63,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -91,6 +92,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 3
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -120,7 +122,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &2603948118037113004
+--- !u!114 &-7122234464559360560
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,7 +131,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2603948118037113005}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a5f420c3fe06564ea7b2a2c0454c0dd, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f6dea8d15bfc4849a85ed52308c817f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _contentImage: {fileID: 1017288150538004305}
@@ -194,6 +196,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
