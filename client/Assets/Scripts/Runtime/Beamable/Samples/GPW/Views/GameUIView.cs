@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using Beamable.Samples.Core.Animation;
+using AirFishLab.ScrollingList;
 using Beamable.Samples.Core.UI;
+using Beamable.Samples.Core.Utilities;
 using Beamable.Samples.GPW.Data;
 using TMPro;
 using UnityEngine;
@@ -23,7 +24,8 @@ namespace Beamable.Samples.GPW.Views
 
       public TMP_BufferedText BufferedText { get { return _bufferedText; } }
       public TMP_Text RoundText { get { return _roundText; } }
-
+      public CircularScrollingList CircularScrollingList { get { return _circularScrollingList; } }
+      
       //  Fields ---------------------------------------
       [SerializeField]
       private Configuration _configuration = null;
@@ -33,6 +35,10 @@ namespace Beamable.Samples.GPW.Views
 
       private TMP_Text _roundText = null;
 
+      [Header("Scrolling List")]
+      [SerializeField]
+      private CircularScrollingList _circularScrollingList = null;
+      
       [Header("Top Buttons")]
       [SerializeField]
       private Button _travelButton = null;

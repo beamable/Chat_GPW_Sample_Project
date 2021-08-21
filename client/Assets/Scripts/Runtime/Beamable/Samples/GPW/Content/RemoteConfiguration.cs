@@ -33,8 +33,8 @@ namespace Beamable.Samples.GPW.Content
         public int TurnsTotal = 30;
       
         [Header("Lists")]
-        public List<ProductContentRef> Products = new List<ProductContentRef>();
-        public List<LocationContentRef> Locations = new List<LocationContentRef>();
+        public List<ProductContentRef> ProductContentRefs = new List<ProductContentRef>();
+        public List<LocationContentRef> LocationContentRefs = new List<LocationContentRef>();
 
     }
 }

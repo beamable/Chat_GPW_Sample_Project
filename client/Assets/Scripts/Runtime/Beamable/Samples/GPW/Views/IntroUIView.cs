@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Beamable.Samples.Core.Animation;
 using Beamable.Samples.Core.UI.DialogSystem;
+using Beamable.Samples.Core.Utilities;
 using Beamable.Samples.GPW.Data;
 using TMPro;
 using UnityEngine;

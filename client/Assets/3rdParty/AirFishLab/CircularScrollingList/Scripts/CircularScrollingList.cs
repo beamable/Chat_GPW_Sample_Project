@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace AirFishLab.ScrollingList
 {
+    public class CircularScrollingListEvent: UnityEvent <CircularScrollingList>{}
+    
+    
     /// <summary>
     /// Manage and control the circular scrolling list
     /// </summary>
     public class CircularScrollingList : MonoBehaviour,
         IBeginDragHandler, IDragHandler, IEndDragHandler, IScrollHandler
     {
+        public CircularScrollingListEvent OnInitialized = new CircularScrollingListEvent();
+        
         #region Enum Definitions
 
         /// <summary>
@@ -71,7 +76,17 @@ namespace AirFishLab.ScrollingList
 
         #region Exposed Properties
 
-        public BaseListBank listBank => _listBank;
+        public BaseListBank ListBank
+        {
+            get => _listBank;
+            set => _listBank = value;
+        }
+
+        public List<ListBox> ListBoxes
+        {
+            get => _listBoxes;
+        }
+        
         public CircularScrollingListSetting setting => _setting;
 
         #endregion
@@ -166,6 +181,8 @@ namespace AirFishLab.ScrollingList
                     _listBoxes, i);
 
             _hasNoContent = _listBank.GetListLength() == 0;
+            
+            OnInitialized.Invoke(this);
         }
 
         #endregion

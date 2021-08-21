@@ -3,7 +3,12 @@ using UnityEngine;
 using System;
 using System.Collections;
 using Beamable.Samples.Core.Audio;
+using Beamable.Samples.Core.Utilities;
+using Beamable.UI.Scripts;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Beamable.Samples.GPW
 {
@@ -181,6 +186,36 @@ namespace Beamable.Samples.GPW
          }
          text += "</indent>" + "\n";
          return text;
+      }
+      
+     
+
+      public static async void AddressablesLoadAssetAsync(AssetReferenceSprite assetReferenceSprite, Image destinationImage)
+      {
+         // Check before await
+         if (destinationImage == null || assetReferenceSprite == null)
+         {
+            return;
+         }
+
+         // Hide it
+         TweenHelper.ImageDoFade(destinationImage, 0, 0, 0, 0);
+
+         Sprite sprite = await AddressableSpriteLoader.LoadSprite(assetReferenceSprite);
+
+         // Check after await
+         if (destinationImage == null || assetReferenceSprite == null)
+         {
+            return;
+         }
+
+         if (sprite != null)
+         {
+            destinationImage.sprite = sprite;
+
+            // Show it
+            TweenHelper.ImageDoFade(destinationImage, 0, 1, 0.25f, 0);
+         }
       }
 
       public static void QuitSafe()

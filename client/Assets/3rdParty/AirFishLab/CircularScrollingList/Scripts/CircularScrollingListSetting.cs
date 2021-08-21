@@ -7,6 +7,8 @@ namespace AirFishLab.ScrollingList
     [Serializable]
     public class CircularScrollingListSetting
     {
+
+        
         #region List Mode
 
         [SerializeField]
@@ -97,6 +99,8 @@ namespace AirFishLab.ScrollingList
         [Tooltip("The callback to be invoked when the movement is ended")]
         private UnityEvent _onMovementEnd;
 
+        
+        
         #endregion
 
         #region Setting Getter

@@ -22,9 +22,9 @@ MonoBehaviour:
   BankInterestMax: 0.1
   RandomSeed: 0.1
   TurnsTotal: 30
-  Products:
+  ProductContentRefs:
   - Id: items.product.Chocolate
   - Id: items.product.Coffee
-  Locations:
+  LocationContentRefs:
   - Id: location.NorthAmerica
   - Id: location.SouthAmerica

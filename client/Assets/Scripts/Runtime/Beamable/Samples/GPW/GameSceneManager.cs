@@ -1,7 +1,13 @@
-﻿using Beamable.Samples.Core.UI;
+﻿using System.Collections.Generic;
+using AirFishLab.ScrollingList;
+using Beamable.Samples.Core.UI;
+using Beamable.Samples.Core.UI.ScrollingList;
+using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
+using Beamable.Samples.GPW.UI.ScrollingList;
 using Beamable.Samples.GPW.Views;
 using UnityEngine;
+using ProductContent = Beamable.Samples.GPW.Content.ProductContent;
 
 namespace Beamable.Samples.GPW
 {
@@ -48,15 +54,29 @@ namespace Beamable.Samples.GPW
          }
 
          Debug.Log("Products.Count: " + 
-                   RuntimeDataStorage.Instance.GameService.RemoteConfiguration.Products.Count);
+                   RuntimeDataStorage.Instance.GameService.ProductContents.Count);
          
          Debug.Log("Locations.Count: " + 
-                   RuntimeDataStorage.Instance.GameService.RemoteConfiguration.Locations.Count);
+                   RuntimeDataStorage.Instance.GameService.LocationContents.Count);
          
          Debug.Log("LocationCurrent: " + 
                    RuntimeDataStorage.Instance.GameService.LocationCurrent.Title);
+
+         List<ProductContent> list = RuntimeDataStorage.Instance.GameService.ProductContents;
+
+         // Prepare list
+         ProductContentListBank listBank = 
+            _gameUIView.CircularScrollingList.gameObject.AddComponent<ProductContentListBank>();
+         listBank.Initialize(list);
+         
+         // Render list
+         _gameUIView.CircularScrollingList.ListBank = listBank;
+         _gameUIView.CircularScrollingList.OnInitialized.AddListener(CircularScrollingList_OnInitialized);
+         _gameUIView.CircularScrollingList.Initialize();
+         
       }
 
+      
       /// <summary>
       /// Render UI text
       /// </summary>
@@ -86,6 +106,27 @@ namespace Beamable.Samples.GPW
          Debug.Log("as are you sure? This blanks progress");
          StartCoroutine(GPWHelper.LoadScene_Coroutine(_configuration.IntroSceneName,
             _configuration.DelayBeforeLoadScene));
+      }
+      
+      private void CircularScrollingList_OnInitialized(CircularScrollingList circularScrollingList)
+      {
+         foreach (ListBox listBox in circularScrollingList.ListBoxes)
+         {
+            ProductContentListItem productContentListItem = listBox as ProductContentListItem;
+            productContentListItem.OnBuy.RemoveAllListeners();
+            productContentListItem.OnBuy.AddListener(ProductContentListItem_OnBuy);
+            productContentListItem.OnSell.RemoveAllListeners();
+            productContentListItem.OnSell.AddListener(ProductContentListItem_OnSell);
+         }
+      }
+
+      private void ProductContentListItem_OnBuy(ProductContent productContent)
+      {
+         Debug.Log("Buy: " + productContent.Title);
+      }
+      private void ProductContentListItem_OnSell(ProductContent productContent)
+      {
+         Debug.Log("Sell: " + productContent.Title);
       }
    }
 }

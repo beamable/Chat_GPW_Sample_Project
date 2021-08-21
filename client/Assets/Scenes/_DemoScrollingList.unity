@@ -232,10 +232,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 710224936}
-  - component: {fileID: 710224938}
+  - component: {fileID: 710224939}
   - component: {fileID: 710224937}
   m_Layer: 5
-  m_Name: CircularScrollingList
+  m_Name: ScrollingListManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -275,7 +275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 831ecc00ba8a38f448ccce2a87cd76db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _listBank: {fileID: 710224938}
+  _listBank: {fileID: 0}
   _listBoxes:
   - {fileID: 973135899}
   - {fileID: 1412263032}
@@ -289,7 +289,7 @@ MonoBehaviour:
     _centeredContentID: 1
     _centerSelectedBox: 0
     _reverseOrder: 0
-    _initializeOnStart: 1
+    _initializeOnStart: 0
     _boxDensity: 1
     _boxPositionCurve:
       serializedVersion: 2
@@ -396,7 +396,7 @@ MonoBehaviour:
     _onMovementEnd:
       m_PersistentCalls:
         m_Calls: []
---- !u!114 &710224938
+--- !u!114 &710224939
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -405,16 +405,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 710224935}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5a103f5c3dd67040abf9b67b32c133a, type: 3}
+  m_Script: {fileID: 11500000, guid: e50ccc31ef9c7cb46a98cf7d8fbd1cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _contents:
-  - color: {r: 1, g: 0, b: 0, a: 1}
-    name: Red
-  - color: {r: 0.6448016, g: 0, b: 1, a: 1}
-    name: Purple
-  - color: {r: 0.022163033, g: 1, b: 0, a: 1}
-    name: Green
+  _circularScrollingList: {fileID: 710224937}
 --- !u!1001 &973135897
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -523,13 +517,13 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &973135899 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -7122234464559360560, guid: 358f93e20741b3248a3cde46639d044c, type: 3}
+  m_CorrespondingSourceObject: {fileID: 8891286384991153641, guid: 358f93e20741b3248a3cde46639d044c, type: 3}
   m_PrefabInstance: {fileID: 973135897}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f6dea8d15bfc4849a85ed52308c817f, type: 3}
+  m_Script: {fileID: 11500000, guid: b0b9558a253f6424a98a1a4338982fb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1412263030
@@ -636,13 +630,13 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1412263032 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -7122234464559360560, guid: 358f93e20741b3248a3cde46639d044c, type: 3}
+  m_CorrespondingSourceObject: {fileID: 8891286384991153641, guid: 358f93e20741b3248a3cde46639d044c, type: 3}
   m_PrefabInstance: {fileID: 1412263030}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f6dea8d15bfc4849a85ed52308c817f, type: 3}
+  m_Script: {fileID: 11500000, guid: b0b9558a253f6424a98a1a4338982fb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1432299772
@@ -867,12 +861,12 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1871868690 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -7122234464559360560, guid: 358f93e20741b3248a3cde46639d044c, type: 3}
+  m_CorrespondingSourceObject: {fileID: 8891286384991153641, guid: 358f93e20741b3248a3cde46639d044c, type: 3}
   m_PrefabInstance: {fileID: 1871868688}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f6dea8d15bfc4849a85ed52308c817f, type: 3}
+  m_Script: {fileID: 11500000, guid: b0b9558a253f6424a98a1a4338982fb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
