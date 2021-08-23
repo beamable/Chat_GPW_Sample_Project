@@ -24,7 +24,7 @@ This sample project demonstrates specific [Beamable](https://beamable.com/) feat
 
 ### What is "Global Price Wars"?
 Buy low, sell high! Finish rich and be top on the Leaderboard. This sample project demonstrates Beamable's Chat feature.
-<br>[Multiplayer KOR - Sample Project](https://docs.beamable.com/docs/chat-gpw-sample-project)
+<br>[Chat GPW - Sample Project](https://docs.beamable.com/docs/chat-gpw-sample-project)
 
 ### What is Beamable?
 Beamable is the low-code option for rapidly adding social, 
