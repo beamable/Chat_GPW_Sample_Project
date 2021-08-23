@@ -19,12 +19,12 @@ This sample project demonstrates specific [Beamable](https://beamable.com/) feat
 * **Included**: This project includes the Beamable SDK for Unity
 * **Version**: The latest public release as of each GIT commit
 
-# Overview: Multiplayer KOR Sample Project
+# Overview: Chat GPW Sample Project
 ![Logo](client/Assets/Art/Textures/ReadMeIcon.png)
 
-### What is "King of the Ring"?
-Attack with power & dodge with speed! Last player alive, wins. This sample project demonstrates Beamable's Multiplayer feature.
-<br>[Multiplayer KOR - Sample Project](https://docs.beamable.com/docs/multiplayer-kor-sample-project)
+### What is "Global Price Wars"?
+Buy low, sell high! Finish rich and be top on the Leaderboard. This sample project demonstrates Beamable's Chat feature.
+<br>[Chat GPW - Sample Project](https://docs.beamable.com/docs/chat-gpw-sample-project)
 
 ### What is Beamable?
 Beamable is the low-code option for rapidly adding social, 
@@ -32,10 +32,9 @@ commerce, and content management features to your live game.
 Learn how to do that with Beamable's online product documentation.
 <br>[docs.beamable.com](https://docs.beamable.com/)
 
-### What is Beamable's "Multiplayer" Feature?
-The purpose of this feature is to allow game makers to create real-time 
-and turn-based multi-user game experiences. 
-<br>[Beamable Multiplayer](https://docs.beamable.com/docs/multiplayer)
+### What is Beamable's "Chat" Feature?
+The purpose of this feature is to allow players to communicate in-game.
+<br>[Beamable Chat](https://docs.beamable.com/docs/chat-feature)
 
 ### Got feedback?
 Let us know what you think or ask any questions you might have.
