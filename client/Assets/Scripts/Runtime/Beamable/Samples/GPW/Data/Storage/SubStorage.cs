@@ -13,7 +13,7 @@ namespace Beamable.Samples.GPW.Data.Storage
 	public class SubStorage<T> : SubStorage
 	{
 		//  Events  --------------------------------------
-		public SubStorageEvent OnRefreshed = new SubStorageEvent();
+		public SubStorageEvent OnChanged = new SubStorageEvent();
 		
 		//  Properties  ----------------------------------
 		public bool IsInitialized {  get { return _isInitialized; } set { _isInitialized = value; } }
@@ -29,7 +29,7 @@ namespace Beamable.Samples.GPW.Data.Storage
 		
 		public void ForceRefresh()
 		{
-			OnRefreshed.Invoke(this);
+			OnChanged.Invoke(this);
 		}
 	}
 }

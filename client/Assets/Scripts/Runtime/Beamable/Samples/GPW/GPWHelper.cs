@@ -5,6 +5,7 @@ using System.Collections;
 using Beamable.Samples.Core.Audio;
 using Beamable.Samples.Core.Utilities;
 using Beamable.UI.Scripts;
+using TMPro;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
@@ -232,6 +233,11 @@ namespace Beamable.Samples.GPW
             //In the build, mimic the user clicking 'X' to quit.
             Application.Quit();
          }
+      }
+
+      public static void SetButtonText(Button button, string line1, string line2)
+      {
+         button.GetComponentInChildren<TextMeshProUGUI>().text = $"{line1}\n<size=20>{line2}</size>";
       }
    }
 }

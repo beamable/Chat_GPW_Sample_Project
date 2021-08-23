@@ -12,41 +12,23 @@ namespace Beamable.Samples.Core.UI.ScrollingList
     public class ProductContentListBank : ListBank
     {
         //  Properties  ----------------------------------
-        public bool IsInitialized { get { return _isInitialized; }}
 
         //  Fields  --------------------------------------
-        private bool _isInitialized = false;
         private List<ProductContent> _contents;
 
         //  Other Methods  --------------------------------
-        public void Initialize (List<ProductContent> contents)
+        public void SetContents (List<ProductContent> contents)
         {
-            if (_isInitialized)
-            {
-                return;
-            }
-            
             _contents = contents;
-            _isInitialized = true;
         }
         
         public override object GetListContent(int index)
         {
-            if (!_isInitialized)
-            {
-                throw new Exception("Must Be Initialized");
-            }
-            
             return _contents[index];
         }
 
         public override int GetListLength()
         {
-            if (!_isInitialized)
-            {
-                throw new Exception("Must Be Initialized");
-            }
-            
             return _contents.Count;
         }
         

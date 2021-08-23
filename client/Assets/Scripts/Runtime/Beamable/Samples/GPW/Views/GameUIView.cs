@@ -32,10 +32,12 @@ namespace Beamable.Samples.GPW.Views
       public TMP_Text RoundText { get { return _roundText; } }
       public CircularScrollingList CircularScrollingList { get { return _circularScrollingList; } }
       public PersistentData PersistentData { get { return _persistentData; } set { _persistentData = value; OnRefresh(); } }
+      public RuntimeData RuntimeData { get { return _runtimeData; } set { _runtimeData = value; OnRefresh(); } }
 
 
       //  Fields ---------------------------------------
       private PersistentData _persistentData = null;
+      private RuntimeData _runtimeData = null;
       
       [SerializeField]
       private Configuration _configuration = null;
@@ -91,12 +93,19 @@ namespace Beamable.Samples.GPW.Views
       
       private void OnRefresh()
       {
-         _cashText.text = $"Cash: ${_persistentData.CashAmount}";
-         _itemsText.text = $"Items: {_persistentData.ItemsCurrent}/{_persistentData.ItemsMax}";
-         _turnText.text = $"Turn: {_persistentData.TurnCurrent}/{_persistentData.TurnsTotal}";
-         _travelButton.GetComponentInChildren<TextMeshProUGUI>().text = $"Travel\n${_persistentData.CashAmount}";
-         _bankButton.GetComponentInChildren<TextMeshProUGUI>().text = $"Bank\n${_persistentData.BankAmount}";
-         _debtButton.GetComponentInChildren<TextMeshProUGUI>().text = $"Debt\n${_persistentData.DebitAmount}";
+         if (_persistentData != null)
+         {
+            _cashText.text = $"Cash: ${_persistentData.CashAmount}";
+            _turnText.text = $"Turn: {_persistentData.TurnCurrent}/{_persistentData.TurnsTotal}";
+            GPWHelper.SetButtonText(_travelButton, "Travel", _persistentData.LocationCurrent.Title);
+            GPWHelper.SetButtonText(_bankButton, "Bank", $"${_persistentData.BankAmount}");
+            GPWHelper.SetButtonText(_debtButton, "Debt", $"${_persistentData.DebitAmount}");
+         }
+
+         if (_runtimeData != null)
+         {
+            _itemsText.text = $"Items: {_runtimeData.ItemsCurrent}/{_runtimeData.ItemsMax}";
+         }
       }
    }
 }

@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Beamable.Api.Inventory;
-using Beamable.Samples.GPW.Content;
+using Beamable.Common.Api.Inventory;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace Beamable.Samples.GPW.Data
 {
-	public class RefreshEvent : UnityEvent<GameServices>{}
+	public class GameServicesEvent : UnityEvent<GameServices>{}
+	public class InventoryViewEvent : UnityEvent<InventoryView>{}
 	
 	/// <summary>
 	/// Game-specific wrapper for calling Beamable online services
@@ -14,25 +16,20 @@ namespace Beamable.Samples.GPW.Data
 	public class GameServices 
 	{
 		//  Events  --------------------------------------
-		public RefreshEvent OnRefresh = new RefreshEvent();
+		public GameServicesEvent OnGameServicesChanged = new GameServicesEvent();
+		public InventoryViewEvent OnInventoryViewChanged = new InventoryViewEvent();
 		
 		//  Properties  ----------------------------------
-		public RemoteConfiguration RemoteConfiguration { get { return _remoteConfiguration; } }
-		public LocationContent LocationCurrent { get { return _locationCurrent; } }
-		public List<LocationContent> LocationContents { get { return _locationContents; } }
-		public List<ProductContent> ProductContents { get { return _productContents; } }
-		public long LocalPlayerDbid { get { return _localPlayerDbid; } set { _localPlayerDbid = value; } }
 		public InventoryService InventoryService { get { return _inventoryService; }}
+		public long LocalPlayerDbid { get { return _localPlayerDbid; } set { _localPlayerDbid = value; } }
 
 		//  Fields  --------------------------------------
-		private long _localPlayerDbid;
-		private InventoryService _inventoryService = null;
-		private RemoteConfiguration _remoteConfiguration;
-		private List<LocationContent> _locationContents = new List<LocationContent>();
-		private List<ProductContent> _productContents = new List<ProductContent>();
-		private LocationContent _locationCurrent = null;
-		private bool _isInitialized = false;
 		private IBeamableAPI _beamableAPI = null;
+		private InventoryService _inventoryService = null;
+		private InventoryView _inventoryView = null;
+		private bool _isInitialized = false;
+		private const string ContentType = "items.product";
+		private long _localPlayerDbid;
 
 		//  Unity Methods  --------------------------------
 
@@ -43,29 +40,78 @@ namespace Beamable.Samples.GPW.Data
 			{
 				_beamableAPI = await Beamable.API.Instance;
 				_localPlayerDbid = _beamableAPI.User.id;
-				_remoteConfiguration = await configuration.RemoteConfigurationRef.Resolve();
+				
 				_inventoryService = _beamableAPI.InventoryService;
-				
-				_locationContents.Clear();
-				foreach (var locationContentRef in _remoteConfiguration.LocationContentRefs)
-				{
-					LocationContent locationContent = await locationContentRef.Resolve();
-					_locationContents.Add(locationContent);
-				}
-				
-				_productContents.Clear();
-				foreach (var productContentRef in _remoteConfiguration.ProductContentRefs)
-				{
-					ProductContent productContent = await productContentRef.Resolve();
-					_productContents.Add(productContent);
-				}
+				_inventoryService.Subscribe(ContentType, InventoryService_OnChanged);
 
-				_locationCurrent = _locationContents[0];
-				
 				_isInitialized = true;
 			}
 
-			OnRefresh.Invoke(this);
+			OnGameServicesChanged.Invoke(this);
 		}
+		
+		
+        public async Task<bool> CanBuyItem(string contentId, int amount)
+        {
+	        return true;
+        }
+
+        public async Task<bool> BuyItem(string contentId, int  amount)
+        {
+            InventoryUpdateBuilder inventoryUpdateBuilder = new InventoryUpdateBuilder();
+            for (int i = 0; i < amount; i++)
+            {
+                inventoryUpdateBuilder.AddItem(contentId);
+            }
+            _inventoryService.Update(inventoryUpdateBuilder);
+
+            return true;
+        }
+
+        public async Task<bool> CanSellItem(string contentId, int amount)
+        {
+	        List<ItemView> itemViews = await GetItems(contentId);
+	        return itemViews.Count >= amount;
+        }
+
+        public async Task<bool> SellItem(string contentId, int amount)
+        {
+            List<ItemView> productContents = await GetItems(contentId);
+
+            if (productContents.Count < amount)
+            {
+                return false;
+            }
+
+            InventoryUpdateBuilder inventoryUpdateBuilder = new InventoryUpdateBuilder();
+            for (int i = 0; i < amount; i++)
+            {
+                Debug.Log("del: " + productContents[i].id);
+                inventoryUpdateBuilder.DeleteItem(contentId, productContents[i].id); 
+            }
+            
+            await _inventoryService.Update(inventoryUpdateBuilder);
+            return true;
+        }
+        
+        private async Task<List<ItemView>> GetItems(string contentId)
+        {
+            Debug.Log("contentId: " + contentId);
+            foreach (KeyValuePair<string, List<ItemView>> kvp in _inventoryView.items)
+            {
+                string inventoryItemName = $"{kvp.Key} x {kvp.Value.Count}";
+                Debug.Log("inventoryItemName: " + inventoryItemName);
+                return kvp.Value;
+            }
+
+            return new List<ItemView>();
+        }
+        
+        //  Event Handlers  -------------------------------
+        private void InventoryService_OnChanged(InventoryView inventoryView)
+        {
+            _inventoryView = inventoryView;
+            OnInventoryViewChanged.Invoke(inventoryView);
+        }
 	}
 }

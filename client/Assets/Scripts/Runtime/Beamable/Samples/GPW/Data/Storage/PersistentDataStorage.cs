@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Beamable.Api.CloudSaving;
+using Beamable.Samples.GPW.Content;
 
 namespace Beamable.Samples.GPW.Data.Storage
 {
@@ -12,8 +13,7 @@ namespace Beamable.Samples.GPW.Data.Storage
 		public int DebitAmount;
 		public int TurnCurrent;
 		public int TurnsTotal;
-		public int ItemsCurrent;
-		public int ItemsMax;
+		public LocationContent LocationCurrent = null;
 	}
 	
 	/// <summary>
