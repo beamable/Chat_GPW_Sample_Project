@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Beamable.Samples.GPW.UI.ScrollingList
 {
-    public class ProductContentEvent : UnityEvent<ProductContent>{}
+    public class ProductContentViewEvent : UnityEvent<ProductContentView>{}
 	
     /// <summary>
     /// Renderer of ScrollingList's <see cref="ListBox"/>.
@@ -16,8 +16,8 @@ namespace Beamable.Samples.GPW.UI.ScrollingList
     public class ProductContentListItem : ListBox
     {
         //  Events  --------------------------------------
-        public ProductContentEvent OnBuy = new ProductContentEvent();
-        public ProductContentEvent OnSell = new ProductContentEvent();
+        public ProductContentViewEvent OnBuy = new ProductContentViewEvent();
+        public ProductContentViewEvent OnSell = new ProductContentViewEvent();
 		
         //  Properties  ----------------------------------
 
@@ -37,31 +37,35 @@ namespace Beamable.Samples.GPW.UI.ScrollingList
         [SerializeField]
         private Button _sellButton = null;
 
-        private Content.ProductContent _productContent = null;
+        private ProductContentView _productContentView = null;
         
         //  Other Methods  --------------------------------
         protected override void UpdateDisplayContent(object content)
         {
-            _productContent = (Content.ProductContent)content;
-            GPWHelper.AddressablesLoadAssetAsync(_productContent.icon, _iconImage);
-            _titleText.text = _productContent.Title;
+            _productContentView = (ProductContentView)content;
+            GPWHelper.AddressablesLoadAssetAsync(_productContentView.ProductContent.icon, _iconImage);
+            _titleText.text = _productContentView.ProductContent.Title;
 
             StringBuilder stringBuilder = new StringBuilder();
-
-            int countThem = 10;
-            int countMe = 05;
-            float priceThem = 100;
-            float priceMe = 20;
-            stringBuilder.AppendLine($"I: {countThem}     P:{priceThem}");
-            stringBuilder.AppendLine($"I: {countMe}     P:{priceMe}");
+            int countThem = _productContentView.Quantity;
+            int countMe = 01;
+            int priceThem = _productContentView.Price;
+            int priceMe = 02;
+            
+            stringBuilder.AppendLine($"Avail: #{countThem:000}   ${priceThem:000}");
+            stringBuilder.AppendLine($"Owned: #{countMe:000}   ${priceMe:000}");
+            
             _detailsText.text = stringBuilder.ToString();
+            _buyButton.onClick.RemoveAllListeners();
             _buyButton.onClick.AddListener(() =>
             {
-                OnBuy.Invoke(_productContent);   
+                OnBuy.Invoke(_productContentView);   
             });
+            
+            _sellButton.onClick.RemoveAllListeners();
             _sellButton.onClick.AddListener(() =>
             {
-                OnSell.Invoke(_productContent);   
+                OnSell.Invoke(_productContentView);   
             });
         }
         

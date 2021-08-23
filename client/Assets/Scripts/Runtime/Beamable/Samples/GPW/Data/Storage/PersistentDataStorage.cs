@@ -13,7 +13,7 @@ namespace Beamable.Samples.GPW.Data.Storage
 		public int DebitAmount;
 		public int TurnCurrent;
 		public int TurnsTotal;
-		public LocationContent LocationCurrent = null;
+		public LocationContentView LocationContentViewCurrent = null;
 	}
 	
 	/// <summary>

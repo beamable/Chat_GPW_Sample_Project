@@ -38,11 +38,8 @@ namespace Beamable.Samples.GPW.Data.Storage
         
         //  Fields  --------------------------------------
         public InventoryView InventoryView = null;
-        public List<LocationContent> LocationContents = new List<LocationContent>();
-        public List<ProductContent> ProductContents = new List<ProductContent>();
+        public List<LocationContentView> LocationContentViews = new List<LocationContentView>();
         public RemoteConfiguration RemoteConfiguration = null;
-
-
     }
         
     /// <summary>
@@ -67,22 +64,29 @@ namespace Beamable.Samples.GPW.Data.Storage
                 IBeamableAPI beamableAPI = await Beamable.API.Instance;
                 
                 _runtimeData.RemoteConfiguration = await configuration.RemoteConfigurationRef.Resolve();
-                _runtimeData.LocationContents.Clear();
-                foreach (var locationContentRef in  _runtimeData.RemoteConfiguration.LocationContentRefs)
-                {
-                    LocationContent locationContent = await locationContentRef.Resolve();
-                    _runtimeData.LocationContents.Add(locationContent);
-                }
-				
-                _runtimeData.ProductContents.Clear();
+                _runtimeData.LocationContentViews.Clear();
+                
+                // Get products
+                List<ProductContent> productContents = new List<ProductContent>();
                 foreach (var productContentRef in  _runtimeData.RemoteConfiguration.ProductContentRefs)
                 {
                     ProductContent productContent = await productContentRef.Resolve();
-                    _runtimeData.ProductContents.Add(productContent);
+                    productContents.Add(productContent);
+                }
+                
+                // Loop through locations, add a copy of the products to each
+                foreach (var locationContentRef in  _runtimeData.RemoteConfiguration.LocationContentRefs)
+                {
+                    LocationContent locationContent = await locationContentRef.Resolve();
+                    
+                    // Populate with new, generated client-side data
+                    LocationContentView locationContentView =
+                        new LocationContentView(locationContent, productContents);
+                    
+                    _runtimeData.LocationContentViews.Add(locationContentView);
                 }
 
                 ForceRefresh();
-                
                 IsInitialized = true;
             }
         }

@@ -1,17 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Beamable.Common.Api.Inventory;
 using Beamable.Samples.Core.Components;
-using Beamable.Samples.Core.UI.ScrollingList;
-using Beamable.Samples.GPW.Content;
+using Beamable.Samples.GPW.Data;
+using Beamable.Samples.GPW.Data.Storage;
 using UnityEngine;
 
-namespace Beamable.Samples.GPW.Data.Storage
+namespace Beamable.Samples.GPW
 {
     /// <summary>
     /// Store game-related data which survives across scenes
     /// </summary>
-    public class GPWSingleton : SingletonMonobehavior<GPWSingleton>
+    public class GameController : SingletonMonobehavior<GameController>
     {
         //  Properties  ----------------------------------
         public bool IsInitialized { get { return _isInitialized; } protected set { _isInitialized = value; } }
@@ -25,9 +24,6 @@ namespace Beamable.Samples.GPW.Data.Storage
         private PersistentDataStorage _persistentDataStorage = new PersistentDataStorage();
         private GameServices _gameServices = new GameServices();
         private bool _isInitialized = false;
-        
-
-        //  Unity Methods  --------------------------------
 
         //  Other Methods  --------------------------------
         public async Task Initialize(Configuration configuration)
@@ -65,10 +61,54 @@ namespace Beamable.Samples.GPW.Data.Storage
             }
         }
         
+        public void UpdateLocationTo()
+        {
+            var current = PersistentDataStorage.PersistentData.LocationContentViewCurrent;
+            var list = RuntimeDataStorage.RuntimeData.LocationContentViews;
+            int currentIndex = 0;
+            foreach (var x in list)
+            {
+                if (x.LocationContent.Id == current.LocationContent.Id)
+                {
+                    break;
+                }
+                currentIndex++;
+            }
+
+            int nextIndex = currentIndex + 1;
+            if (nextIndex > list.Count -1)
+            {
+                nextIndex = 0;
+            }
+         
+            PersistentDataStorage.PersistentData.LocationContentViewCurrent =
+                list[nextIndex];
+            PersistentDataStorage.ForceRefresh();
+        }
+        
+        public void UpdateBankTo()
+        {
+            int amountToAddToBank = 10;
+            _persistentDataStorage.PersistentData.CashAmount -= amountToAddToBank;
+            _persistentDataStorage.PersistentData.BankAmount += amountToAddToBank;
+            _persistentDataStorage.ForceRefresh();
+        }
+      
+        public void UpdateDebtTo()
+        {
+            int amountToAddToDebt = 10;
+            _persistentDataStorage.PersistentData.CashAmount += amountToAddToDebt;
+            _persistentDataStorage.PersistentData.DebitAmount += amountToAddToDebt;
+            _persistentDataStorage.ForceRefresh();
+        }
+        
         
         //  Event Handlers  -------------------------------
         private void InventoryService_OnChanged(InventoryView inventoryView)
         {
+            Debug.Log("InventoryService_OnChanged() : " + 
+                      inventoryView.items.Count);
+            
             _runtimeDataStorage.RuntimeData.InventoryView = inventoryView;
             _runtimeDataStorage.ForceRefresh();
         }
@@ -78,19 +118,22 @@ namespace Beamable.Samples.GPW.Data.Storage
         {
             PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
          
-            Debug.Log("LocationCurrent: " + 
-                      persistentDataStorage.PersistentData.LocationCurrent.Title);
+            Debug.Log("PersistentDataStorage_OnChanged() : " + 
+                      persistentDataStorage.PersistentData.LocationContentViewCurrent.LocationContent.Title);
         }
       
       
         private void RuntimeDataStorage_OnChanged(SubStorage subStorage)
         {
-            Debug.Log("RuntimeDataStorage_OnChanged: -------");
+            Debug.Log("RuntimeDataStorage_OnChanged() : -------");
             RuntimeDataStorage runtimeDataStorage = subStorage as RuntimeDataStorage;
             InventoryView inventoryView = runtimeDataStorage.RuntimeData.InventoryView;
-         
-            _persistentDataStorage.PersistentData.LocationCurrent = 
-                runtimeDataStorage.RuntimeData.LocationContents[0];
+
+            if (_persistentDataStorage.PersistentData.LocationContentViewCurrent == null)
+            {
+                _persistentDataStorage.PersistentData.LocationContentViewCurrent = 
+                    runtimeDataStorage.RuntimeData.LocationContentViews[0];
+            }
         }
     }
 }

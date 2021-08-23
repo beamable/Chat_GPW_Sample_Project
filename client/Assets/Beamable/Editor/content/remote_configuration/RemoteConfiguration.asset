@@ -22,14 +22,23 @@ MonoBehaviour:
   BankInterestMax: 0.1
   RandomSeed: 0.1
   TurnsTotal: 30
+  ItemsMax: 100
   ProductContentRefs:
   - Id: items.product.Chocolate
   - Id: items.product.Coffee
-  - Id: items.product.Corn
+  - Id: items.product.Fruits
   - Id: items.product.Gold
+  - Id: items.product.Meat
+  - Id: items.product.Oil
   - Id: items.product.Silver
-  - Id: items.product.Sugar
-  - Id: items.product.Wheat
+  - Id: items.product.Solar_Energy
+  - Id: items.product.Vegetables
+  - Id: items.product.Videogames
   LocationContentRefs:
+  - Id: location.Africa
+  - Id: location.Antarctica
+  - Id: location.Asia
+  - Id: location.Australia
+  - Id: location.Europe
   - Id: location.NorthAmerica
   - Id: location.SouthAmerica

@@ -14,10 +14,10 @@ namespace Beamable.Samples.Core.UI.ScrollingList
         //  Properties  ----------------------------------
 
         //  Fields  --------------------------------------
-        private List<ProductContent> _contents;
+        private List<ProductContentView> _contents;
 
         //  Other Methods  --------------------------------
-        public void SetContents (List<ProductContent> contents)
+        public void SetContents (List<ProductContentView> contents)
         {
             _contents = contents;
         }

@@ -28,9 +28,9 @@ namespace Beamable.Samples.GPW.Views
       public Button BankButton { get { return _bankButton; } }
       public Button DebtButton { get { return _debtButton; } }
 
-      public TMP_BufferedText BufferedText { get { return _bufferedText; } }
       public TMP_Text RoundText { get { return _roundText; } }
-      public CircularScrollingList CircularScrollingList { get { return _circularScrollingList; } }
+      public CircularScrollingList ProductContentList { get { return _productContentList; } }
+      public CanvasGroup ProductContentListCanvasGroup { get { return _productContentListCanvasGroup; } }
       public PersistentData PersistentData { get { return _persistentData; } set { _persistentData = value; OnRefresh(); } }
       public RuntimeData RuntimeData { get { return _runtimeData; } set { _runtimeData = value; OnRefresh(); } }
 
@@ -42,14 +42,14 @@ namespace Beamable.Samples.GPW.Views
       [SerializeField]
       private Configuration _configuration = null;
 
-      [SerializeField]
-      private TMP_BufferedText _bufferedText = null;
-
       private TMP_Text _roundText = null;
 
       [Header("Scrolling List")]
       [SerializeField]
-      private CircularScrollingList _circularScrollingList = null;
+      private CircularScrollingList _productContentList = null;
+      
+      [SerializeField]
+      private CanvasGroup _productContentListCanvasGroup = null;
       
       [Header("Top Text")]
       [SerializeField]
@@ -97,7 +97,8 @@ namespace Beamable.Samples.GPW.Views
          {
             _cashText.text = $"Cash: ${_persistentData.CashAmount}";
             _turnText.text = $"Turn: {_persistentData.TurnCurrent}/{_persistentData.TurnsTotal}";
-            GPWHelper.SetButtonText(_travelButton, "Travel", _persistentData.LocationCurrent.Title);
+            GPWHelper.SetButtonText(_travelButton, "Travel", 
+               _persistentData.LocationContentViewCurrent.LocationContent.Title);
             GPWHelper.SetButtonText(_bankButton, "Bank", $"${_persistentData.BankAmount}");
             GPWHelper.SetButtonText(_debtButton, "Debt", $"${_persistentData.DebitAmount}");
          }

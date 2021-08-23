@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Beamable.Api.Inventory;
 using Beamable.Common.Api.Inventory;
+using Beamable.Samples.GPW.Content;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -70,37 +71,42 @@ namespace Beamable.Samples.GPW.Data
 
         public async Task<bool> CanSellItem(string contentId, int amount)
         {
-	        List<ItemView> itemViews = await GetItems(contentId);
+	        List<ItemView> itemViews = await GetItemViews(contentId);
 	        return itemViews.Count >= amount;
         }
 
         public async Task<bool> SellItem(string contentId, int amount)
         {
-            List<ItemView> productContents = await GetItems(contentId);
+            List<ItemView> itemViews = await GetItemViews(contentId);
 
-            if (productContents.Count < amount)
+            if (itemViews.Count < amount)
             {
                 return false;
             }
 
             InventoryUpdateBuilder inventoryUpdateBuilder = new InventoryUpdateBuilder();
-            for (int i = 0; i < amount; i++)
+            inventoryUpdateBuilder.deleteItems.Clear();
+
+            int deletedAlready = 0;
+            foreach (ItemView itemView in itemViews)
             {
-                Debug.Log("del: " + productContents[i].id);
-                inventoryUpdateBuilder.DeleteItem(contentId, productContents[i].id); 
+	            if (deletedAlready++ > amount)
+	            {
+		            break;
+	            }
+	            Debug.Log($"DeleteItem() contentId={contentId}, itemView.id={itemView.id}");
+	           inventoryUpdateBuilder.DeleteItem(contentId, itemView.id);
             }
             
             await _inventoryService.Update(inventoryUpdateBuilder);
             return true;
         }
         
-        private async Task<List<ItemView>> GetItems(string contentId)
+        private async Task<List<ItemView>> GetItemViews(string contentId)
         {
-            Debug.Log("contentId: " + contentId);
             foreach (KeyValuePair<string, List<ItemView>> kvp in _inventoryView.items)
             {
                 string inventoryItemName = $"{kvp.Key} x {kvp.Value.Count}";
-                Debug.Log("inventoryItemName: " + inventoryItemName);
                 return kvp.Value;
             }
 

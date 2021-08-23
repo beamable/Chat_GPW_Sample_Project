@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84be377992f94756825226066288b3be, type: 3}
-  m_Name: Wheat
+  m_Name: Meat
   m_EditorClassIdentifier: 
   _tags: []
   icon:
@@ -19,7 +19,7 @@ MonoBehaviour:
     m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   clientPermission:
-    writeSelf: 0
-  Title: Wheat
+    writeSelf: 1
+  Title: Meat
   PriceMin: 1
   PriceMax: 10

@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using AirFishLab.ScrollingList;
-using Beamable.Common.Api.Inventory;
-using Beamable.Samples.Core.UI;
 using Beamable.Samples.Core.UI.ScrollingList;
+using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Data.Storage;
 using Beamable.Samples.GPW.UI.ScrollingList;
 using Beamable.Samples.GPW.Views;
 using UnityEngine;
-using ProductContent = Beamable.Samples.GPW.Content.ProductContent;
 
 namespace Beamable.Samples.GPW
 {
@@ -33,6 +31,12 @@ namespace Beamable.Samples.GPW
       //  Unity Methods   ------------------------------
       protected void Start()
       {
+         _gameUIView.ProductContentListCanvasGroup.alpha = 0;
+         
+         _gameUIView.TravelButton.onClick.AddListener(TravelButton_OnClicked);
+         _gameUIView.BankButton.onClick.AddListener(BankButton_OnClicked);
+         _gameUIView.DebtButton.onClick.AddListener(DebtButton_OnClicked);
+         //
          _gameUIView.ChatButton.onClick.AddListener(ChatButton_OnClicked);
          _gameUIView.LeaderboardButton.onClick.AddListener(LeaderboardButton_OnClicked);
          _gameUIView.QuitButton.onClick.AddListener(QuitButton_OnClicked);
@@ -46,36 +50,41 @@ namespace Beamable.Samples.GPW
       {
          _beamableAPI = await Beamable.API.Instance;
          
-         if (!GPWSingleton.Instance.IsInitialized)
+         if (!GameController.Instance.IsInitialized)
          {
-            await GPWSingleton.Instance.Initialize(_configuration);
+            await GameController.Instance.Initialize(_configuration);
          }
 
-         // CircularScrollingList
-         _gameUIView.CircularScrollingList.OnInitialized.AddListener(CircularScrollingList_OnInitialized);
-         ProductContentListBank listBank =  _gameUIView.CircularScrollingList.gameObject.AddComponent<ProductContentListBank>();
-         _gameUIView.CircularScrollingList.ListBank = listBank;
+         // ProductContentList
+         _gameUIView.ProductContentList.OnInitialized.AddListener(CircularScrollingList_OnInitialized);
+         ProductContentListBank listBank =  _gameUIView.ProductContentList.gameObject.AddComponent<ProductContentListBank>();
+         _gameUIView.ProductContentList.ListBank = listBank;
          
          // Storage
-         GPWSingleton.Instance.PersistentDataStorage.OnChanged.AddListener(PersistentDataStorage_OnChanged);
-         GPWSingleton.Instance.RuntimeDataStorage.OnChanged.AddListener(RuntimeDataStorage_OnChanged);
-         GPWSingleton.Instance.PersistentDataStorage.ForceRefresh();
-         GPWSingleton.Instance.RuntimeDataStorage.ForceRefresh();
-         
-      }
-
-      /// <summary>
-      /// Render UI text
-      /// </summary>
-      /// <param name="message"></param>
-      /// <param name="statusTextMode"></param>
-      public void SetStatusText(string message, TMP_BufferedText.BufferedTextMode statusTextMode)
-      {
-         _gameUIView.BufferedText.SetText(message, statusTextMode);
+         GameController.Instance.PersistentDataStorage.OnChanged.AddListener(PersistentDataStorage_OnChanged);
+         GameController.Instance.RuntimeDataStorage.OnChanged.AddListener(RuntimeDataStorage_OnChanged);
+         GameController.Instance.PersistentDataStorage.ForceRefresh();
+         GameController.Instance.RuntimeDataStorage.ForceRefresh();
       }
 
       
       //  Event Handlers -------------------------------
+      
+      private void TravelButton_OnClicked()
+      {
+         GameController.Instance.UpdateLocationTo();
+  }
+      
+      private void BankButton_OnClicked()
+      {
+         GameController.Instance.UpdateBankTo();
+      }
+      
+      private void DebtButton_OnClicked()
+      {
+         GameController.Instance.UpdateDebtTo();
+      }
+      
       private void ChatButton_OnClicked()
       {
          StartCoroutine(GPWHelper.LoadScene_Coroutine(_configuration.ChatSceneName,
@@ -98,83 +107,68 @@ namespace Beamable.Samples.GPW
       }
       
       
-      private async void ProductContentListItem_OnBuy(ProductContent productContent)
+      private async void ProductContentListItem_OnBuy(ProductContentView productContentView)
       {
-         Debug.Log("Buy: " + productContent.Title);
-
-         var canBuyItem = await GPWSingleton.Instance.GameServices.
-            CanBuyItem(productContent.Id, 1);
+         var canBuyItem = await GameController.Instance.GameServices.
+            CanBuyItem(productContentView.ProductContent.Id, 1);
          
          bool isSuccessful = false;
          if (canBuyItem)
          {
-            isSuccessful = await GPWSingleton.Instance.GameServices.
-               BuyItem(productContent.Id, 1);
-         }
-         else
-         {
-            Debug.Log("FAILED. canBuyItem: " + canBuyItem);
+            isSuccessful = await GameController.Instance.GameServices.
+               BuyItem(productContentView.ProductContent.Id, 1);
          }
          
-         Debug.Log("isSuccessful: " + isSuccessful);
+         Debug.Log($"ProductContentListItem_OnBuy() canBuyItem = {canBuyItem}, " +
+                   $"isSuccessful = {isSuccessful}");
       }
       
       
-      private async void ProductContentListItem_OnSell(ProductContent productContent)
+      private async void ProductContentListItem_OnSell(ProductContentView productContentView)
       {
-         Debug.Log("Sell: " + productContent.Title);
+         bool canSellItem = await GameController.Instance.GameServices.
+            CanSellItem(productContentView.ProductContent.Id, 1);
 
-         bool canSellItem = await GPWSingleton.Instance.GameServices.
-            CanSellItem(productContent.Id, 1);
-         
          bool isSuccessful = false;
          if (canSellItem)
          {
-            isSuccessful = await GPWSingleton.Instance.GameServices.
-               SellItem(productContent.Id, 1);
+            isSuccessful = await GameController.Instance.GameServices.
+               SellItem(productContentView.ProductContent.Id, 1);
          }
-         else
-         {
-            Debug.Log("FAILED. canSellItem: " + canSellItem);
-         }
-         
-         Debug.Log("isSuccessful: " + isSuccessful);
+
+         Debug.Log($"ProductContentListItem_OnSell() canSellItem = {canSellItem}, " +
+                   $"isSuccessful = {isSuccessful}");
       }
       
       private void PersistentDataStorage_OnChanged(SubStorage subStorage)
       {
+         Debug.Log("PersistentDataStorage_OnChanged: -------");
+         
          PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
          _gameUIView.PersistentData = persistentDataStorage.PersistentData;
          
-         Debug.Log("LocationCurrent: " + 
-                   persistentDataStorage.PersistentData.LocationCurrent.Title);
+         List<ProductContentView> list = persistentDataStorage.PersistentData.LocationContentViewCurrent.ProductContentViews;
+
+         // Prepare list
+         ProductContentListBank listBank = _gameUIView.ProductContentList.ListBank as ProductContentListBank;
+         listBank.SetContents(list);
+         
+         // Render list
+         _gameUIView.ProductContentList.ListBank = listBank;
+         _gameUIView.ProductContentList.Initialize();
+         _gameUIView.ProductContentList.Refresh();
+
+         if (_gameUIView.ProductContentListCanvasGroup.alpha == 0)
+         {
+            _gameUIView.ProductContentListCanvasGroup.alpha = 1;
+         }
       }
       
       
       private void RuntimeDataStorage_OnChanged(SubStorage subStorage)
       {
-         Debug.Log("RuntimeDataStorage_OnChanged: -------");
          RuntimeDataStorage runtimeDataStorage = subStorage as RuntimeDataStorage;
          _gameUIView.RuntimeData = runtimeDataStorage.RuntimeData;
-         
-         Debug.Log("Products.Count: " + 
-                   runtimeDataStorage.RuntimeData.ProductContents.Count);
-         
-         Debug.Log("Locations.Count: " + 
-                   runtimeDataStorage.RuntimeData.LocationContents.Count);
-         
-         List<ProductContent> list = runtimeDataStorage.RuntimeData.ProductContents;
-
-         runtimeDataStorage.RuntimeData.ProductContents[0].Title += "r=" + Random.Range(0, 10);
-
-         // Prepare list
-         ProductContentListBank listBank = _gameUIView.CircularScrollingList.ListBank as ProductContentListBank;
-         listBank.SetContents(list);
-         
-         // Render list
-         _gameUIView.CircularScrollingList.ListBank = listBank;
-         _gameUIView.CircularScrollingList.Initialize();
-         _gameUIView.CircularScrollingList.Refresh();
       }
       
       
@@ -183,9 +177,11 @@ namespace Beamable.Samples.GPW
          foreach (ListBox listBox in circularScrollingList.ListBoxes)
          {
             ProductContentListItem productContentListItem = listBox as ProductContentListItem;
+            
             productContentListItem.OnBuy.RemoveAllListeners();
-            productContentListItem.OnBuy.AddListener(ProductContentListItem_OnBuy);
             productContentListItem.OnSell.RemoveAllListeners();
+            //
+            productContentListItem.OnBuy.AddListener(ProductContentListItem_OnBuy);
             productContentListItem.OnSell.AddListener(ProductContentListItem_OnSell);
          }
       }
