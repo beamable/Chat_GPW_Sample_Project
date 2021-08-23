@@ -19,7 +19,7 @@ This sample project demonstrates specific [Beamable](https://beamable.com/) feat
 * **Included**: This project includes the Beamable SDK for Unity
 * **Version**: The latest public release as of each GIT commit
 
-# Overview: Multiplayer GPW Sample Project
+# Overview: Chat GPW Sample Project
 ![Logo](client/Assets/Art/Textures/ReadMeIcon.png)
 
 ### What is "Global Price Wars"?
@@ -34,7 +34,7 @@ Learn how to do that with Beamable's online product documentation.
 
 ### What is Beamable's "Chat" Feature?
 The purpose of this feature is to allow players to communicate in-game.
-<br>[Beamable Multiplayer](https://docs.beamable.com/docs/chat-feature)
+<br>[Beamable Chat](https://docs.beamable.com/docs/chat-feature)
 
 ### Got feedback?
 Let us know what you think or ask any questions you might have.
