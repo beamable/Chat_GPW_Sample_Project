@@ -25,6 +25,11 @@ MonoBehaviour:
   ProductContentRefs:
   - Id: items.product.Chocolate
   - Id: items.product.Coffee
+  - Id: items.product.Corn
+  - Id: items.product.Gold
+  - Id: items.product.Silver
+  - Id: items.product.Sugar
+  - Id: items.product.Wheat
   LocationContentRefs:
   - Id: location.NorthAmerica
   - Id: location.SouthAmerica

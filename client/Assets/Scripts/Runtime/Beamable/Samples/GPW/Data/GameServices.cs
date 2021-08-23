@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Beamable.Samples.Core.Components;
+using Beamable.Api.Inventory;
 using Beamable.Samples.GPW.Content;
 using UnityEngine.Events;
 
 namespace Beamable.Samples.GPW.Data
 {
-	public class RefreshEvent : UnityEvent<GameService>{}
+	public class RefreshEvent : UnityEvent<GameServices>{}
 	
 	/// <summary>
 	/// Game-specific wrapper for calling Beamable online services
 	/// </summary>
-	public class GameService 
+	public class GameServices 
 	{
 		//  Events  --------------------------------------
 		public RefreshEvent OnRefresh = new RefreshEvent();
@@ -22,9 +22,11 @@ namespace Beamable.Samples.GPW.Data
 		public List<LocationContent> LocationContents { get { return _locationContents; } }
 		public List<ProductContent> ProductContents { get { return _productContents; } }
 		public long LocalPlayerDbid { get { return _localPlayerDbid; } set { _localPlayerDbid = value; } }
+		public InventoryService InventoryService { get { return _inventoryService; }}
 
 		//  Fields  --------------------------------------
 		private long _localPlayerDbid;
+		private InventoryService _inventoryService = null;
 		private RemoteConfiguration _remoteConfiguration;
 		private List<LocationContent> _locationContents = new List<LocationContent>();
 		private List<ProductContent> _productContents = new List<ProductContent>();
@@ -42,6 +44,7 @@ namespace Beamable.Samples.GPW.Data
 				_beamableAPI = await Beamable.API.Instance;
 				_localPlayerDbid = _beamableAPI.User.id;
 				_remoteConfiguration = await configuration.RemoteConfigurationRef.Resolve();
+				_inventoryService = _beamableAPI.InventoryService;
 				
 				_locationContents.Clear();
 				foreach (var locationContentRef in _remoteConfiguration.LocationContentRefs)

@@ -4,6 +4,7 @@ using Beamable.Samples.Core.UI;
 using Beamable.Samples.Core.UI.ScrollingList;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
+using Beamable.Samples.GPW.Data.Storage;
 using Beamable.Samples.GPW.UI.ScrollingList;
 using Beamable.Samples.GPW.Views;
 using UnityEngine;
@@ -45,24 +46,24 @@ namespace Beamable.Samples.GPW
       {
          _beamableAPI = await Beamable.API.Instance;
          
-         if (!RuntimeDataStorage.Instance.IsInitialized)
+         if (!GPWSingleton.Instance.IsInitialized)
          {
-            await RuntimeDataStorage.Instance.Initialize(_configuration);
+            await GPWSingleton.Instance.Initialize(_configuration);
          }
-         else
-         {
-         }
+
+         GPWSingleton.Instance.PersistentDataStorage.OnRefreshed.AddListener(PersistentStorage_OnChanged);
+         GPWSingleton.Instance.PersistentDataStorage.ForceRefresh();
 
          Debug.Log("Products.Count: " + 
-                   RuntimeDataStorage.Instance.GameService.ProductContents.Count);
+                   GPWSingleton.Instance.GameServices.ProductContents.Count);
          
          Debug.Log("Locations.Count: " + 
-                   RuntimeDataStorage.Instance.GameService.LocationContents.Count);
+                   GPWSingleton.Instance.GameServices.LocationContents.Count);
          
          Debug.Log("LocationCurrent: " + 
-                   RuntimeDataStorage.Instance.GameService.LocationCurrent.Title);
+                   GPWSingleton.Instance.GameServices.LocationCurrent.Title);
 
-         List<ProductContent> list = RuntimeDataStorage.Instance.GameService.ProductContents;
+         List<ProductContent> list = GPWSingleton.Instance.GameServices.ProductContents;
 
          // Prepare list
          ProductContentListBank listBank = 
@@ -76,7 +77,14 @@ namespace Beamable.Samples.GPW
          
       }
 
-      
+      private void PersistentStorage_OnChanged(SubStorage subStorage)
+      {
+         PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
+         PersistentData persistentData = persistentDataStorage.PersistentData;
+        _gameUIView.PersistentData = persistentData;
+      }
+
+
       /// <summary>
       /// Render UI text
       /// </summary>
@@ -120,13 +128,31 @@ namespace Beamable.Samples.GPW
          }
       }
 
-      private void ProductContentListItem_OnBuy(ProductContent productContent)
+      private async void ProductContentListItem_OnBuy(ProductContent productContent)
       {
          Debug.Log("Buy: " + productContent.Title);
+
+         var canBuyItem = await GPWSingleton.Instance.CanBuyItem(productContent.Id, 1);
+         bool isSuccessful = false;
+         if (canBuyItem)
+         {
+            isSuccessful = await GPWSingleton.Instance.BuyItem(productContent.Id, 1);
+         }
+         
+         Debug.Log("isSuccessful: " + isSuccessful);
       }
-      private void ProductContentListItem_OnSell(ProductContent productContent)
+      private async void ProductContentListItem_OnSell(ProductContent productContent)
       {
          Debug.Log("Sell: " + productContent.Title);
+
+         bool canSellItem = await GPWSingleton.Instance.CanSellItem(productContent.Id, 1);
+         bool isSuccessful = false;
+         if (canSellItem)
+         {
+            isSuccessful = await GPWSingleton.Instance.SellItem(productContent.Id, 1);
+         }
+         
+         Debug.Log("isSuccessful: " + isSuccessful);
       }
    }
 }

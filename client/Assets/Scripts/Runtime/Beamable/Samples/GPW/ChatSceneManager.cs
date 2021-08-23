@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Beamable.Samples.Core.Audio;
-using Beamable.Samples.Core.UI;
+﻿using Beamable.Samples.Core.UI;
 using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Views;
 using UnityEngine;

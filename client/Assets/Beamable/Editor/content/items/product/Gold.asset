@@ -20,6 +20,6 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   clientPermission:
     writeSelf: 0
-  Title: Coffee
+  Title: Gold
   PriceMin: 1
   PriceMax: 10

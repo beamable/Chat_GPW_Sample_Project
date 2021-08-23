@@ -63,7 +63,7 @@ namespace Beamable.Samples.GPW.Data
       [SerializeField]
       private string _leaderboardSceneName = "";
       
-      [Header("Game Data")]
+      [Header("Game PersistentData")]
       [SerializeField]
       private float _delayGameBeforeMove = 1;
 

@@ -31,7 +31,8 @@ namespace Beamable.Samples.GPW.Content
         [Header("Other")]
         public float RandomSeed = 0.1f;
         public int TurnsTotal = 30;
-      
+        public int ItemsMax = 100;
+        
         [Header("Lists")]
         public List<ProductContentRef> ProductContentRefs = new List<ProductContentRef>();
         public List<LocationContentRef> LocationContentRefs = new List<LocationContentRef>();

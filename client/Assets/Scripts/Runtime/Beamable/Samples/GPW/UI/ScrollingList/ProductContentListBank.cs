@@ -6,7 +6,7 @@ using Beamable.Samples.GPW.Content;
 namespace Beamable.Samples.Core.UI.ScrollingList
 {
     /// <summary>s
-    /// Data provider of ScrollingList's <see cref="ListBank"/>.
+    /// PersistentData provider of ScrollingList's <see cref="ListBank"/>.
     /// </summary>
     [Serializable]
     public class ProductContentListBank : ListBank

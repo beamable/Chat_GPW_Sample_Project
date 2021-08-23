@@ -13,7 +13,7 @@ namespace Beamable.Samples.Core.UI.ScrollingList
     }
 
     /// <summary>s
-    /// Data provider of ScrollingList's <see cref="BaseListBank"/>.
+    /// PersistentData provider of ScrollingList's <see cref="BaseListBank"/>.
     /// </summary>
     [Serializable]
     public class ColorStringListBank : ListBank
