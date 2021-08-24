@@ -65,8 +65,10 @@ namespace Beamable.Samples.GPW
          }
          else
          {
+            Debug.Log("Force");
             GameController.Instance.PersistentDataStorage.ForceRefresh();
             GameController.Instance.RuntimeDataStorage.ForceRefresh();
+            GameController.Instance.GameServices.ForceRefresh();
          }
       }
 
@@ -148,13 +150,13 @@ namespace Beamable.Samples.GPW
       
       private void PersistentDataStorage_OnChanged(SubStorage subStorage)
       {
-         Debug.Log("PersistentDataStorage_OnChanged: -------");
-         
          PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
          _gameUIView.PersistentData = persistentDataStorage.PersistentData;
          
          List<ProductContentView> list = persistentDataStorage.PersistentData.LocationContentViewCurrent.ProductContentViews;
 
+         Debug.Log($"PersistentDataStorage_OnChanged() ProductContentView = {list.Count}");
+         
          // Prepare list
          ProductContentListBank listBank = _gameUIView.ProductContentList.ListBank as ProductContentListBank;
          listBank.SetContents(list);

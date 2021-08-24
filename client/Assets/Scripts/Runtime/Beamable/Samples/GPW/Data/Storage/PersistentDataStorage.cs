@@ -22,7 +22,6 @@ namespace Beamable.Samples.GPW.Data.Storage
 				return TurnCurrent >= 2; // TurnsTotal;
 			}
 		}
-		
 	}
 	
 	/// <summary>

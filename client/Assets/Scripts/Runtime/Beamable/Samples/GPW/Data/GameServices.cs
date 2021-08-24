@@ -53,6 +53,7 @@ namespace Beamable.Samples.GPW.Data
 				// InventoryService
 				_inventoryService = _beamableAPI.InventoryService;
 				_inventoryService.Subscribe(ContentType, InventoryService_OnChanged);
+				Debug.Log("inv sub 11111111111");
 				
 				// ChatService
 				_chatService = _beamableAPI.Experimental.ChatService;
@@ -236,6 +237,20 @@ namespace Beamable.Samples.GPW.Data
 		#endregion
 
 		#region InventoryService
+		
+		/// <summary>
+		/// Called manually when a scene loads and all data is already fresh
+		/// and we want to manually re-invoke the events
+		/// </summary>
+		public void ForceRefresh()
+		{
+			if (_inventoryView == null)
+			{
+				throw new Exception("ForceRefresh() failed. _inventoryView cannot be null");
+			}
+
+			OnInventoryViewChanged.Invoke(_inventoryView);
+		}
 
         public async Task<bool> CanBuyItem(string contentId, int amount)
         {
@@ -304,6 +319,9 @@ namespace Beamable.Samples.GPW.Data
         private void InventoryService_OnChanged(InventoryView inventoryView)
         {
             _inventoryView = inventoryView;
+            
+            Debug.Log("inv resp 222222");
+            
             OnInventoryViewChanged.Invoke(inventoryView);
         }
         
@@ -312,5 +330,7 @@ namespace Beamable.Samples.GPW.Data
 	        _chatView = chatView;
 	        OnChatViewChanged.Invoke(_chatView);
         }
+
+   
 	}
 }

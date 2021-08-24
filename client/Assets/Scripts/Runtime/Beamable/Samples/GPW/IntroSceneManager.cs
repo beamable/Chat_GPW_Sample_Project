@@ -1,4 +1,5 @@
 ﻿using System;
+using Beamable.Samples.Core.Utilities;
 using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Views;
 using UnityEngine;
@@ -30,6 +31,7 @@ namespace Beamable.Samples.GPW
          _introUIView.BodyText = "";
          _introUIView.StartGameButton.onClick.AddListener(StartGameButton_OnClicked);
          _introUIView.LeaderboardButton.onClick.AddListener(LeaderboardButton_OnClicked);
+         _introUIView.ResetButton.onClick.AddListener(ResetButton_OnClicked);
          _introUIView.QuitButton.onClick.AddListener(QuitButton_OnClicked);
          
          //
@@ -122,6 +124,15 @@ namespace Beamable.Samples.GPW
       {
          StartCoroutine(GPWHelper.LoadScene_Coroutine(_configuration.LeaderboardSceneName,
             _configuration.DelayBeforeLoadScene));
+      }
+      
+      private void ResetButton_OnClicked()
+      {
+         _introUIView.DialogSystem.ShowDialogBoxConfirmation(
+            delegate
+            {
+               ExampleProjectHacks.ClearDeviceUsersAndReloadScene();
+            });
       }
       
       private void QuitButton_OnClicked()

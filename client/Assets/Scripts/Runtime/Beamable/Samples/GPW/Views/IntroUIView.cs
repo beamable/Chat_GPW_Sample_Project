@@ -14,6 +14,7 @@ namespace Beamable.Samples.GPW.Views
       public string BodyText { set { _bodyText.text = value; } }
       public Button StartGameButton { get { return _startGameButton; } }
       public Button LeaderboardButton { get { return _leaderboardButton; } }
+      public Button ResetButton { get { return _resetButton; } }
       public Button QuitButton { get { return _quitButton; } }
       public CanvasGroup ButtonsCanvasGroup { get { return _buttonsCanvasGroup; } }
 
@@ -25,6 +26,9 @@ namespace Beamable.Samples.GPW.Views
       [SerializeField]
       private Button _leaderboardButton = null;
 
+      [SerializeField]
+      private Button _resetButton = null;
+      
       [SerializeField]
       private Button _quitButton = null;
 
