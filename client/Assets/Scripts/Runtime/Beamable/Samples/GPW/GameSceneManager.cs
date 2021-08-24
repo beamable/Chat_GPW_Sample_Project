@@ -75,7 +75,7 @@ namespace Beamable.Samples.GPW
       
       private void TravelButton_OnClicked()
       {
-         GameController.Instance.UpdateLocationTo();
+         GameController.Instance.GoToLocation();
   }
       
       private void BankButton_OnClicked()

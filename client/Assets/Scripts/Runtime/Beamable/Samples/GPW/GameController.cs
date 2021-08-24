@@ -20,6 +20,8 @@ namespace Beamable.Samples.GPW
         public RuntimeDataStorage RuntimeDataStorage { get { return _runtimeDataStorage; } }
         public PersistentDataStorage PersistentDataStorage { get { return _persistentDataStorage; } }
         public GameServices GameServices { get { return _gameServices; } }
+
+  
         
         //  Fields  --------------------------------------
         
@@ -93,8 +95,13 @@ namespace Beamable.Samples.GPW
             }
         }
         
-        public void UpdateLocationTo()
+        public void GoToLocation()
         {
+            if (_persistentDataStorage.PersistentData.IsGameOver)
+            {
+                return;
+            }
+            
             var current = PersistentDataStorage.PersistentData.LocationContentViewCurrent;
             var list = RuntimeDataStorage.RuntimeData.LocationContentViews;
             int currentIndex = 0;
@@ -112,10 +119,37 @@ namespace Beamable.Samples.GPW
             {
                 nextIndex = 0;
             }
-         
+
+            // Progress Turn / Bank / Debt
+            GoToNextTurn();
+            
+            // Change Location
             PersistentDataStorage.PersistentData.LocationContentViewCurrent =
                 list[nextIndex];
             PersistentDataStorage.ForceRefresh();
+        }
+
+        private void GoToNextTurn()
+        {
+            if (_persistentDataStorage.PersistentData.IsGameOver)
+            {
+                return;
+            }
+
+            // Calculate interest - BankAmount 
+            float bankAmount = PersistentDataStorage.PersistentData.BankAmount +
+                (PersistentDataStorage.PersistentData.BankAmount * RuntimeDataStorage.RuntimeData.BankInterestCurrent);
+            PersistentDataStorage.PersistentData.BankAmount = (int)bankAmount;
+            
+            // Calculate interest - BankAmount 
+            float debtAmount = PersistentDataStorage.PersistentData.DebitAmount +
+                               (PersistentDataStorage.PersistentData.DebitAmount * RuntimeDataStorage.RuntimeData.DebtInterestCurrent);
+            PersistentDataStorage.PersistentData.DebitAmount = (int)debtAmount;
+            
+            // Advance the turn counter
+            PersistentDataStorage.PersistentData.TurnCurrent++;
+            
+            //TODO: Check for gameover (turns==30)
         }
         
         public void UpdateBankTo()

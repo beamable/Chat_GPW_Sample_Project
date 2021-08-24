@@ -80,6 +80,10 @@ namespace Beamable.Samples.GPW.Views
       
       private void OnRefresh()
       {
+         _bankButton.interactable = _persistentData != null && !_persistentData.IsGameOver;
+         _travelButton.interactable = _persistentData != null && !_persistentData.IsGameOver;
+         _debtButton.interactable = _persistentData != null && !_persistentData.IsGameOver;
+         
          if (_persistentData != null)
          {
             _cashText.text = $"Cash: ${_persistentData.CashAmount}";

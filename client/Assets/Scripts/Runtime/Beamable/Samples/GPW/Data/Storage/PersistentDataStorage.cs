@@ -14,6 +14,15 @@ namespace Beamable.Samples.GPW.Data.Storage
 		public int TurnCurrent;
 		public int TurnsTotal;
 		public LocationContentView LocationContentViewCurrent = null;
+		
+		public bool IsGameOver
+		{
+			get
+			{
+				return TurnCurrent >= 2; // TurnsTotal;
+			}
+		}
+		
 	}
 	
 	/// <summary>

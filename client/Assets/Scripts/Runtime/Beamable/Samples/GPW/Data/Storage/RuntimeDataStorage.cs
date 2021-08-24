@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Beamable.Common.Api.Inventory;
 using Beamable.Samples.GPW.Content;
@@ -43,12 +44,16 @@ namespace Beamable.Samples.GPW.Data.Storage
                 return RemoteConfiguration.ItemsMax;
             }
         }
+
         
+
         //  Fields  --------------------------------------
         public InventoryView InventoryView = null;
         public List<LocationContentView> LocationContentViews = new List<LocationContentView>();
         public RemoteConfiguration RemoteConfiguration = null;
         public ChatMode ChatMode = ChatMode.None;
+        public float BankInterestCurrent;
+        public float DebtInterestCurrent;
     }
         
     /// <summary>
@@ -76,7 +81,9 @@ namespace Beamable.Samples.GPW.Data.Storage
                 _runtimeData.RemoteConfiguration = await configuration.RemoteConfigurationRef.Resolve();
                 _runtimeData.LocationContentViews.Clear();
                 
+                ///////////////////////
                 // Get products
+                ///////////////////////
                 List<ProductContent> productContents = new List<ProductContent>();
                 foreach (var productContentRef in  _runtimeData.RemoteConfiguration.ProductContentRefs)
                 {
@@ -84,7 +91,9 @@ namespace Beamable.Samples.GPW.Data.Storage
                     productContents.Add(productContent);
                 }
                 
+                ///////////////////////
                 // Loop through locations, add a copy of the products to each
+                ///////////////////////
                 foreach (var locationContentRef in  _runtimeData.RemoteConfiguration.LocationContentRefs)
                 {
                     LocationContent locationContent = await locationContentRef.Resolve();
@@ -96,6 +105,20 @@ namespace Beamable.Samples.GPW.Data.Storage
                     _runtimeData.LocationContentViews.Add(locationContentView);
                 }
 
+                ///////////////////////
+                // Money
+                ///////////////////////
+                // WHY RANDOM SEED? So the users get a DETERMINISTIC experience. This may
+                // or may not be needed for these specific values - srivello
+                Random random = new System.Random(_runtimeData.RemoteConfiguration.RandomSeed);
+                double BankInterestCurrent = _runtimeData.RemoteConfiguration.BankInterestMin +
+                                            random.NextDouble() * _runtimeData.RemoteConfiguration.BankInterestMax;
+                double DebtInterestCurrent = _runtimeData.RemoteConfiguration.DebtInterestMin +
+                                             random.NextDouble() * _runtimeData.RemoteConfiguration.DebtInterestMax;
+
+                _runtimeData.BankInterestCurrent = (float)BankInterestCurrent;
+                _runtimeData.DebtInterestCurrent = (float)DebtInterestCurrent;
+                
                 ForceRefresh();
                 IsInitialized = true;
             }

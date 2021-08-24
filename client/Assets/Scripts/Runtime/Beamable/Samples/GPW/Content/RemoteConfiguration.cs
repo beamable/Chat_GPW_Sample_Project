@@ -29,7 +29,7 @@ namespace Beamable.Samples.GPW.Content
         public float BankInterestMax = 0.1f;
       
         [Header("Other")]
-        public float RandomSeed = 0.1f;
+        public int RandomSeed = 1;
         public int TurnsTotal = 30;
         public int ItemsMax = 100;
         
