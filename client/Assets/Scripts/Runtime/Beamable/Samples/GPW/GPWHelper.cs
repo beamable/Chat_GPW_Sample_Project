@@ -38,8 +38,10 @@ namespace Beamable.Samples.GPW
       /// Return the intro menu text. This serves as a welcome to the game plot and game instructions.
       /// If error, help text is shown.
       /// </summary>
-      public static string GetIntroAboutBodyText(bool isConnected, long dbid,
-         bool isBeamableSDKInstalled, string isBeamableSDKInstalledErrorMessage)
+      public static string GetIntroAboutBodyText(bool isConnected,
+         bool isBeamableSDKInstalled, 
+         long dbid,
+         string isBeamableSDKInstalledErrorMessage)
       {
          string text = "";
 
@@ -238,6 +240,11 @@ namespace Beamable.Samples.GPW
       public static void SetButtonText(Button button, string line1, string line2)
       {
          button.GetComponentInChildren<TextMeshProUGUI>().text = $"{line1}\n<size=20>{line2}</size>";
+      }
+      
+      public static void SetButtonText(Button button, string line1)
+      {
+         button.GetComponentInChildren<TextMeshProUGUI>().text = $"{line1}";
       }
    }
 }

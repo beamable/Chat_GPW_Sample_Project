@@ -20,8 +20,6 @@ namespace Beamable.Samples.GPW
       public Configuration Configuration { get { return _configuration; } }
 
       //  Fields ---------------------------------------
-      private IBeamableAPI _beamableAPI = null;
-      
       [SerializeField]
       private Configuration _configuration = null;
       
@@ -40,6 +38,8 @@ namespace Beamable.Samples.GPW
          _gameUIView.ChatButton.onClick.AddListener(ChatButton_OnClicked);
          _gameUIView.LeaderboardButton.onClick.AddListener(LeaderboardButton_OnClicked);
          _gameUIView.QuitButton.onClick.AddListener(QuitButton_OnClicked);
+         
+         //
          SetupBeamable();
          
       }
@@ -48,23 +48,26 @@ namespace Beamable.Samples.GPW
       //  Other Methods  -----------------------------
       private async void SetupBeamable()
       {
-         _beamableAPI = await Beamable.API.Instance;
          
+         // Setup List
+         _gameUIView.ProductContentList.OnInitialized.AddListener(ProductContentList_OnInitialized);
+         ProductContentListBank listBank =  _gameUIView.ProductContentList.gameObject.AddComponent<ProductContentListBank>();
+         _gameUIView.ProductContentList.ListBank = listBank;
+         
+         // Setup Storage
+         GameController.Instance.PersistentDataStorage.OnChanged.AddListener(PersistentDataStorage_OnChanged);
+         GameController.Instance.RuntimeDataStorage.OnChanged.AddListener(RuntimeDataStorage_OnChanged);
+         
+         // Every scene initializes as needed (Max 1 time per session)
          if (!GameController.Instance.IsInitialized)
          {
             await GameController.Instance.Initialize(_configuration);
          }
-
-         // ProductContentList
-         _gameUIView.ProductContentList.OnInitialized.AddListener(CircularScrollingList_OnInitialized);
-         ProductContentListBank listBank =  _gameUIView.ProductContentList.gameObject.AddComponent<ProductContentListBank>();
-         _gameUIView.ProductContentList.ListBank = listBank;
-         
-         // Storage
-         GameController.Instance.PersistentDataStorage.OnChanged.AddListener(PersistentDataStorage_OnChanged);
-         GameController.Instance.RuntimeDataStorage.OnChanged.AddListener(RuntimeDataStorage_OnChanged);
-         GameController.Instance.PersistentDataStorage.ForceRefresh();
-         GameController.Instance.RuntimeDataStorage.ForceRefresh();
+         else
+         {
+            GameController.Instance.PersistentDataStorage.ForceRefresh();
+            GameController.Instance.RuntimeDataStorage.ForceRefresh();
+         }
       }
 
       
@@ -101,9 +104,12 @@ namespace Beamable.Samples.GPW
       
       private void QuitButton_OnClicked()
       {
-         Debug.Log("as are you sure? This blanks progress");
-         StartCoroutine(GPWHelper.LoadScene_Coroutine(_configuration.IntroSceneName,
-            _configuration.DelayBeforeLoadScene));
+         _gameUIView.DialogSystem.ShowDialogBoxConfirmation(
+            delegate
+            {
+               StartCoroutine(GPWHelper.LoadScene_Coroutine(_configuration.IntroSceneName,
+                  _configuration.DelayBeforeLoadScene));
+            });
       }
       
       
@@ -172,7 +178,7 @@ namespace Beamable.Samples.GPW
       }
       
       
-      private void CircularScrollingList_OnInitialized(CircularScrollingList circularScrollingList)
+      private void ProductContentList_OnInitialized(CircularScrollingList circularScrollingList)
       {
          foreach (ListBox listBox in circularScrollingList.ListBoxes)
          {

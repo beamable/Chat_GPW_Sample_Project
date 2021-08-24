@@ -5,6 +5,14 @@ using Beamable.Samples.GPW.Content;
 
 namespace Beamable.Samples.GPW.Data.Storage
 {
+    public enum ChatMode
+    {
+        None,
+        Global,
+        Location,
+        Direct
+    }
+    
     public class RuntimeData
     {
         //  Properties  ----------------------------------
@@ -40,6 +48,7 @@ namespace Beamable.Samples.GPW.Data.Storage
         public InventoryView InventoryView = null;
         public List<LocationContentView> LocationContentViews = new List<LocationContentView>();
         public RemoteConfiguration RemoteConfiguration = null;
+        public ChatMode ChatMode = ChatMode.None;
     }
         
     /// <summary>
@@ -49,15 +58,16 @@ namespace Beamable.Samples.GPW.Data.Storage
     {
         //  Properties  ----------------------------------
         public RuntimeData RuntimeData { get { return _runtimeData; ForceRefresh(); } }
-
+  
         //  Fields  --------------------------------------
         private IBeamableAPI _beamableAPI = null;
         private RuntimeData _runtimeData = new RuntimeData();
         
+        
         //  Unity Methods  --------------------------------
 
         //  Other Methods  --------------------------------
-        public async Task Initialize(Configuration configuration)
+        public override async Task Initialize(Configuration configuration)
         {
             if (!IsInitialized)
             {

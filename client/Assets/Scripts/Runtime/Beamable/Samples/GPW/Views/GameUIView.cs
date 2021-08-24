@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using AirFishLab.ScrollingList;
-using Beamable.Samples.Core.UI;
-using Beamable.Samples.Core.Utilities;
-using Beamable.Samples.GPW.Data;
+﻿using AirFishLab.ScrollingList;
 using Beamable.Samples.GPW.Data.Storage;
 using TMPro;
 using UnityEngine;
@@ -13,13 +9,9 @@ namespace Beamable.Samples.GPW.Views
    /// <summary>
    /// Handles the audio/graphics rendering logic: Game
    /// </summary>
-   public class GameUIView : MonoBehaviour
+   public class GameUIView : BaseSceneUIView
    {
       //  Properties -----------------------------------
-      public Button ChatButton { get { return _chatButton; } }
-      public Button LeaderboardButton { get { return _leaderboardButton; } }
-      public Button QuitButton { get { return _quitButton; } }
-      
       public TMP_Text CashText { get { return _cashText; } }
       public TMP_Text ItemsText { get { return _itemsText; } }
       public TMP_Text TurnText { get { return _turnText; } }
@@ -27,8 +19,11 @@ namespace Beamable.Samples.GPW.Views
       public Button TravelButton { get { return _travelButton; } }
       public Button BankButton { get { return _bankButton; } }
       public Button DebtButton { get { return _debtButton; } }
+      
+      public Button ChatButton { get { return _chatButton; } }
+      public Button LeaderboardButton { get { return _leaderboardButton; } }
+      public Button QuitButton { get { return _quitButton; } }
 
-      public TMP_Text RoundText { get { return _roundText; } }
       public CircularScrollingList ProductContentList { get { return _productContentList; } }
       public CanvasGroup ProductContentListCanvasGroup { get { return _productContentListCanvasGroup; } }
       public PersistentData PersistentData { get { return _persistentData; } set { _persistentData = value; OnRefresh(); } }
@@ -38,13 +33,8 @@ namespace Beamable.Samples.GPW.Views
       //  Fields ---------------------------------------
       private PersistentData _persistentData = null;
       private RuntimeData _runtimeData = null;
-      
-      [SerializeField]
-      private Configuration _configuration = null;
 
-      private TMP_Text _roundText = null;
-
-      [Header("Scrolling List")]
+      [Header("Child Properties")]
       [SerializeField]
       private CircularScrollingList _productContentList = null;
       
@@ -62,11 +52,12 @@ namespace Beamable.Samples.GPW.Views
       private TMP_Text _turnText = null;
 
       [Header("Top Buttons")]
-      [SerializeField]
-      private Button _travelButton = null;
 
       [SerializeField]
       private Button _bankButton = null;
+
+      [SerializeField]
+      private Button _travelButton = null;
 
       [SerializeField]
       private Button _debtButton = null;
@@ -81,14 +72,10 @@ namespace Beamable.Samples.GPW.Views
       [SerializeField]
       private Button _quitButton = null;
 
-      [Header("Cosmetic Animation")]
-      [SerializeField]
-      private List<CanvasGroup> _canvasGroups = null;
-
       //  Unity Methods   ------------------------------
-      protected void Start()
+      protected override void Start()
       {
-         TweenHelper.CanvasGroupsDoFade(_canvasGroups, 0, 1, 1, 0, _configuration.DelayFadeInUI);
+         base.Start(); 
       }
       
       private void OnRefresh()

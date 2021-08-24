@@ -29,9 +29,7 @@ namespace Beamable.Samples.GPW.Content
          Random random = new System.Random(randomSeed);
          int delta = ProductContent.PriceMax - ProductContent.PriceMin;
          double p = random.NextDouble();
-         Debug.Log("p1  = " + p);
          p = ProductContent.PriceMin + p * delta;
-         Debug.Log("p2  = " + p);
          Price = (int)p;
          Quantity = random.Next(1, 10);
       }

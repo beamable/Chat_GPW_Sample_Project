@@ -77,7 +77,7 @@ MonoBehaviour:
     _alignMiddle: 1
     _reverseDirection: 0
     _direction: 0
-    _centeredContentID: 0
+    _centeredContentID: 4
     _centerSelectedBox: 0
     _reverseOrder: 0
     _initializeOnStart: 0

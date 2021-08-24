@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using Beamable.Samples.Core.UI.DialogSystem;
-using Beamable.Samples.Core.Utilities;
-using Beamable.Samples.GPW.Data;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +7,7 @@ namespace Beamable.Samples.GPW.Views
    /// <summary>
    /// Handles the audio/graphics rendering logic: Intro UI
    /// </summary>
-   public class IntroUIView : MonoBehaviour
+   public class IntroUIView : BaseSceneUIView
    {
       //  Properties -----------------------------------
       public string TitleText { set { _titleText.text = value; } }
@@ -20,13 +16,9 @@ namespace Beamable.Samples.GPW.Views
       public Button LeaderboardButton { get { return _leaderboardButton; } }
       public Button QuitButton { get { return _quitButton; } }
       public CanvasGroup ButtonsCanvasGroup { get { return _buttonsCanvasGroup; } }
-      
-      public DialogSystem DialogSystem { get { return _dialogSystem; } }
 
       //  Fields ---------------------------------------
-      [SerializeField]
-      private Configuration _configuration = null;
-
+      [Header("Child Properties")]
       [SerializeField]
       private Button _startGameButton = null;
 
@@ -45,17 +37,10 @@ namespace Beamable.Samples.GPW.Views
       [SerializeField]
       private CanvasGroup _buttonsCanvasGroup = null;
 
-      [SerializeField]
-      private DialogSystem _dialogSystem = null;
-      
-      [Header ("Cosmetic Animation")]
-      [SerializeField]
-      private List<CanvasGroup> _canvasGroups = null;
-
       //  Unity Methods   ------------------------------
-      protected void Start()
+      protected override void Start()
       {
-         TweenHelper.CanvasGroupsDoFade(_canvasGroups, 0, 1, 1, 0, _configuration.DelayFadeInUI);
+         base.Start();
       }
    }
 }

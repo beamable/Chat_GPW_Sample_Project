@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.Core.UI;
-using Beamable.Samples.Core.Utilities;
-using Beamable.Samples.GPW.Data;
+using Beamable.Samples.GPW.Data.Storage;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,34 +10,115 @@ namespace Beamable.Samples.GPW.Views
    /// <summary>
    /// Handles the audio/graphics rendering logic: Chat
    /// </summary>
-   public class ChatUIView : MonoBehaviour
+   public class ChatUIView : BaseSceneUIView
    {
       //  Properties -----------------------------------
-      public Button BackButton { get { return _backButton; } }
+      public TMP_Text CashText { get { return _cashText; } }
+      public TMP_Text ItemsText { get { return _itemsText; } }
+      public TMP_Text TurnText { get { return _turnText; } }
+      
+      public TMP_ScrollingText ScrollingText { get { return _scrollingText; } }
 
-      public TMP_BufferedText BufferedText { get { return _bufferedText; } }
-      public TMP_Text RoundText { get { return _roundText; } }
+      public Button GlobalChatButton { get { return _globalChatButton; } }
+      public Button LocationChatButton { get { return _locationChatButton; } }
+      public Button DirectChatButton { get { return _directChatButton; } }
+      
+      public Button TransactionButton { get { return _transactionButton; } }
+      public Button BackButton { get { return _backButton; } }
+      
+      public PersistentData PersistentData { get { return _persistentData; } set { _persistentData = value; Refresh(); } }
+      public RuntimeData RuntimeData { get { return _runtimeData; } set { _runtimeData = value; Refresh(); } }
+
 
       //  Fields ---------------------------------------
+      [Header("Child Properties")]
+      
       [SerializeField]
-      private Configuration _configuration = null;
+      private TMP_Text _cashText = null;
 
       [SerializeField]
-      private TMP_BufferedText _bufferedText = null;
+      private TMP_Text _itemsText = null;
 
-      private TMP_Text _roundText = null;
+      [SerializeField]
+      private TMP_Text _turnText = null;
 
+      [SerializeField]
+      private TMP_ScrollingText _scrollingText = null;
+      
+      [SerializeField]
+      private Button _globalChatButton = null;
+      
+      [SerializeField]
+      private Button _locationChatButton = null;
+      
+      [SerializeField]
+      private Button _directChatButton = null;
+      
+
+      [SerializeField]
+      private Button _transactionButton = null;
+      
       [SerializeField]
       private Button _backButton = null;
-
-      [Header("Cosmetic Animation")]
-      [SerializeField]
-      private List<CanvasGroup> _canvasGroups = null;
+      
+      private PersistentData _persistentData = null;
+      private RuntimeData _runtimeData = null;
 
       //  Unity Methods   ------------------------------
-      protected void Start()
+      protected override void Start()
       {
-         TweenHelper.CanvasGroupsDoFade(_canvasGroups, 0, 1, 1, 0, _configuration.DelayFadeInUI);
+         base.Start();
+      }
+      
+      //  Other Methods   ------------------------------
+      public void Refresh()
+      {
+         GPWHelper.SetButtonText(_globalChatButton, "Global", "Chat");
+         GPWHelper.SetButtonText(_directChatButton, "Direct", $"Chat");
+         GPWHelper.SetButtonText(_transactionButton, "Direct", $"Buy/Sell");
+         GPWHelper.SetButtonText(_backButton, "Back");
+         
+         if (_persistentData != null)
+         {
+            _cashText.text = $"Cash: ${_persistentData.CashAmount}";
+            _turnText.text = $"Turn: {_persistentData.TurnCurrent}/{_persistentData.TurnsTotal}";
+            
+    
+            try
+            {
+               GPWHelper.SetButtonText(_locationChatButton, 
+                  $"{_persistentData.LocationContentViewCurrent.LocationContent.Title}",
+                  "Chat");
+            }
+            catch 
+            {
+               GPWHelper.SetButtonText(_locationChatButton, 
+                  $"TBD",
+                  "Chat");
+            }
+         }
+
+         if (_runtimeData != null)
+         {
+            _itemsText.text = $"Items: {_runtimeData.ItemsCurrent}/{_runtimeData.ItemsMax}";
+
+            switch (_runtimeData.ChatMode)
+            {
+               case ChatMode.Global:
+                  _globalChatButton.Select();
+                  break;
+               case ChatMode.Location:
+                  _locationChatButton.Select();
+                  break;
+               case ChatMode.Direct:
+                  _directChatButton.Select();
+                  break;
+                  SwitchDefaultException.Throw(_runtimeData.ChatMode);
+                  break;
+            }
+
+            _transactionButton.interactable = _runtimeData.ChatMode == ChatMode.Direct;
+         }
       }
    }
 }

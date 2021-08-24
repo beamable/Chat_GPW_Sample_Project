@@ -1,6 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Beamable.Common.Api.Inventory;
+using Beamable.Experimental.Api.Chat;
 using Beamable.Samples.Core.Components;
+using Beamable.Samples.Core.Exceptions;
+using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Data.Storage;
 using UnityEngine;
@@ -32,16 +35,19 @@ namespace Beamable.Samples.GPW
             {
                 IBeamableAPI beamableAPI = await Beamable.API.Instance;
                 
+                /////////////////////////////
                 // GameServices
+                /////////////////////////////
                 _gameServices.OnInventoryViewChanged.AddListener(InventoryService_OnChanged);
                 _runtimeDataStorage.OnChanged.AddListener(RuntimeDataStorage_OnChanged);
                 _persistentDataStorage.OnChanged.AddListener(PersistentDataStorage_OnChanged);
-                _gameServices.OnInventoryViewChanged.AddListener(InventoryService_OnChanged);
                 await _gameServices.Initialize(configuration);
                 await _runtimeDataStorage.Initialize(configuration);
                 await _persistentDataStorage.Initialize(configuration);
 
+                /////////////////////////////
                 // Money
+                /////////////////////////////
                 _persistentDataStorage.PersistentData.BankAmount = 
                     _runtimeDataStorage.RuntimeData.RemoteConfiguration.BankAmountInitial;
                 
@@ -50,8 +56,34 @@ namespace Beamable.Samples.GPW
                 
                 _persistentDataStorage.PersistentData.DebitAmount = 
                     _runtimeDataStorage.RuntimeData.RemoteConfiguration.DebtAmountInitial;
+                
+                /////////////////////////////
+                // Chat
+                /////////////////////////////
+                while (!_gameServices.HasChatView)
+                {
+                    await Task.Delay(100);
+                }
+                
+                // Chat - Global Room
+                await _gameServices.CreateRoomSafe(GPWConstants.ChatRoomNameGlobal);
+                
+                // Chat - Direct Room - TODO: Should I use the existing 'DirectRooms' 
+                // available on the chatView instance?
+                await _gameServices.CreateRoomSafe(GPWConstants.GetChatRoomNameDirect());
+                
+                // Chat - Location Rooms
+                foreach (LocationContentView locationContentView in _runtimeDataStorage.RuntimeData.LocationContentViews)
+                {
+                    await _gameServices.CreateRoomSafe(
+                        GPWConstants.GetChatRoomNameLocation(locationContentView.LocationContent));
+                }
+                
+                _runtimeDataStorage.RuntimeData.ChatMode = ChatMode.Global;
 
+                /////////////////////////////
                 // Turns
+                /////////////////////////////
                 _persistentDataStorage.PersistentData.TurnCurrent = 1;
                 _persistentDataStorage.PersistentData.TurnsTotal = 
                     _runtimeDataStorage.RuntimeData.RemoteConfiguration.TurnsTotal;
@@ -102,6 +134,30 @@ namespace Beamable.Samples.GPW
             _persistentDataStorage.ForceRefresh();
         }
         
+        public RoomHandle GetCurrentRoomHandle()
+        {
+            string currentRoomName = "";
+			
+            switch (_runtimeDataStorage.RuntimeData.ChatMode)
+            {
+                case ChatMode.Global:
+                    currentRoomName = GPWConstants.ChatRoomNameGlobal;
+                    break;
+                case ChatMode.Location:
+                    LocationContent locationContent = _persistentDataStorage.
+                        PersistentData.LocationContentViewCurrent.LocationContent;
+                    currentRoomName = GPWConstants.GetChatRoomNameLocation(locationContent);
+                    break;
+                case ChatMode.Direct:
+                    currentRoomName = GPWConstants.GetChatRoomNameDirect();
+                    break;
+                    SwitchDefaultException.Throw(_runtimeDataStorage.RuntimeData.ChatMode);
+                    break;
+            }
+
+            Debug.Log("currentRoomName:" + currentRoomName);
+            return _gameServices.GetRoomHandle(currentRoomName);
+        }
         
         //  Event Handlers  -------------------------------
         private void InventoryService_OnChanged(InventoryView inventoryView)

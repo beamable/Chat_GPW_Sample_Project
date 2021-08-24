@@ -1,4 +1,6 @@
-﻿namespace Beamable.Samples.GPW
+﻿using Beamable.Samples.GPW.Content;
+
+namespace Beamable.Samples.GPW
 {
    /// <summary>
    /// Store commonly used static values
@@ -18,22 +20,29 @@
       /// </summary>
       public const int UnsetValue = -1;
 
-      // Round
-      public static string RoundText = "<b>Round</b><br><size=20>{0} of {1}</size>";
-
-      // Status
-      public const string StatusText_GameState_Playing = "Playing ...";
+      // Chat
+      public static string ChatRoomNameGlobal = "Global";
+      private static string ChatRoomNameLocation = "Location";
+      private static string ChatRoomNameDirect = "Direct";
+      private static string ChatRoomNameSeparator = "_";
+      public static string GetChatRoomNameLocation(LocationContent locationContent)
+      {
+         return ChatRoomNameLocation +
+                ChatRoomNameSeparator +
+                locationContent.Title;
+      }
       
-      // Animations
-      public static string Avatar_Idle = "Idle"; //start here
-      public static string Avatar_Attack_01 = "Attack_01";
-      public static string Avatar_Attack_02 = "Attack_02";
-      public static string Avatar_Attack_03 = "Attack_03";
-      public static string Avatar_Death = "Death"; //end here
-
-      //Lobby
-      public static string StatusText_Joining = "Player {0}/{1} joined. Waiting ...";
-      public static string StatusText_Joined = "Player {0}/{1} joined. Ready!";
+      public static string GetChatRoomNameDirect()
+      {
+         //TODO: pass in the 2 playerids that are chatting?
+         long dbid01 = 01;
+         long dbid02 = 01;
+         return ChatRoomNameDirect +
+                ChatRoomNameSeparator +
+                dbid01 +
+                ChatRoomNameSeparator +
+                dbid02;
+      }
 
    }
 }

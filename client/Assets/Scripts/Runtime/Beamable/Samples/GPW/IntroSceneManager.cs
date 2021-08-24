@@ -20,16 +20,19 @@ namespace Beamable.Samples.GPW
 
       private IBeamableAPI _beamableAPI = null;
       private bool _isConnected = false;
-      private bool _isBeamableSDKInstalled = false;
+      private bool _isBeamableSDKInstalled = true;
       private string _isBeamableSDKInstalledErrorMessage = "";
 
       //  Unity Methods   ------------------------------
       protected void Start()
       {
          _introUIView.TitleText = "Beamable\nGlobal Price Wars";
+         _introUIView.BodyText = "";
          _introUIView.StartGameButton.onClick.AddListener(StartGameButton_OnClicked);
          _introUIView.LeaderboardButton.onClick.AddListener(LeaderboardButton_OnClicked);
          _introUIView.QuitButton.onClick.AddListener(QuitButton_OnClicked);
+         
+         //
          SetupBeamable();
       }
 
@@ -49,29 +52,30 @@ namespace Beamable.Samples.GPW
       /// <summary>
       /// Login with Beamable and fetch user/session information
       /// </summary>
-      private void SetupBeamable()
+      private async void SetupBeamable()
       {
-         // Attempt Connection to Beamable
-         Beamable.API.Instance.Then(de =>
+         _beamableAPI = await Beamable.API.Instance;
+         
+         try
          {
-            try
+            // Handle any changes to the internet connectivity
+            _beamableAPI.ConnectivityService.OnConnectivityChanged += ConnectivityService_OnConnectivityChanged;
+            ConnectivityService_OnConnectivityChanged(_beamableAPI.ConnectivityService.HasConnectivity);
+         
+            // Every scene initializes as needed (Max 1 time per session)
+            if (!GameController.Instance.IsInitialized)
             {
-               _beamableAPI = de;
-               _isBeamableSDKInstalled = true;
-
-               // Handle any changes to the internet connectivity
-               _beamableAPI.ConnectivityService.OnConnectivityChanged += ConnectivityService_OnConnectivityChanged;
-               ConnectivityService_OnConnectivityChanged(_beamableAPI.ConnectivityService.HasConnectivity);
-
+               await GameController.Instance.Initialize(_configuration);
             }
-            catch (Exception e)
-            {
-               // Failed to connect (e.g. not logged in)
-               _isBeamableSDKInstalled = false;
-               _isBeamableSDKInstalledErrorMessage = e.Message;
-               ConnectivityService_OnConnectivityChanged(false);
-            }
-         });
+            
+         }
+         catch (Exception e)
+         {
+            // Failed to connect (e.g. not logged in)
+            _isBeamableSDKInstalled = false;
+            _isBeamableSDKInstalledErrorMessage = e.Message;
+            ConnectivityService_OnConnectivityChanged(false);
+         }
       }
 
 
@@ -88,10 +92,9 @@ namespace Beamable.Samples.GPW
 
          string bodyText = GPWHelper.GetIntroAboutBodyText(
             _isConnected, 
-            dbid, 
             _isBeamableSDKInstalled, 
-            _isBeamableSDKInstalledErrorMessage);
-
+            dbid, _isBeamableSDKInstalledErrorMessage);
+         
          _introUIView.BodyText = bodyText;
          _introUIView.ButtonsCanvasGroup.interactable = _isConnected;
       }
@@ -128,11 +131,6 @@ namespace Beamable.Samples.GPW
             {
                GPWHelper.QuitSafe();
             });
-      }
-
-      private void ONButtonClicked()
-      {
-         throw new NotImplementedException();
       }
    }
 }
