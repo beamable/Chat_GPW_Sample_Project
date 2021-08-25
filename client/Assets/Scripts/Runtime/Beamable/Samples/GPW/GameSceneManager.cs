@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AirFishLab.ScrollingList;
 using Beamable.Samples.Core.UI.ScrollingList;
 using Beamable.Samples.GPW.Content;
@@ -29,7 +30,7 @@ namespace Beamable.Samples.GPW
       //  Unity Methods   ------------------------------
       protected void Start()
       {
-         _gameUIView.ProductContentListCanvasGroup.alpha = 0;
+         _gameUIView.ProductContentList.CanvasGroup.alpha = 0;
          
          _gameUIView.TravelButton.onClick.AddListener(TravelButton_OnClicked);
          _gameUIView.BankButton.onClick.AddListener(BankButton_OnClicked);
@@ -48,11 +49,8 @@ namespace Beamable.Samples.GPW
       //  Other Methods  -----------------------------
       private async void SetupBeamable()
       {
-         
          // Setup List
          _gameUIView.ProductContentList.OnInitialized.AddListener(ProductContentList_OnInitialized);
-         ProductContentListBank listBank =  _gameUIView.ProductContentList.gameObject.AddComponent<ProductContentListBank>();
-         _gameUIView.ProductContentList.ListBank = listBank;
          
          // Setup Storage
          GameController.Instance.PersistentDataStorage.OnChanged.AddListener(PersistentDataStorage_OnChanged);
@@ -65,7 +63,6 @@ namespace Beamable.Samples.GPW
          }
          else
          {
-            Debug.Log("Force");
             GameController.Instance.PersistentDataStorage.ForceRefresh();
             GameController.Instance.RuntimeDataStorage.ForceRefresh();
             GameController.Instance.GameServices.ForceRefresh();
@@ -148,27 +145,23 @@ namespace Beamable.Samples.GPW
                    $"isSuccessful = {isSuccessful}");
       }
       
-      private void PersistentDataStorage_OnChanged(SubStorage subStorage)
+      private async void PersistentDataStorage_OnChanged(SubStorage subStorage)
       {
          PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
          _gameUIView.PersistentData = persistentDataStorage.PersistentData;
          
          List<ProductContentView> list = persistentDataStorage.PersistentData.LocationContentViewCurrent.ProductContentViews;
 
-         Debug.Log($"PersistentDataStorage_OnChanged() ProductContentView = {list.Count}");
-         
-         // Prepare list
-         ProductContentListBank listBank = _gameUIView.ProductContentList.ListBank as ProductContentListBank;
-         listBank.SetContents(list);
+         Debug.Log($">>>>>PersistentDataStorage_OnChanged() ProductContentView = {list.Count}");
          
          // Render list
-         _gameUIView.ProductContentList.ListBank = listBank;
-         _gameUIView.ProductContentList.Initialize();
+         await _gameUIView.ProductContentList.InitializeOnDelay(list, 100);
          _gameUIView.ProductContentList.Refresh();
+         
 
-         if (_gameUIView.ProductContentListCanvasGroup.alpha == 0)
+         if (_gameUIView.ProductContentList.CanvasGroup.alpha == 0)
          {
-            _gameUIView.ProductContentListCanvasGroup.alpha = 1;
+            _gameUIView.ProductContentList.CanvasGroup.alpha = 1;
          }
       }
       

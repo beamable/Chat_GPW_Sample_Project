@@ -20,7 +20,7 @@ MonoBehaviour:
   BankAmountInitial: 0
   BankInterestMin: 0.01
   BankInterestMax: 0.1
-  RandomSeed: 0.1
+  RandomSeed: 0
   TurnsTotal: 30
   ItemsMax: 100
   ProductContentRefs:

@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace AirFishLab.ScrollingList
 {
-    public class CircularScrollingListEvent: UnityEvent <CircularScrollingList>{}
-    
-    
     /// <summary>
     /// Manage and control the circular scrolling list
     /// </summary>
     public class CircularScrollingList : MonoBehaviour,
         IBeginDragHandler, IDragHandler, IEndDragHandler, IScrollHandler
     {
-        public CircularScrollingListEvent OnInitialized = new CircularScrollingListEvent();
-        
+       
         #region Enum Definitions
 
         /// <summary>
@@ -60,7 +55,7 @@ namespace AirFishLab.ScrollingList
 
         #region Settings
 
-        [SerializeField]
+        [HideInInspector]
         [Tooltip("The game object that stores the contents for the list to display. " +
                  "It should be derived from the class BaseListBank.")]
         private BaseListBank _listBank;
@@ -112,7 +107,7 @@ namespace AirFishLab.ScrollingList
         /// <summary>
         /// Is the list initialized?
         /// </summary>
-        private bool _isInitialized;
+        protected bool _isInitialized;
         /// <summary>
         /// Does the list bank has no content?
         /// </summary>
@@ -137,8 +132,9 @@ namespace AirFishLab.ScrollingList
         /// <summary>
         /// Initialize the list
         /// </summary>
-        public void Initialize()
+        public virtual void Initialize()
         {
+            
             if (_isInitialized)
                 return;
 
@@ -163,7 +159,7 @@ namespace AirFishLab.ScrollingList
         /// <summary>
         /// Initialize the related list components
         /// </summary>
-        private void InitializeListComponents()
+        public virtual void InitializeListComponents()
         {
             _listPositionCtrl =
                 new ListPositionCtrl(
@@ -176,13 +172,13 @@ namespace AirFishLab.ScrollingList
                 _setting.onBoxClick.AddListener(SelectContentID);
 
             for (var i = 0; i < _listBoxes.Count; ++i)
+            {
                 _listBoxes[i].Initialize(
                     _setting, _listPositionCtrl, _listContentManager,
                     _listBoxes, i);
+            }
 
             _hasNoContent = _listBank.GetListLength() == 0;
-            
-            OnInitialized.Invoke(this);
         }
 
         #endregion
@@ -257,7 +253,10 @@ namespace AirFishLab.ScrollingList
             _listPositionCtrl.numOfUpperDisabledBoxes = 0;
 
             foreach (var listBox in _listBoxes)
+            {
                 listBox.Refresh(centeredBox.listBoxID, centeredContentID);
+            }
+                
 
             _hasNoContent = numOfContents == 0;
         }

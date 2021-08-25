@@ -64,6 +64,7 @@ namespace AirFishLab.ScrollingList
             List<ListBox> listBoxes,
             int listBoxID)
         {
+            
             _listSetting = setting;
             _positionCtrl = listPositionCtrl;
             _contentManager = listContentManager;

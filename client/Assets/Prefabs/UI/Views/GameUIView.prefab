@@ -33,7 +33,7 @@ MonoBehaviour:
   - {fileID: 5995049139731752018}
   - {fileID: 5853969765396939229}
   - {fileID: 9045431744172079911}
-  _productContentList: {fileID: 6273614396844857103}
+  _productContentList: {fileID: 2737391792764014680}
   _productContentListCanvasGroup: {fileID: 4348924771004868756}
   _cashText: {fileID: 6857004305348803793}
   _itemsText: {fileID: 2434980495019459432}
@@ -1341,22 +1341,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9f6f6d96f6e0b3e479a17548f62b5f96, type: 3}
---- !u!114 &6273614396844857103 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4515320380092313467, guid: 9f6f6d96f6e0b3e479a17548f62b5f96, type: 3}
-  m_PrefabInstance: {fileID: 7618393990518093940}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 831ecc00ba8a38f448ccce2a87cd76db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!225 &4348924771004868756 stripped
 CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 6188936486938300640, guid: 9f6f6d96f6e0b3e479a17548f62b5f96, type: 3}
   m_PrefabInstance: {fileID: 7618393990518093940}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2737391792764014680 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -3727621849945085908, guid: 9f6f6d96f6e0b3e479a17548f62b5f96, type: 3}
+  m_PrefabInstance: {fileID: 7618393990518093940}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebd70d07d73a4c69878bac05bdb4b9d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8339494342270979431
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1554,11 +1554,11 @@ PrefabInstance:
     - target: {fileID: 711228756, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: _productContentList
       value: 
-      objectReference: {fileID: 6273614396844857103}
+      objectReference: {fileID: 0}
     - target: {fileID: 711228756, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: _circularScrollingList
       value: 
-      objectReference: {fileID: 6273614396844857103}
+      objectReference: {fileID: 0}
     - target: {fileID: 711228756, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: _dialogSystem._dialogParent
       value: 

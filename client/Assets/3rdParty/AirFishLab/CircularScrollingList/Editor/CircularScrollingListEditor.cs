@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace AirFishLab.ScrollingList.Editor
 {
-    [CustomEditor(typeof(CircularScrollingList))]
+    [CustomEditor(typeof(CircularScrollingList), true)]
     [CanEditMultipleObjects]
     public class CircularScrollingListEditor : UnityEditor.Editor
     {
@@ -20,8 +20,13 @@ namespace AirFishLab.ScrollingList.Editor
 
         private void DrawPropertyField(string path, bool includeChildren = false)
         {
-            EditorGUILayout.PropertyField(
-                serializedObject.FindProperty(path), includeChildren);
+            var prop = serializedObject.FindProperty(path);
+
+            if (prop != null)
+            {
+                EditorGUILayout.PropertyField(prop, includeChildren);
+            }
+           
         }
 
         #region Setting Property Drawer

@@ -1,4 +1,5 @@
 ﻿using AirFishLab.ScrollingList;
+using Beamable.Samples.Core.UI.ScrollingList;
 using Beamable.Samples.GPW.Data.Storage;
 using TMPro;
 using UnityEngine;
@@ -24,8 +25,8 @@ namespace Beamable.Samples.GPW.Views
       public Button LeaderboardButton { get { return _leaderboardButton; } }
       public Button QuitButton { get { return _quitButton; } }
 
-      public CircularScrollingList ProductContentList { get { return _productContentList; } }
-      public CanvasGroup ProductContentListCanvasGroup { get { return _productContentListCanvasGroup; } }
+      public ScrollingList ProductContentList { get { return _productContentList; } }
+
       public PersistentData PersistentData { get { return _persistentData; } set { _persistentData = value; OnRefresh(); } }
       public RuntimeData RuntimeData { get { return _runtimeData; } set { _runtimeData = value; OnRefresh(); } }
 
@@ -36,11 +37,9 @@ namespace Beamable.Samples.GPW.Views
 
       [Header("Child Properties")]
       [SerializeField]
-      private CircularScrollingList _productContentList = null;
+      private ScrollingList _productContentList = null;
       
-      [SerializeField]
-      private CanvasGroup _productContentListCanvasGroup = null;
-      
+
       [Header("Top Text")]
       [SerializeField]
       private TMP_Text _cashText = null;

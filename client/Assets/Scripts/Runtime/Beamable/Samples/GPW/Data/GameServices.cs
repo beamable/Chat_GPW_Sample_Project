@@ -53,7 +53,6 @@ namespace Beamable.Samples.GPW.Data
 				// InventoryService
 				_inventoryService = _beamableAPI.InventoryService;
 				_inventoryService.Subscribe(ContentType, InventoryService_OnChanged);
-				Debug.Log("inv sub 11111111111");
 				
 				// ChatService
 				_chatService = _beamableAPI.Experimental.ChatService;
@@ -71,7 +70,7 @@ namespace Beamable.Samples.GPW.Data
 		{
 			foreach (RoomHandle roomHandle in _chatView.roomHandles)
 			{
-				Debug.Log("Check: " + roomHandle.Name);
+				//Debug.Log("Check: " + roomHandle.Name);
 				if (roomHandle.Name == roomName)
 				{
 					return true;
@@ -124,11 +123,11 @@ namespace Beamable.Samples.GPW.Data
 
 				wasSuccesfullyCreated = roomInfo.name == roomName;
 				
-				Debug.Log("88CREATED: " + roomName + " succ: " + wasSuccesfullyCreated);
+				//Debug.Log("88CREATED: " + roomName + " succ: " + wasSuccesfullyCreated);
 			}
 			else
 			{
-				Debug.Log("88FOUND: " + roomName + " succ: " + alreadyHasRoom);
+				//Debug.Log("88FOUND: " + roomName + " succ: " + alreadyHasRoom);
 			}
 
 			return alreadyHasRoom || wasSuccesfullyCreated;
@@ -249,7 +248,7 @@ namespace Beamable.Samples.GPW.Data
 				throw new Exception("ForceRefresh() failed. _inventoryView cannot be null");
 			}
 
-			OnInventoryViewChanged.Invoke(_inventoryView);
+			InventoryService_OnChanged(_inventoryView);
 		}
 
         public async Task<bool> CanBuyItem(string contentId, int amount)
@@ -319,8 +318,6 @@ namespace Beamable.Samples.GPW.Data
         private void InventoryService_OnChanged(InventoryView inventoryView)
         {
             _inventoryView = inventoryView;
-            
-            Debug.Log("inv resp 222222");
             
             OnInventoryViewChanged.Invoke(inventoryView);
         }

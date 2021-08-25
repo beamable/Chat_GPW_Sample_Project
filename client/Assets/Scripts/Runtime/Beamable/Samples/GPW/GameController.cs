@@ -196,9 +196,6 @@ namespace Beamable.Samples.GPW
         //  Event Handlers  -------------------------------
         private void InventoryService_OnChanged(InventoryView inventoryView)
         {
-            Debug.Log("InventoryService_OnChanged() : " + 
-                      inventoryView.items.Count);
-            
             _runtimeDataStorage.RuntimeData.InventoryView = inventoryView;
             _runtimeDataStorage.ForceRefresh();
         }
@@ -207,15 +204,11 @@ namespace Beamable.Samples.GPW
         private void PersistentDataStorage_OnChanged(SubStorage subStorage)
         {
             PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
-         
-            Debug.Log("PersistentDataStorage_OnChanged() : " + 
-                      persistentDataStorage.PersistentData.LocationContentViewCurrent.LocationContent.Title);
         }
       
       
         private void RuntimeDataStorage_OnChanged(SubStorage subStorage)
         {
-            Debug.Log("RuntimeDataStorage_OnChanged() : -------");
             RuntimeDataStorage runtimeDataStorage = subStorage as RuntimeDataStorage;
             InventoryView inventoryView = runtimeDataStorage.RuntimeData.InventoryView;
 

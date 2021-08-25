@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8003049350798058823}
-  - component: {fileID: 4515320380092313467}
   - component: {fileID: 6188936486938300640}
+  - component: {fileID: -3727621849945085908}
   m_Layer: 5
   m_Name: ProductContentList
   m_TagString: Untagged
@@ -47,7 +47,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4515320380092313467
+--- !u!225 &6188936486938300640
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6079842562763394415}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &-3727621849945085908
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,10 +68,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6079842562763394415}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 831ecc00ba8a38f448ccce2a87cd76db, type: 3}
+  m_Script: {fileID: 11500000, guid: ebd70d07d73a4c69878bac05bdb4b9d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _listBank: {fileID: 0}
   _listBoxes:
   - {fileID: 5837037408777461746}
   - {fileID: 7916795441167588476}
@@ -78,7 +89,7 @@ MonoBehaviour:
     _reverseDirection: 0
     _direction: 0
     _centeredContentID: 4
-    _centerSelectedBox: 0
+    _centerSelectedBox: 1
     _reverseOrder: 0
     _initializeOnStart: 0
     _boxDensity: 1
@@ -187,18 +198,7 @@ MonoBehaviour:
     _onMovementEnd:
       m_PersistentCalls:
         m_Calls: []
---- !u!225 &6188936486938300640
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6079842562763394415}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
+  _canvasGroup: {fileID: 6188936486938300640}
 --- !u!1001 &95707683870716561
 PrefabInstance:
   m_ObjectHideFlags: 0
