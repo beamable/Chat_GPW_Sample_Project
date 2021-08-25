@@ -63,36 +63,14 @@ namespace Beamable.Samples.GPW.Data
 		}
 
 		#region ChatService
-
-
 		
-		private bool HasRoom(string roomName)
+		public bool HasRoom(string roomName)
 		{
-			foreach (RoomHandle roomHandle in _chatView.roomHandles)
-			{
-				//Debug.Log("Check: " + roomHandle.Name);
-				if (roomHandle.Name == roomName)
-				{
-					return true;
-				}
-			}
-
-			return false;
+			return GetRoom (roomName) != null;
 		}
 		
-		private bool IsLocalPlayerInRoom(string roomName)
-		{
-			foreach (RoomHandle roomHandle in _chatView.roomHandles)
-			{
-				if (roomHandle.Players.Contains(_localPlayerDbid)) ;
-				{
-					return true;
-				}
-			}
-			return false;
-		}
 
-		public RoomHandle GetRoomHandle(string roomName)
+		public RoomHandle GetRoom(string roomName)
 		{
 			foreach (RoomHandle roomHandle in _chatView.roomHandles)
 			{
@@ -102,36 +80,53 @@ namespace Beamable.Samples.GPW.Data
 				}
 			}
 
-			throw new Exception("can't find id for roomName: " + roomName);
+			return null;
+		}
+		
+		private bool IsLocalPlayerInRoom(string roomName)
+		{
+			if (!HasRoom(roomName))
+			{
+				return false;
+			}
+
+			// foreach (var x in GetRoom(roomName).Players)
+			// {
+			// 	Debug.Log(x + " and " + _localPlayerDbid);
+			// }
+			return GetRoom(roomName).Players.Contains(_localPlayerDbid);
 		}
 
 		public async Task<bool> CreateRoomSafe(string roomName)
 		{
-			bool wasSuccesfullyCreated = false;
+			bool wasJustCreated = false;
 			
 			if (_chatView == null)
 			{
 				throw new Exception("CreateRoomSafe() failed. _chatView must be not null.");
 			}
 
-			bool alreadyHasRoom = HasRoom(roomName);
-			if (!alreadyHasRoom)
+			bool wasAlreadyExisting = HasRoom(roomName);
+			if (!wasAlreadyExisting)
 			{
-				RoomInfo roomInfo = await _chatService.CreateRoom(roomName, 
-					true, 
-					new List<long> {_localPlayerDbid});
-
-				wasSuccesfullyCreated = roomInfo.name == roomName;
+				const bool keepSubscribed = true;
+				List<long> players = new List<long> { _localPlayerDbid };
 				
-				//Debug.Log("88CREATED: " + roomName + " succ: " + wasSuccesfullyCreated);
-			}
-			else
-			{
-				//Debug.Log("88FOUND: " + roomName + " succ: " + alreadyHasRoom);
-			}
+				RoomInfo roomInfo = await _chatService.CreateRoom(roomName, 
+					keepSubscribed, 
+					players
+					);
 
-			return alreadyHasRoom || wasSuccesfullyCreated;
+				wasJustCreated = roomInfo.name == roomName;
+			}
+			
+			bool isSuccess = wasAlreadyExisting || wasJustCreated;
+			Debug.Log($"CreateRoomSafe() room={roomName}, " +
+			          $"wasAlreadyExisting={wasAlreadyExisting}, wasJustCreated={wasJustCreated}");
+
+			return isSuccess;
 		}
+
 
 		public async Task<bool> JoinRoom(string roomName)
 		{
@@ -148,7 +143,8 @@ namespace Beamable.Samples.GPW.Data
 			}
 			else
 			{
-				RoomHandle roomHandle = GetRoomHandle(roomName);
+				//TODO: how do I join an existing room? Like this? -srivello
+				RoomHandle roomHandle = GetRoom(roomName);
 				List<long> players = roomHandle.Players;
 				players.Add(_localPlayerDbid);
 				await _chatService.CreateRoom(roomHandle.Id, true, players);
@@ -171,7 +167,7 @@ namespace Beamable.Samples.GPW.Data
 				return false;
 			}
 
-			await _chatService.LeaveRoom(GetRoomHandle(roomName).Id);
+			await _chatService.LeaveRoom(GetRoom(roomName).Id);
 
 			return true;
 		}
@@ -198,23 +194,8 @@ namespace Beamable.Samples.GPW.Data
 				messageToSend = "[Message Not Allowed]";
 			}
             
-			await GetRoomHandle(roomName).SendMessage(messageToSend);
+			await GetRoom(roomName).SendMessage(messageToSend);
 			return true;
-		}
-		
-		public List<Message> GetRoomMessages(string roomName)
-		{
-			if (!HasRoom(roomName))
-			{
-				Debug.LogError("Room does not exist");
-			}
-			
-			if (!IsLocalPlayerInRoom(roomName))
-			{
-				Debug.LogError("Local player is not in this room");
-			}
-			
-			return GetRoomHandle(roomName).Messages;;
 		}
 		
 		/// <summary>
@@ -317,6 +298,7 @@ namespace Beamable.Samples.GPW.Data
         //  Event Handlers  -------------------------------
         private void InventoryService_OnChanged(InventoryView inventoryView)
         {
+	        Debug.Log("Game.InventoryService_OnChanged()");
             _inventoryView = inventoryView;
             
             OnInventoryViewChanged.Invoke(inventoryView);
@@ -324,10 +306,24 @@ namespace Beamable.Samples.GPW.Data
         
         private void ChatService_OnChanged(ChatView chatView)
         {
+	        Debug.Log("Game.ChatService_OnChanged()");
 	        _chatView = chatView;
+
+	        foreach (RoomHandle roomHandle in _chatView.roomHandles)
+	        {
+		        if (IsLocalPlayerInRoom(roomHandle.Name))
+		        {
+			        roomHandle.OnMessageReceived -= RoomHandle_MessageReceived;
+			        roomHandle.OnMessageReceived += RoomHandle_MessageReceived;
+		        }
+	        }
 	        OnChatViewChanged.Invoke(_chatView);
         }
 
-   
+        private void RoomHandle_MessageReceived(Message message)
+        {
+	        Debug.Log("Game.RoomHandle_MessageReceived()");
+	        OnChatViewChanged.Invoke(_chatView);
+        }
 	}
 }

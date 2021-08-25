@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirFishLab.ScrollingList;
+using Beamable.Samples.Core.UI.DialogSystem;
 using Beamable.Samples.Core.UI.ScrollingList;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
@@ -79,12 +80,51 @@ namespace Beamable.Samples.GPW
       
       private void BankButton_OnClicked()
       {
-         GameController.Instance.UpdateBankTo();
+         _gameUIView.DialogSystem.ShowDialogBox<DialogUI>(
+            _gameUIView.DialogSystem.DialogUIPrefab,
+            "Bank",
+            "Transfer from CASH → BANK?",
+            new List<DialogButtonData>
+            {
+               new DialogButtonData("+100", delegate
+               {
+                  GameController.Instance.TransferCashToBank(100);
+               }),
+               new DialogButtonData("-100", delegate
+               {
+                  GameController.Instance.TransferCashToBank(-100);
+               }),
+               new DialogButtonData("Ok", delegate
+               {
+                  _gameUIView.DialogSystem.HideDialogBox();
+               })
+            });
       }
-      
+
+
       private void DebtButton_OnClicked()
       {
-         GameController.Instance.UpdateDebtTo();
+         _gameUIView.DialogSystem.ShowDialogBox<DialogUI>(
+            _gameUIView.DialogSystem.DialogUIPrefab,
+            "Transfer from CASH → DEBT?",
+            $"DEBT increases by " +
+            $"{GameController.Instance.RuntimeDataStorage.RuntimeData.DebtInterestCurrent}% every TURN.",
+            new List<DialogButtonData>
+            {
+               new DialogButtonData("+100", delegate
+               {
+                  GameController.Instance.TransferCashToDebt(100);
+               }),
+               new DialogButtonData("-100", delegate
+               {
+                  GameController.Instance.TransferCashToDebt(-100);
+               }),
+               new DialogButtonData("Ok", delegate
+               {
+                  _gameUIView.DialogSystem.HideDialogBox();
+               })
+            });
+         
       }
       
       private void ChatButton_OnClicked()

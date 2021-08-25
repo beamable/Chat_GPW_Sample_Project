@@ -1,10 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using Beamable.Experimental.Api.Chat;
-using Beamable.Samples.Core.Exceptions;
-using Beamable.Samples.Core.UI;
-using Beamable.Samples.Core.UI.ScrollingList;
-using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Data.Storage;
 using Beamable.Samples.GPW.Views;
@@ -34,6 +29,7 @@ namespace Beamable.Samples.GPW
       protected void Start()
       {
          _chatUIView.ScrollingText.SetText("");
+         _chatUIView.ChatInputUI.OnValueSubmitted.AddListener(ChatInputUI_OnValueSubmitted);
          
          //
          _chatUIView.GlobalChatButton.onClick.AddListener(GlobalChatButton_OnClicked);
@@ -46,7 +42,9 @@ namespace Beamable.Samples.GPW
          //
          SetupBeamable();
       }
-      
+
+
+
 
       //  Other Methods  -----------------------------
 
@@ -72,8 +70,17 @@ namespace Beamable.Samples.GPW
 
 
       //  Event Handlers -------------------------------
-
       
+      private async void ChatInputUI_OnValueSubmitted(string message)
+      {
+         RoomHandle roomHandle = GameController.Instance.GetCurrentRoomHandle();
+         bool isSuccess = await GameController.Instance.GameServices.SendMessage(roomHandle.Name, message);
+         
+         //The ChatInputUI selects itself upon submit,
+         //but calling again here prevents a selection bug, so
+         //keep this here
+         _chatUIView.ChatInputUI.Select();
+      }
       
       private void GlobalChatButton_OnClicked()
       {
@@ -130,36 +137,20 @@ namespace Beamable.Samples.GPW
          {
             return;
          }
+         
+         if (!GameController.Instance.HasCurrentRoomHandle)
+         {
+            return;
+         }
+         
          RoomHandle roomHandle = GameController.Instance.GetCurrentRoomHandle();
-         
-
-         Debug.Log("2 Rooms -----------------------------");
-         foreach (var x in GameController.Instance.GameServices.ChatView.roomHandles)
-         {
-            Debug.Log("\nNAME: " + x.Name + " #" + x.Players.Count);
-         }
-         
-         Debug.Log("3 Guild -----------------------------");
-         foreach (var x in GameController.Instance.GameServices.ChatView.GuildRooms)
-         {
-            Debug.Log("\nNAME: " + x.Name + " #" + x.Players.Count);
-         }
-         
-         Debug.Log("4 Direct -----------------------------");
-         foreach (var x in GameController.Instance.GameServices.ChatView.DirectMessageRooms)
-         {
-            Debug.Log("\nNAME: " + x.Name + " #" + x.Players.Count);
-         }
-         
-         Debug.Log("5 So -----------------------------");
-         Debug.Log("you looking in room: " + roomHandle.Name);
 
          StringBuilder stringBuilder = new StringBuilder();
-         for (int i = 0; i < 200; i++)
+         stringBuilder.AppendLine($"Room: {roomHandle.Name}     |     Messages: ({roomHandle.Messages.Count})").AppendLine();
+         foreach (Message message in roomHandle.Messages)
          {
-            stringBuilder.AppendLine($"[Alias01]: " + i);
+            stringBuilder.AppendLine($"[{message.gamerTag}]: " + message.content);
          }
-
          _chatUIView.ScrollingText.SetText(stringBuilder.ToString());
       }
       

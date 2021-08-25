@@ -152,20 +152,39 @@ namespace Beamable.Samples.GPW
             //TODO: Check for gameover (turns==30)
         }
         
-        public void UpdateBankTo()
+        public void TransferCashToBank(int amountToAddToBank)
         {
-            int amountToAddToBank = 10;
-            _persistentDataStorage.PersistentData.CashAmount -= amountToAddToBank;
-            _persistentDataStorage.PersistentData.BankAmount += amountToAddToBank;
-            _persistentDataStorage.ForceRefresh();
+            // The amount may be positive or negative
+            // Check that both balances will be above zero
+            if (_persistentDataStorage.PersistentData.CashAmount - amountToAddToBank >= 0 && 
+                _persistentDataStorage.PersistentData.BankAmount + amountToAddToBank >= 0)
+            {
+                _persistentDataStorage.PersistentData.CashAmount -= amountToAddToBank;
+                _persistentDataStorage.PersistentData.BankAmount += amountToAddToBank;
+                _persistentDataStorage.ForceRefresh();
+            }
         }
       
-        public void UpdateDebtTo()
+        public void TransferCashToDebt(int amountToAddToDebt)
         {
-            int amountToAddToDebt = 10;
-            _persistentDataStorage.PersistentData.CashAmount += amountToAddToDebt;
-            _persistentDataStorage.PersistentData.DebitAmount += amountToAddToDebt;
-            _persistentDataStorage.ForceRefresh();
+            // The amount may be positive or negative
+            // Check that both balances will be above zero
+            if (_persistentDataStorage.PersistentData.CashAmount - amountToAddToDebt >= 0 && 
+                _persistentDataStorage.PersistentData.DebitAmount + amountToAddToDebt >= 0)
+            {
+                _persistentDataStorage.PersistentData.CashAmount -= amountToAddToDebt;
+                _persistentDataStorage.PersistentData.DebitAmount += amountToAddToDebt;
+                _persistentDataStorage.ForceRefresh();
+            }
+        }
+        
+        public bool HasCurrentRoomHandle
+        {
+            get
+            {
+                return GetCurrentRoomHandle() != null;
+            }
+            
         }
         
         public RoomHandle GetCurrentRoomHandle()
@@ -189,9 +208,14 @@ namespace Beamable.Samples.GPW
                     break;
             }
 
-            Debug.Log("currentRoomName:" + currentRoomName);
-            return _gameServices.GetRoomHandle(currentRoomName);
+            if (!_gameServices.HasRoom(currentRoomName))
+            {
+                return null;
+            }
+            
+            return _gameServices.GetRoom(currentRoomName);
         }
+
         
         //  Event Handlers  -------------------------------
         private void InventoryService_OnChanged(InventoryView inventoryView)

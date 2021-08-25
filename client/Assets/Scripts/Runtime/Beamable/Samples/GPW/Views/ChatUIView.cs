@@ -18,6 +18,7 @@ namespace Beamable.Samples.GPW.Views
       public TMP_Text TurnText { get { return _turnText; } }
       
       public TMP_ScrollingText ScrollingText { get { return _scrollingText; } }
+      public TMP_ChatInputUI ChatInputUI { get { return _chatInputUI ;}}
 
       public Button GlobalChatButton { get { return _globalChatButton; } }
       public Button LocationChatButton { get { return _locationChatButton; } }
@@ -44,6 +45,10 @@ namespace Beamable.Samples.GPW.Views
 
       [SerializeField]
       private TMP_ScrollingText _scrollingText = null;
+      
+      [SerializeField]
+      private TMP_ChatInputUI _chatInputUI = null;
+
       
       [SerializeField]
       private Button _globalChatButton = null;
