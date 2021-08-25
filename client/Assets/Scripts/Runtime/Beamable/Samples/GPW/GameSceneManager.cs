@@ -149,11 +149,19 @@ namespace Beamable.Samples.GPW
       {
          PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
          _gameUIView.PersistentData = persistentDataStorage.PersistentData;
-         
-         List<ProductContentView> list = persistentDataStorage.PersistentData.LocationContentViewCurrent.ProductContentViews;
+
+         ProductContentListRefresh();
+   
+      }
+
+      private async void ProductContentListRefresh()
+      {
+         List<ProductContentView> list = GameController.Instance.PersistentDataStorage.
+            PersistentData.LocationContentViewCurrent.ProductContentViews;
 
          Debug.Log($">>>>>PersistentDataStorage_OnChanged() ProductContentView = {list.Count}");
          
+         Debug.Log("FIRST ITEM: " +  list[0].ProductContent.Title + " AND " + list[0].Price);
          // Render list
          await _gameUIView.ProductContentList.InitializeOnDelay(list, 100);
          _gameUIView.ProductContentList.Refresh();
@@ -164,8 +172,8 @@ namespace Beamable.Samples.GPW
             _gameUIView.ProductContentList.CanvasGroup.alpha = 1;
          }
       }
-      
-      
+
+
       private void RuntimeDataStorage_OnChanged(SubStorage subStorage)
       {
          RuntimeDataStorage runtimeDataStorage = subStorage as RuntimeDataStorage;

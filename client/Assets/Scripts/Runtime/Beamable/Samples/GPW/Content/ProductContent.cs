@@ -31,6 +31,15 @@ namespace Beamable.Samples.GPW.Content
          double p = random.NextDouble();
          p = ProductContent.PriceMin + p * delta;
          Price = (int)p;
+         if (productContent.Title.ToLower().Contains("chocolate"))
+         {
+            Debug.Log("------------------------------------");
+            Debug.Log("randomSeed: " + randomSeed);
+            Debug.Log("p: " + p);
+            Debug.Log("ProductContent.PriceMin: " + ProductContent.PriceMin);
+            Debug.Log("delta: " + delta);
+            Debug.Log("......price: " + Price);
+         }
          Quantity = random.Next(1, 10);
       }
 

@@ -82,20 +82,13 @@ namespace Beamable.Samples.GPW.Views
          {
             _cashText.text = $"Cash: ${_persistentData.CashAmount}";
             _turnText.text = $"Turn: {_persistentData.TurnCurrent}/{_persistentData.TurnsTotal}";
-            
-    
-            try
-            {
-               GPWHelper.SetButtonText(_locationChatButton, 
-                  $"{_persistentData.LocationContentViewCurrent.LocationContent.Title}",
-                  "Chat");
-            }
-            catch 
-            {
-               GPWHelper.SetButtonText(_locationChatButton, 
-                  $"TBD",
-                  "Chat");
-            }
+
+
+            string title = _persistentData?.LocationContentViewCurrent?.LocationContent?.Title;
+            //Adjust spacing due to long names
+            GPWHelper.SetButtonText(_locationChatButton, 
+               $"<size=20>{title}</size>",
+               "Chat", 12);
          }
 
          if (_runtimeData != null)

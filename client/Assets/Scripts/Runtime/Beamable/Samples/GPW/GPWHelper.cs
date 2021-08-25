@@ -237,9 +237,12 @@ namespace Beamable.Samples.GPW
          }
       }
 
-      public static void SetButtonText(Button button, string line1, string line2)
+      public static void SetButtonText(Button button, string line1, string line2, int spaceBetweenLines = 10)
       {
-         button.GetComponentInChildren<TextMeshProUGUI>().text = $"{line1}\n<size=20>{line2}</size>";
+         button.GetComponentInChildren<TextMeshProUGUI>().text = 
+            $"{line1}"+
+            $"<size={spaceBetweenLines}>\n  \n</size>"+
+            $"<size=20>{line2}</size>";
       }
       
       public static void SetButtonText(Button button, string line1)
