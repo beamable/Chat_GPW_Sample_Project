@@ -91,6 +91,13 @@ namespace Beamable.Samples.GPW.Data.Storage
                     productContents.Add(productContent);
                 }
                 
+                //  Sort the product list from a to z
+                productContents.Sort((p1, p2) =>
+                {
+                    return string.Compare(p2.Title, p2.Title, 
+                        StringComparison.InvariantCulture);
+                });
+                
                 ///////////////////////
                 // Loop through locations, add a copy of the products to each
                 ///////////////////////
@@ -104,6 +111,14 @@ namespace Beamable.Samples.GPW.Data.Storage
                     
                     _runtimeData.LocationContentViews.Add(locationContentView);
                 }
+                
+                //  Sort the location list from a to z
+                _runtimeData.LocationContentViews.Sort((p1, p2) =>
+                {
+                    return string.Compare(p2.LocationContent.Title, p2.LocationContent.Title, 
+                        StringComparison.InvariantCulture);
+                });
+
 
                 ///////////////////////
                 // Money
