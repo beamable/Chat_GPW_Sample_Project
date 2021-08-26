@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Beamable.Api.Auth;
 using Beamable.Api.Leaderboard;
 using Beamable.Api.Stats;
@@ -47,7 +48,10 @@ namespace Beamable.Samples.Core.Data
          int currentRowCount = leaderboardView.rankings.Count;
          int targetRowCount = leaderboardRowCountMin;
 
-         Debug.Log($"PopulateLeaderboardWithMockData() BEFORE, rowCount={currentRowCount}");
+         StringBuilder stringBuilder = new StringBuilder();
+         stringBuilder.AppendLine($"PopulateLeaderboardWithMockData() ...");
+         stringBuilder.AppendLine();
+         stringBuilder.AppendLine($"* Before, rowCount={currentRowCount}");
 
          if (currentRowCount < targetRowCount)
          {
@@ -67,14 +71,17 @@ namespace Beamable.Samples.Core.Data
                mockScore = GPWHelper.GetRoundedScore(mockScore);
                await leaderboardService.SetScore(leaderboardContent.Id, mockScore);
 
-               Debug.Log($"PopulateLeaderboardWithMockData() Created Mock User. Alias={alias}, score:{mockScore}.");
+               stringBuilder.AppendLine($"* During, Created Mock User. Alias={alias}, score:{mockScore}");
 
             }
          }
 
          LeaderBoardView leaderboardViewAfter = await leaderboardService.GetBoard(leaderboardContent.Id, 0, 100);
          int currentRowCountAfter = leaderboardViewAfter.rankings.Count;
-         Debug.Log($"PopulateLeaderboardWithMockData() AFTER, rowCount={currentRowCountAfter}");
+         stringBuilder.AppendLine($"* After, rowCount={currentRowCountAfter}");
+         stringBuilder.AppendLine().AppendLine();
+         
+         Debug.Log(stringBuilder.ToString());
 
          // Login again as local user
          var deviceUsers = await beamableAPI.GetDeviceUsers();

@@ -195,10 +195,7 @@ namespace Beamable.Samples.GPW
       {
          List<ProductContentView> list = GameController.Instance.PersistentDataStorage.
             PersistentData.LocationContentViewCurrent.ProductContentViews;
-
-         Debug.Log($">>>>>PersistentDataStorage_OnChanged() ProductContentView = {list.Count}");
          
-         Debug.Log("FIRST ITEM: " +  list[0].ProductContent.Title + " AND " + list[0].Price);
          // Render list
          await _gameUIView.ProductContentList.InitializeOnDelay(list, 100);
          _gameUIView.ProductContentList.Refresh();
