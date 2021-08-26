@@ -322,7 +322,6 @@ namespace Beamable.Samples.GPW.Data
 
         private void RoomHandle_MessageReceived(Message message)
         {
-	        Debug.Log("Game.RoomHandle_MessageReceived()");
 	        OnChatViewChanged.Invoke(_chatView);
         }
 	}

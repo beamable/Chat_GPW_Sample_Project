@@ -35,11 +35,10 @@ namespace Beamable.Samples.GPW
         {
             if (!IsInitialized)
             {
-                IBeamableAPI beamableAPI = await Beamable.API.Instance;
-                
                 /////////////////////////////
                 // GameServices
                 /////////////////////////////
+                IBeamableAPI beamableAPI = await Beamable.API.Instance;
                 _gameServices.OnInventoryViewChanged.AddListener(InventoryService_OnChanged);
                 _runtimeDataStorage.OnChanged.AddListener(RuntimeDataStorage_OnChanged);
                 _persistentDataStorage.OnChanged.AddListener(PersistentDataStorage_OnChanged);

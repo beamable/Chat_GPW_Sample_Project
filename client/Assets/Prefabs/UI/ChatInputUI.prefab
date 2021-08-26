@@ -676,9 +676,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af580afb1b514994e9a21496a89430f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnValueSubmitted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
   _inputField: {fileID: 3197450069365140130}
   _chatInputSubmitButton: {fileID: 3764656111894367797}
   _chatInputClearButton: {fileID: 7530203107875021546}
+  _willAutoClear: 1
+  _willAutoSelect: 1
+  _willSubmitViaKeyCode: 1
+  _keyCode: 13
 --- !u!1001 &3756204247306485698
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -777,6 +787,14 @@ PrefabInstance:
     - target: {fileID: 4642577600662038294, guid: be5a111fcdf7f1742b6f0367d2768321, type: 3}
       propertyPath: m_text
       value: Submit
+      objectReference: {fileID: 0}
+    - target: {fileID: 4766959905161343315, guid: be5a111fcdf7f1742b6f0367d2768321, type: 3}
+      propertyPath: m_MinWidth
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4766959905161343315, guid: be5a111fcdf7f1742b6f0367d2768321, type: 3}
+      propertyPath: m_PreferredWidth
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be5a111fcdf7f1742b6f0367d2768321, type: 3}
@@ -897,19 +915,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4766959905161343315, guid: be5a111fcdf7f1742b6f0367d2768321, type: 3}
       propertyPath: m_MinWidth
-      value: 50
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4766959905161343315, guid: be5a111fcdf7f1742b6f0367d2768321, type: 3}
       propertyPath: m_MinHeight
-      value: 50
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4766959905161343315, guid: be5a111fcdf7f1742b6f0367d2768321, type: 3}
       propertyPath: m_PreferredWidth
-      value: 50
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4766959905161343315, guid: be5a111fcdf7f1742b6f0367d2768321, type: 3}
       propertyPath: m_PreferredHeight
-      value: 50
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be5a111fcdf7f1742b6f0367d2768321, type: 3}

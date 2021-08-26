@@ -56,20 +56,20 @@ namespace Beamable.Samples.GPW
       /// </summary>
       private async void SetupBeamable()
       {
-         _beamableAPI = await Beamable.API.Instance;
-         
          try
          {
-            // Handle any changes to the internet connectivity
-            _beamableAPI.ConnectivityService.OnConnectivityChanged += ConnectivityService_OnConnectivityChanged;
-            ConnectivityService_OnConnectivityChanged(_beamableAPI.ConnectivityService.HasConnectivity);
-         
+            // Do this first! It sets the screenresolution
             // Every scene initializes as needed (Max 1 time per session)
             if (!GameController.Instance.IsInitialized)
             {
                await GameController.Instance.Initialize(_configuration);
             }
+         
+            _beamableAPI = await Beamable.API.Instance;
             
+            // Handle any changes to the internet connectivity
+            _beamableAPI.ConnectivityService.OnConnectivityChanged += ConnectivityService_OnConnectivityChanged;
+            ConnectivityService_OnConnectivityChanged(_beamableAPI.ConnectivityService.HasConnectivity);
          }
          catch (Exception e)
          {

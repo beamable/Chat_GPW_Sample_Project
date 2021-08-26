@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using AirFishLab.ScrollingList;
 using Beamable.Samples.Core.UI.DialogSystem;
-using Beamable.Samples.Core.UI.ScrollingList;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Data.Storage;

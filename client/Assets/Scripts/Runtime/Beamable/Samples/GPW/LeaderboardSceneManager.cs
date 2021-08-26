@@ -20,8 +20,20 @@ namespace Beamable.Samples.GPW
       protected void Start()
       {
          _backButton.onClick.AddListener(BackButton_OnClicked);
+         
+         //
+         SetupBeamable();
       }
-
+      
+      //  Other Methods   ------------------------------
+      private async void SetupBeamable()
+      {
+         // Every scene initializes as needed (Max 1 time per session)
+         if (!GameController.Instance.IsInitialized)
+         {
+            await GameController.Instance.Initialize(_configuration);
+         }
+      }
 
       //  Event Handlers -------------------------------
       private void BackButton_OnClicked()
