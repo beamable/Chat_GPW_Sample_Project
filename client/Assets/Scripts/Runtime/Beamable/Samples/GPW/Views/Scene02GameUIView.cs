@@ -10,7 +10,7 @@ namespace Beamable.Samples.GPW.Views
    /// <summary>
    /// Handles the audio/graphics rendering logic: Game
    /// </summary>
-   public class GameUIView : BaseSceneUIView
+   public class Scene02GameUIView : BaseSceneUIView
    {
       //  Properties -----------------------------------
       public TMP_Text CashText { get { return _cashText; } }

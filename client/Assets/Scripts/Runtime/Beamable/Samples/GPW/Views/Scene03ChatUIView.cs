@@ -10,7 +10,7 @@ namespace Beamable.Samples.GPW.Views
    /// <summary>
    /// Handles the audio/graphics rendering logic: Chat
    /// </summary>
-   public class ChatUIView : BaseSceneUIView
+   public class Scene03ChatUIView : BaseSceneUIView
    {
       //  Properties -----------------------------------
       public TMP_Text CashText { get { return _cashText; } }

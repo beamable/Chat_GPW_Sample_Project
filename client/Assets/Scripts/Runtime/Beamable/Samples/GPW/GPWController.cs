@@ -8,14 +8,13 @@ using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Data.Storage;
-using UnityEngine;
 
 namespace Beamable.Samples.GPW
 {
     /// <summary>
     /// Store game-related data which survives across scenes
     /// </summary>
-    public class GameController : SingletonMonobehavior<GameController>
+    public class GPWController : SingletonMonobehavior<GPWController>
     {
         //  Properties  ----------------------------------
         public bool IsInitialized { get { return _isInitialized; } protected set { _isInitialized = value; } }
@@ -23,7 +22,6 @@ namespace Beamable.Samples.GPW
         public PersistentDataStorage PersistentDataStorage { get { return _persistentDataStorage; } }
         public GameServices GameServices { get { return _gameServices; } }
 
-  
         
         //  Fields  --------------------------------------
         
@@ -84,7 +82,7 @@ namespace Beamable.Samples.GPW
                 
                 // When running this scene directly, go back to intro scene
                 // When running in production, go to the previous scene
-                _runtimeDataStorage.RuntimeData.PreviousSceneName = configuration.IntroSceneName;
+                _runtimeDataStorage.RuntimeData.PreviousSceneName = configuration.Scene01IntroName;
                 
                 // Default to global chat
                 _runtimeDataStorage.RuntimeData.ChatMode = ChatMode.Global;

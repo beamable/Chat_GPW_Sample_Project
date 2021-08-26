@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Configuration
   m_EditorClassIdentifier: 
   _isDemoMode: 1
-  _introSceneName: 1.IntroScene
-  _gameSceneName: 2.GameScene
-  _chatSceneName: 3.ChatScene
-  _leaderboardSceneName: 4.LeaderboardScene
+  _scene01IntroName: Scene01Intro
+  _scene02GameName: Scene02Game
+  _scene03ChatName: Scene03Chat
+  _scene04LeaderboardName: Scene04Leaderboard
   _remoteConfigurationRef:
     Id: remote_configuration.RemoteConfiguration
   _leaderboardRef:

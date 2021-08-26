@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Beamable.Common.Leaderboards;
+﻿using Beamable.Common.Leaderboards;
 using Beamable.Samples.GPW.Content;
 using UnityEngine;
 
@@ -24,12 +23,12 @@ namespace Beamable.Samples.GPW.Data
       //TODO: Remove this and add logging?
       public bool IsDemoMode { get { return _isDemoMode; } }
       
-      public string IntroSceneName { get { return _introSceneName; } }
+      public string Scene01IntroName { get { return _scene01IntroName; } }
 
-      public string GameSceneName { get { return _gameSceneName; } }
+      public string Scene02GameName { get { return _scene02GameName; } }
 
-      public string ChatSceneName { get { return _chatSceneName; } }
-      public string LeaderboardSceneName { get { return _leaderboardSceneName; } }
+      public string Scene03ChatName { get { return _scene03ChatName; } }
+      public string Scene04LeaderboardName { get { return _scene04LeaderboardName; } }
       
       public float DelayBeforeLoadScene { get { return _delayBeforeLoadScene; } }
       public float DelayFadeInUI { get { return _delayFadeInUI; } }
@@ -55,16 +54,16 @@ namespace Beamable.Samples.GPW.Data
       
       [Header("Scene Names")]
       [SerializeField]
-      private string _introSceneName = "";
+      private string _scene01IntroName = "";
 
       [SerializeField]
-      private string _gameSceneName = "";
+      private string _scene02GameName = "";
 
       [SerializeField]
-      private string _chatSceneName = "";
+      private string _scene03ChatName = "";
       
       [SerializeField]
-      private string _leaderboardSceneName = "";
+      private string _scene04LeaderboardName = "";
       
       [Header("Content")] 
       [SerializeField]

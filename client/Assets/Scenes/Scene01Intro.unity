@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 654778935}
   - component: {fileID: 654778934}
   m_Layer: 0
-  m_Name: IntroSceneManager
+  m_Name: Scene01IntroManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -195,8 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e5a3a4094a6b52428070259f395b237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _introUIView: {fileID: 756706364}
-  _configuration: {fileID: 11400000, guid: 28e7b012a002a51458322ba2fc05964d, type: 2}
+  _scene01IntroUIView: {fileID: 756706364}
 --- !u!4 &654778935
 Transform:
   m_ObjectHideFlags: 0
@@ -315,7 +314,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 881634746522008052, guid: 1edfef8c0a53c0c42843f3747da97a46, type: 3}
       propertyPath: m_Name
-      value: IntroUIView
+      value: Scene01IntroUIView
       objectReference: {fileID: 0}
     - target: {fileID: 1018191582503360998, guid: 1edfef8c0a53c0c42843f3747da97a46, type: 3}
       propertyPath: m_AnchorMax.y
@@ -520,7 +519,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1978513655401939744, guid: 394dde454585d0148a59854e4795c8af, type: 3}
       propertyPath: m_Name
-      value: World
+      value: CameraRig
       objectReference: {fileID: 0}
     - target: {fileID: 1978513655401939745, guid: 394dde454585d0148a59854e4795c8af, type: 3}
       propertyPath: m_RootOrder

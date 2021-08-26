@@ -1,6 +1,5 @@
 ﻿using System;
 using Beamable.Samples.Core.Utilities;
-using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Views;
 using UnityEngine;
 
@@ -9,12 +8,12 @@ namespace Beamable.Samples.GPW
    /// <summary>
    /// Handles the main scene logic: Intro
    /// </summary>
-   public class IntroSceneManager : MonoBehaviour
+   public class Scene01IntroManager : MonoBehaviour
    {
       //  Fields ---------------------------------------
 
       [SerializeField]
-      private IntroUIView _introUIView = null;
+      private Scene01IntroUIView _scene01IntroUIView = null;
 
       private IBeamableAPI _beamableAPI = null;
       private bool _isConnected = false;
@@ -24,12 +23,12 @@ namespace Beamable.Samples.GPW
       //  Unity Methods   ------------------------------
       protected void Start()
       {
-         _introUIView.TitleText = "Beamable\nGlobal Price Wars";
-         _introUIView.BodyText = "";
-         _introUIView.StartGameButton.onClick.AddListener(StartGameButton_OnClicked);
-         _introUIView.LeaderboardButton.onClick.AddListener(LeaderboardButton_OnClicked);
-         _introUIView.ResetButton.onClick.AddListener(ResetButton_OnClicked);
-         _introUIView.QuitButton.onClick.AddListener(QuitButton_OnClicked);
+         _scene01IntroUIView.TitleText = "Beamable\nGlobal Price Wars";
+         _scene01IntroUIView.BodyText = "";
+         _scene01IntroUIView.StartGameButton.onClick.AddListener(StartGameButton_OnClicked);
+         _scene01IntroUIView.LeaderboardButton.onClick.AddListener(LeaderboardButton_OnClicked);
+         _scene01IntroUIView.ResetButton.onClick.AddListener(ResetButton_OnClicked);
+         _scene01IntroUIView.QuitButton.onClick.AddListener(QuitButton_OnClicked);
          
          //
          SetupBeamable();
@@ -57,9 +56,9 @@ namespace Beamable.Samples.GPW
          {
             // Do this first! It sets the screenresolution
             // Every scene initializes as needed (Max 1 time per session)
-            if (!GameController.Instance.IsInitialized)
+            if (!GPWController.Instance.IsInitialized)
             {
-               await GameController.Instance.Initialize(_introUIView.Configuration);
+               await GPWController.Instance.Initialize(_scene01IntroUIView.Configuration);
             }
          
             _beamableAPI = await Beamable.API.Instance;
@@ -94,8 +93,8 @@ namespace Beamable.Samples.GPW
             _isBeamableSDKInstalled, 
             dbid, _isBeamableSDKInstalledErrorMessage);
          
-         _introUIView.BodyText = bodyText;
-         _introUIView.ButtonsCanvasGroup.interactable = _isConnected;
+         _scene01IntroUIView.BodyText = bodyText;
+         _scene01IntroUIView.ButtonsCanvasGroup.interactable = _isConnected;
       }
 
       
@@ -110,24 +109,24 @@ namespace Beamable.Samples.GPW
 
       private void StartGameButton_OnClicked()
       {
-         _introUIView.ButtonsCanvasGroup.interactable = false;
+         _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
 
          StartCoroutine(GPWHelper.LoadScene_Coroutine(
-            _introUIView.Configuration.GameSceneName,
-            _introUIView.Configuration.DelayBeforeLoadScene));
+            _scene01IntroUIView.Configuration.Scene02GameName,
+            _scene01IntroUIView.Configuration.DelayBeforeLoadScene));
       }
 
 
       private void LeaderboardButton_OnClicked()
       {
          StartCoroutine(GPWHelper.LoadScene_Coroutine(
-            _introUIView.Configuration.LeaderboardSceneName,
-            _introUIView.Configuration.DelayBeforeLoadScene));
+            _scene01IntroUIView.Configuration.Scene04LeaderboardName,
+            _scene01IntroUIView.Configuration.DelayBeforeLoadScene));
       }
       
       private void ResetButton_OnClicked()
       {
-         _introUIView.DialogSystem.ShowDialogBoxConfirmation(
+         _scene01IntroUIView.DialogSystem.ShowDialogBoxConfirmation(
             delegate
             {
                ExampleProjectHacks.ClearDeviceUsersAndReloadScene();
@@ -136,7 +135,7 @@ namespace Beamable.Samples.GPW
       
       private void QuitButton_OnClicked()
       {
-         _introUIView.DialogSystem.ShowDialogBoxConfirmation(
+         _scene01IntroUIView.DialogSystem.ShowDialogBoxConfirmation(
             delegate
             {
                GPWHelper.QuitSafe();

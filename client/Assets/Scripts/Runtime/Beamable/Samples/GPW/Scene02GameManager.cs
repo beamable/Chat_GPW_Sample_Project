@@ -2,7 +2,6 @@
 using AirFishLab.ScrollingList;
 using Beamable.Samples.Core.UI.DialogSystem;
 using Beamable.Samples.GPW.Content;
-using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Data.Storage;
 using Beamable.Samples.GPW.UI.ScrollingList;
 using Beamable.Samples.GPW.Views;
@@ -13,27 +12,27 @@ namespace Beamable.Samples.GPW
    /// <summary>
    /// Handles the main scene logic: Game
    /// </summary>
-   public class GameSceneManager : MonoBehaviour
+   public class Scene02GameManager : MonoBehaviour
    {
       //  Properties -----------------------------------
-      public GameUIView GameUIView { get { return _gameUIView; } }
+      public Scene02GameUIView Scene02GameUIView { get { return _scene02GameUIView; } }
 
       //  Fields ---------------------------------------
       [SerializeField]
-      private GameUIView _gameUIView = null;
+      private Scene02GameUIView _scene02GameUIView = null;
       
       //  Unity Methods   ------------------------------
       protected void Start()
       {
-         _gameUIView.ProductContentList.CanvasGroup.alpha = 0;
+         _scene02GameUIView.ProductContentList.CanvasGroup.alpha = 0;
          
-         _gameUIView.TravelButton.onClick.AddListener(TravelButton_OnClicked);
-         _gameUIView.BankButton.onClick.AddListener(BankButton_OnClicked);
-         _gameUIView.DebtButton.onClick.AddListener(DebtButton_OnClicked);
+         _scene02GameUIView.TravelButton.onClick.AddListener(TravelButton_OnClicked);
+         _scene02GameUIView.BankButton.onClick.AddListener(BankButton_OnClicked);
+         _scene02GameUIView.DebtButton.onClick.AddListener(DebtButton_OnClicked);
          //
-         _gameUIView.ChatButton.onClick.AddListener(ChatButton_OnClicked);
-         _gameUIView.LeaderboardButton.onClick.AddListener(LeaderboardButton_OnClicked);
-         _gameUIView.QuitButton.onClick.AddListener(QuitButton_OnClicked);
+         _scene02GameUIView.ChatButton.onClick.AddListener(ChatButton_OnClicked);
+         _scene02GameUIView.LeaderboardButton.onClick.AddListener(LeaderboardButton_OnClicked);
+         _scene02GameUIView.QuitButton.onClick.AddListener(QuitButton_OnClicked);
          
          //
          SetupBeamable();
@@ -45,22 +44,22 @@ namespace Beamable.Samples.GPW
       private async void SetupBeamable()
       {
          // Setup List
-         _gameUIView.ProductContentList.OnInitialized.AddListener(ProductContentList_OnInitialized);
+         _scene02GameUIView.ProductContentList.OnInitialized.AddListener(ProductContentList_OnInitialized);
          
          // Setup Storage
-         GameController.Instance.PersistentDataStorage.OnChanged.AddListener(PersistentDataStorage_OnChanged);
-         GameController.Instance.RuntimeDataStorage.OnChanged.AddListener(RuntimeDataStorage_OnChanged);
+         GPWController.Instance.PersistentDataStorage.OnChanged.AddListener(PersistentDataStorage_OnChanged);
+         GPWController.Instance.RuntimeDataStorage.OnChanged.AddListener(RuntimeDataStorage_OnChanged);
          
          // Every scene initializes as needed (Max 1 time per session)
-         if (!GameController.Instance.IsInitialized)
+         if (!GPWController.Instance.IsInitialized)
          {
-            await GameController.Instance.Initialize(_gameUIView.Configuration);
+            await GPWController.Instance.Initialize(_scene02GameUIView.Configuration);
          }
          else
          {
-            GameController.Instance.PersistentDataStorage.ForceRefresh();
-            GameController.Instance.RuntimeDataStorage.ForceRefresh();
-            GameController.Instance.GameServices.ForceRefresh();
+            GPWController.Instance.PersistentDataStorage.ForceRefresh();
+            GPWController.Instance.RuntimeDataStorage.ForceRefresh();
+            GPWController.Instance.GameServices.ForceRefresh();
          }
       }
 
@@ -69,28 +68,28 @@ namespace Beamable.Samples.GPW
       
       private void TravelButton_OnClicked()
       {
-         GameController.Instance.GoToLocation();
+         GPWController.Instance.GoToLocation();
   }
       
       private void BankButton_OnClicked()
       {
-         _gameUIView.DialogSystem.ShowDialogBox<DialogUI>(
-            _gameUIView.DialogSystem.DialogUIPrefab,
+         _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
+            _scene02GameUIView.DialogSystem.DialogUIPrefab,
             "Bank",
             "Transfer from CASH → BANK?",
             new List<DialogButtonData>
             {
                new DialogButtonData("+100", delegate
                {
-                  GameController.Instance.TransferCashToBank(100);
+                  GPWController.Instance.TransferCashToBank(100);
                }),
                new DialogButtonData("-100", delegate
                {
-                  GameController.Instance.TransferCashToBank(-100);
+                  GPWController.Instance.TransferCashToBank(-100);
                }),
                new DialogButtonData("Ok", delegate
                {
-                  _gameUIView.DialogSystem.HideDialogBox();
+                  _scene02GameUIView.DialogSystem.HideDialogBox();
                })
             });
       }
@@ -98,24 +97,24 @@ namespace Beamable.Samples.GPW
 
       private void DebtButton_OnClicked()
       {
-         _gameUIView.DialogSystem.ShowDialogBox<DialogUI>(
-            _gameUIView.DialogSystem.DialogUIPrefab,
+         _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
+            _scene02GameUIView.DialogSystem.DialogUIPrefab,
             "Transfer from CASH → DEBT?",
             $"DEBT increases by " +
-            $"{GameController.Instance.RuntimeDataStorage.RuntimeData.DebtInterestCurrent}% every TURN.",
+            $"{GPWController.Instance.RuntimeDataStorage.RuntimeData.DebtInterestCurrent}% every TURN.",
             new List<DialogButtonData>
             {
                new DialogButtonData("+100", delegate
                {
-                  GameController.Instance.TransferCashToDebt(100);
+                  GPWController.Instance.TransferCashToDebt(100);
                }),
                new DialogButtonData("-100", delegate
                {
-                  GameController.Instance.TransferCashToDebt(-100);
+                  GPWController.Instance.TransferCashToDebt(-100);
                }),
                new DialogButtonData("Ok", delegate
                {
-                  _gameUIView.DialogSystem.HideDialogBox();
+                  _scene02GameUIView.DialogSystem.HideDialogBox();
                })
             });
          
@@ -124,40 +123,40 @@ namespace Beamable.Samples.GPW
       private void ChatButton_OnClicked()
       {
          StartCoroutine(GPWHelper.LoadScene_Coroutine(
-            _gameUIView.Configuration.ChatSceneName,
-            _gameUIView.Configuration.DelayBeforeLoadScene));
+            _scene02GameUIView.Configuration.Scene03ChatName,
+            _scene02GameUIView.Configuration.DelayBeforeLoadScene));
       }
 
       
       private void LeaderboardButton_OnClicked()
       {
          StartCoroutine(GPWHelper.LoadScene_Coroutine(
-            _gameUIView.Configuration.LeaderboardSceneName,
-            _gameUIView.Configuration.DelayBeforeLoadScene));
+            _scene02GameUIView.Configuration.Scene04LeaderboardName,
+            _scene02GameUIView.Configuration.DelayBeforeLoadScene));
       }
       
       
       private void QuitButton_OnClicked()
       {
-         _gameUIView.DialogSystem.ShowDialogBoxConfirmation(
+         _scene02GameUIView.DialogSystem.ShowDialogBoxConfirmation(
             delegate
             {
                StartCoroutine(GPWHelper.LoadScene_Coroutine(
-                  _gameUIView.Configuration.IntroSceneName,
-                  _gameUIView.Configuration.DelayBeforeLoadScene));
+                  _scene02GameUIView.Configuration.Scene01IntroName,
+                  _scene02GameUIView.Configuration.DelayBeforeLoadScene));
             });
       }
       
       
       private async void ProductContentListItem_OnBuy(ProductContentView productContentView)
       {
-         var canBuyItem = await GameController.Instance.GameServices.
+         var canBuyItem = await GPWController.Instance.GameServices.
             CanBuyItem(productContentView.ProductContent.Id, 1);
          
          bool isSuccessful = false;
          if (canBuyItem)
          {
-            isSuccessful = await GameController.Instance.GameServices.
+            isSuccessful = await GPWController.Instance.GameServices.
                BuyItem(productContentView.ProductContent.Id, 1);
          }
          
@@ -168,13 +167,13 @@ namespace Beamable.Samples.GPW
       
       private async void ProductContentListItem_OnSell(ProductContentView productContentView)
       {
-         bool canSellItem = await GameController.Instance.GameServices.
+         bool canSellItem = await GPWController.Instance.GameServices.
             CanSellItem(productContentView.ProductContent.Id, 1);
 
          bool isSuccessful = false;
          if (canSellItem)
          {
-            isSuccessful = await GameController.Instance.GameServices.
+            isSuccessful = await GPWController.Instance.GameServices.
                SellItem(productContentView.ProductContent.Id, 1);
          }
 
@@ -185,7 +184,7 @@ namespace Beamable.Samples.GPW
       private async void PersistentDataStorage_OnChanged(SubStorage subStorage)
       {
          PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
-         _gameUIView.PersistentData = persistentDataStorage.PersistentData;
+         _scene02GameUIView.PersistentData = persistentDataStorage.PersistentData;
 
          ProductContentListRefresh();
    
@@ -193,17 +192,17 @@ namespace Beamable.Samples.GPW
 
       private async void ProductContentListRefresh()
       {
-         List<ProductContentView> list = GameController.Instance.PersistentDataStorage.
+         List<ProductContentView> list = GPWController.Instance.PersistentDataStorage.
             PersistentData.LocationContentViewCurrent.ProductContentViews;
          
          // Render list
-         await _gameUIView.ProductContentList.InitializeOnDelay(list, 100);
-         _gameUIView.ProductContentList.Refresh();
+         await _scene02GameUIView.ProductContentList.InitializeOnDelay(list, 100);
+         _scene02GameUIView.ProductContentList.Refresh();
          
 
-         if (_gameUIView.ProductContentList.CanvasGroup.alpha == 0)
+         if (_scene02GameUIView.ProductContentList.CanvasGroup.alpha == 0)
          {
-            _gameUIView.ProductContentList.CanvasGroup.alpha = 1;
+            _scene02GameUIView.ProductContentList.CanvasGroup.alpha = 1;
          }
       }
 
@@ -211,7 +210,7 @@ namespace Beamable.Samples.GPW
       private void RuntimeDataStorage_OnChanged(SubStorage subStorage)
       {
          RuntimeDataStorage runtimeDataStorage = subStorage as RuntimeDataStorage;
-         _gameUIView.RuntimeData = runtimeDataStorage.RuntimeData;
+         _scene02GameUIView.RuntimeData = runtimeDataStorage.RuntimeData;
       }
       
       

@@ -6,16 +6,16 @@ namespace Beamable.Samples.GPW
    /// <summary>
    /// Handles the main scene logic: Leaderboard
    /// </summary>
-   public class LeaderboardSceneManager : MonoBehaviour
+   public class Scene04LeaderboardManager : MonoBehaviour
    {
       //  Fields ---------------------------------------
       [SerializeField]
-      private LeaderboardUIView _leaderboardUIView = null;
+      private Scene04LeaderboardUIView _scene04LeaderboardUIView = null;
 
       //  Unity Methods   ------------------------------
       protected void Start()
       {
-         _leaderboardUIView.BackButton.onClick.AddListener(BackButton_OnClicked);
+         _scene04LeaderboardUIView.BackButton.onClick.AddListener(BackButton_OnClicked);
          
          //
          SetupBeamable();
@@ -25,20 +25,20 @@ namespace Beamable.Samples.GPW
       private async void SetupBeamable()
       {
          // Every scene initializes as needed (Max 1 time per session)
-         if (!GameController.Instance.IsInitialized)
+         if (!GPWController.Instance.IsInitialized)
          {
-            await GameController.Instance.Initialize(_leaderboardUIView.Configuration);
+            await GPWController.Instance.Initialize(_scene04LeaderboardUIView.Configuration);
          }
       }
 
       //  Event Handlers -------------------------------
       private void BackButton_OnClicked()
       {
-         _leaderboardUIView.BackButton.interactable = false;
+         _scene04LeaderboardUIView.BackButton.interactable = false;
          
          StartCoroutine(GPWHelper.LoadScene_Coroutine(
-            GameController.Instance.RuntimeDataStorage.RuntimeData.PreviousSceneName,
-            _leaderboardUIView.Configuration.DelayBeforeLoadScene));
+            GPWController.Instance.RuntimeDataStorage.RuntimeData.PreviousSceneName,
+            _scene04LeaderboardUIView.Configuration.DelayBeforeLoadScene));
       }
    }
 }

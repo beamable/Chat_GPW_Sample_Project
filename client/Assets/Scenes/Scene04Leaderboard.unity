@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 654778935}
   - component: {fileID: 654778934}
   m_Layer: 0
-  m_Name: LeaderboardSceneManager
+  m_Name: Scene04LeaderboardManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -195,7 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3383e84fff92f94c96a77d804766ac7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _leaderboardUIView: {fileID: 665194822}
+  _scene04LeaderboardUIView: {fileID: 665194822}
 --- !u!4 &654778935
 Transform:
   m_ObjectHideFlags: 0
@@ -208,7 +208,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &665194821 stripped
 GameObject:
@@ -244,7 +244,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1978513655401939744, guid: 394dde454585d0148a59854e4795c8af, type: 3}
       propertyPath: m_Name
-      value: World
+      value: CameraRig
       objectReference: {fileID: 0}
     - target: {fileID: 1978513655401939745, guid: 394dde454585d0148a59854e4795c8af, type: 3}
       propertyPath: m_RootOrder
@@ -394,7 +394,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 985560872433115710, guid: f225c6ccfac31ff4ebfca9daf751c23d, type: 3}
       propertyPath: m_Name
-      value: LeaderboardUIView
+      value: Scene04LeaderboardUIView
       objectReference: {fileID: 0}
     - target: {fileID: 1130420670460871212, guid: f225c6ccfac31ff4ebfca9daf751c23d, type: 3}
       propertyPath: m_AnchorMax.y
@@ -571,7 +571,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1228773914, guid: 1b85b3a11dfa349b0933bc289d82af9f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -2.198822
+      value: -0.00012207031
       objectReference: {fileID: 0}
     - target: {fileID: 2854357959311335834, guid: 1b85b3a11dfa349b0933bc289d82af9f, type: 3}
       propertyPath: m_fontSize
@@ -779,7 +779,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5960774261714958968, guid: 1b85b3a11dfa349b0933bc289d82af9f, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5960774261714958968, guid: 1b85b3a11dfa349b0933bc289d82af9f, type: 3}
       propertyPath: m_LocalPosition.x

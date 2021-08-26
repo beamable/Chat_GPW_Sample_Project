@@ -7,7 +7,6 @@ using Beamable.Samples.Core.Utilities;
 using Beamable.UI.Scripts;
 using TMPro;
 using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -25,7 +24,7 @@ namespace Beamable.Samples.GPW
          SoundManager.Instance.PlayAudioClip(SoundConstants.Click01);
          
          //Store previous scene. Useful for some 'back' buttons
-         GameController.Instance.RuntimeDataStorage.RuntimeData.PreviousSceneName = 
+         GPWController.Instance.RuntimeDataStorage.RuntimeData.PreviousSceneName = 
             SceneManager.GetActiveScene().name;
          
          if (GPWConstants.IsDebugLogging)

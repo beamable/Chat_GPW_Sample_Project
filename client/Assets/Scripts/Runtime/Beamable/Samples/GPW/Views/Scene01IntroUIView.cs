@@ -7,7 +7,7 @@ namespace Beamable.Samples.GPW.Views
    /// <summary>
    /// Handles the audio/graphics rendering logic: Intro UI
    /// </summary>
-   public class IntroUIView : BaseSceneUIView
+   public class Scene01IntroUIView : BaseSceneUIView
    {
       //  Properties -----------------------------------
       public string TitleText { set { _titleText.text = value; } }
