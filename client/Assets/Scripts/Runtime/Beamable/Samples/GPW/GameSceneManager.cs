@@ -17,12 +17,8 @@ namespace Beamable.Samples.GPW
    {
       //  Properties -----------------------------------
       public GameUIView GameUIView { get { return _gameUIView; } }
-      public Configuration Configuration { get { return _configuration; } }
 
       //  Fields ---------------------------------------
-      [SerializeField]
-      private Configuration _configuration = null;
-      
       [SerializeField]
       private GameUIView _gameUIView = null;
       
@@ -58,7 +54,7 @@ namespace Beamable.Samples.GPW
          // Every scene initializes as needed (Max 1 time per session)
          if (!GameController.Instance.IsInitialized)
          {
-            await GameController.Instance.Initialize(_configuration);
+            await GameController.Instance.Initialize(_gameUIView.Configuration);
          }
          else
          {
@@ -127,15 +123,17 @@ namespace Beamable.Samples.GPW
       
       private void ChatButton_OnClicked()
       {
-         StartCoroutine(GPWHelper.LoadScene_Coroutine(_configuration.ChatSceneName,
-            _configuration.DelayBeforeLoadScene));
+         StartCoroutine(GPWHelper.LoadScene_Coroutine(
+            _gameUIView.Configuration.ChatSceneName,
+            _gameUIView.Configuration.DelayBeforeLoadScene));
       }
 
       
       private void LeaderboardButton_OnClicked()
       {
-         StartCoroutine(GPWHelper.LoadScene_Coroutine(_configuration.LeaderboardSceneName,
-            _configuration.DelayBeforeLoadScene));
+         StartCoroutine(GPWHelper.LoadScene_Coroutine(
+            _gameUIView.Configuration.LeaderboardSceneName,
+            _gameUIView.Configuration.DelayBeforeLoadScene));
       }
       
       
@@ -144,8 +142,9 @@ namespace Beamable.Samples.GPW
          _gameUIView.DialogSystem.ShowDialogBoxConfirmation(
             delegate
             {
-               StartCoroutine(GPWHelper.LoadScene_Coroutine(_configuration.IntroSceneName,
-                  _configuration.DelayBeforeLoadScene));
+               StartCoroutine(GPWHelper.LoadScene_Coroutine(
+                  _gameUIView.Configuration.IntroSceneName,
+                  _gameUIView.Configuration.DelayBeforeLoadScene));
             });
       }
       

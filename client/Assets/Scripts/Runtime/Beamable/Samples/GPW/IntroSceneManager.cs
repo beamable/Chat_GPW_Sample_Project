@@ -16,9 +16,6 @@ namespace Beamable.Samples.GPW
       [SerializeField]
       private IntroUIView _introUIView = null;
 
-      [SerializeField]
-      private Configuration _configuration = null;
-
       private IBeamableAPI _beamableAPI = null;
       private bool _isConnected = false;
       private bool _isBeamableSDKInstalled = true;
@@ -62,7 +59,7 @@ namespace Beamable.Samples.GPW
             // Every scene initializes as needed (Max 1 time per session)
             if (!GameController.Instance.IsInitialized)
             {
-               await GameController.Instance.Initialize(_configuration);
+               await GameController.Instance.Initialize(_introUIView.Configuration);
             }
          
             _beamableAPI = await Beamable.API.Instance;
@@ -115,15 +112,17 @@ namespace Beamable.Samples.GPW
       {
          _introUIView.ButtonsCanvasGroup.interactable = false;
 
-         StartCoroutine(GPWHelper.LoadScene_Coroutine(_configuration.GameSceneName,
-            _configuration.DelayBeforeLoadScene));
+         StartCoroutine(GPWHelper.LoadScene_Coroutine(
+            _introUIView.Configuration.GameSceneName,
+            _introUIView.Configuration.DelayBeforeLoadScene));
       }
 
 
       private void LeaderboardButton_OnClicked()
       {
-         StartCoroutine(GPWHelper.LoadScene_Coroutine(_configuration.LeaderboardSceneName,
-            _configuration.DelayBeforeLoadScene));
+         StartCoroutine(GPWHelper.LoadScene_Coroutine(
+            _introUIView.Configuration.LeaderboardSceneName,
+            _introUIView.Configuration.DelayBeforeLoadScene));
       }
       
       private void ResetButton_OnClicked()

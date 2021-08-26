@@ -23,7 +23,11 @@ namespace Beamable.Samples.GPW
       public static IEnumerator LoadScene_Coroutine(string sceneName, float delayBeforeLoading)
       {
          SoundManager.Instance.PlayAudioClip(SoundConstants.Click01);
-
+         
+         //Store previous scene. Useful for some 'back' buttons
+         GameController.Instance.RuntimeDataStorage.RuntimeData.PreviousSceneName = 
+            SceneManager.GetActiveScene().name;
+         
          if (GPWConstants.IsDebugLogging)
          {
             Debug.Log($"LoadScene() to {sceneName}");

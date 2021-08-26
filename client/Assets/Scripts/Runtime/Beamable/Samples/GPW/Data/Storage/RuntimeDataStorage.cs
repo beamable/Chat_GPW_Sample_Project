@@ -47,6 +47,7 @@ namespace Beamable.Samples.GPW.Data.Storage
 
         
 
+
         //  Fields  --------------------------------------
         public InventoryView InventoryView = null;
         public List<LocationContentView> LocationContentViews = new List<LocationContentView>();
@@ -54,6 +55,7 @@ namespace Beamable.Samples.GPW.Data.Storage
         public ChatMode ChatMode = ChatMode.None;
         public float BankInterestCurrent;
         public float DebtInterestCurrent;
+        public string PreviousSceneName = "";
     }
         
     /// <summary>

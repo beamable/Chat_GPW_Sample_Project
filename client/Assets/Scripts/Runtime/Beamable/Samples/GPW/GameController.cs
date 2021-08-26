@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Beamable.Common.Api.Inventory;
+using Beamable.Common.Leaderboards;
 using Beamable.Experimental.Api.Chat;
 using Beamable.Samples.Core.Components;
+using Beamable.Samples.Core.Data;
 using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
@@ -80,6 +82,11 @@ namespace Beamable.Samples.GPW
                         GPWConstants.GetChatRoomNameLocation(locationContentView.LocationContent));
                 }
                 
+                // When running this scene directly, go back to intro scene
+                // When running in production, go to the previous scene
+                _runtimeDataStorage.RuntimeData.PreviousSceneName = configuration.IntroSceneName;
+                
+                // Default to global chat
                 _runtimeDataStorage.RuntimeData.ChatMode = ChatMode.Global;
 
                 /////////////////////////////
@@ -91,6 +98,16 @@ namespace Beamable.Samples.GPW
                 
                 IsInitialized = true;
                 _persistentDataStorage.OnChanged.Invoke(_persistentDataStorage);
+                
+                /////////////////////////////
+                // Leaderboard
+                /////////////////////////////
+                LeaderboardContent leaderboardContent = await configuration.LeaderboardRef.Resolve();
+                MockDataCreator.PopulateLeaderboardWithMockData(beamableAPI,
+                    leaderboardContent,
+                    configuration.LeaderboardRowCountMin,
+                    configuration.LeaderboardScoreMin,
+                    configuration.LeaderboardScoreMax);
             }
         }
         

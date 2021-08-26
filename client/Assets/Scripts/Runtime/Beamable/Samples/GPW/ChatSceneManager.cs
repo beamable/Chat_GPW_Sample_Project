@@ -14,7 +14,6 @@ namespace Beamable.Samples.GPW
    {
       //  Properties -----------------------------------
       public ChatUIView ChatUIView { get { return _chatUIView; } }
-      public Configuration Configuration { get { return _configuration; } }
 
       //  Fields ---------------------------------------
       private IBeamableAPI _beamableAPI = null;

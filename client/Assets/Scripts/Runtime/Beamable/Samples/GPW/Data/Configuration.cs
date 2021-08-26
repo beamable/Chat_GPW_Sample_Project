@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Beamable.Common.Leaderboards;
 using Beamable.Samples.GPW.Content;
 using UnityEngine;
 
@@ -16,9 +17,11 @@ namespace Beamable.Samples.GPW.Data
    public class Configuration : ScriptableObject
    {
       //  Constants  -----------------------------------
-      private const string Title = "TFB Configuration";
+      private const string Title = "Configuration";
 
       //  Properties -----------------------------------
+      
+      //TODO: Remove this and add logging?
       public bool IsDemoMode { get { return _isDemoMode; } }
       
       public string IntroSceneName { get { return _introSceneName; } }
@@ -30,15 +33,15 @@ namespace Beamable.Samples.GPW.Data
       
       public float DelayBeforeLoadScene { get { return _delayBeforeLoadScene; } }
       public float DelayFadeInUI { get { return _delayFadeInUI; } }
-      public float DelayGameBeforeMove { get { return _delayGameBeforeMove; } }
 
       public RemoteConfigurationRef RemoteConfigurationRef { get { return _remoteConfigurationRef; } }
       
-      /// <summary>
-      /// Duration in seconds
-      /// </summary>
-      public float StatusMessageMinDuration { get { return _statusMessageMinDuration; } }
+      public LeaderboardRef LeaderboardRef { get { return _leaderboardRef; } }
+      public int LeaderboardRowCountMin { get { return _leaderboardRowCountMin; } }
+      public int LeaderboardScoreMin { get { return _leaderboardScoreMin; } }
+      public int LeaderboardScoreMax { get { return _leaderboardScoreMax; } }
 
+      
       //  Fields ---------------------------------------
       
       /// <summary>
@@ -63,26 +66,32 @@ namespace Beamable.Samples.GPW.Data
       [SerializeField]
       private string _leaderboardSceneName = "";
       
-      [Header("Game PersistentData")]
-      [SerializeField]
-      private float _delayGameBeforeMove = 1;
-
       [Header("Content")] 
       [SerializeField]
       private RemoteConfigurationRef _remoteConfigurationRef = null;
       
-      [Header("Cosmetic Delays")]
+      [SerializeField]
+      private LeaderboardRef _leaderboardRef = null;
+
+      [Header("Cosmetics")]
       [SerializeField]
       private float _delayBeforeLoadScene = 0;
-
-      [Range (0,3)]
-      [SerializeField]
-      public float _statusMessageMinDuration = 3000;
-
-      [Header("Cosmetic Animation")]
+      
       [SerializeField]
       private float _delayFadeInUI = 0.25f;
 
+      [Header("Leaderboard (Mock Data)")] 
+      
+      [SerializeField]
+      private int _leaderboardRowCountMin = 10;
+      
+      [SerializeField]
+      private int _leaderboardScoreMin = 100;
+      
+      [SerializeField]
+      private int _leaderboardScoreMax = 1000;
+
+      
       //  Unity Methods ---------------------------------------
       protected void OnValidate()
       {

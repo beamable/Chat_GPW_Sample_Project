@@ -13,6 +13,7 @@ namespace Beamable.Samples.GPW
       /// <summary>
       /// Determines if using Unity debug log statements.
       /// </summary>
+      //TODO: Remove anduse logger?
       public static bool IsDebugLogging = true;
 
       /// <summary>

@@ -17,9 +17,12 @@ MonoBehaviour:
   _gameSceneName: 2.GameScene
   _chatSceneName: 3.ChatScene
   _leaderboardSceneName: 4.LeaderboardScene
-  _delayGameBeforeMove: 1
   _remoteConfigurationRef:
     Id: remote_configuration.RemoteConfiguration
+  _leaderboardRef:
+    Id: leaderboards.Leaderboard
   _delayBeforeLoadScene: 0.1
-  _statusMessageMinDuration: 1
   _delayFadeInUI: 0.25
+  _leaderboardRowCountMin: 10
+  _leaderboardScoreMin: 100
+  _leaderboardScoreMax: 1000

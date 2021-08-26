@@ -1,6 +1,5 @@
-﻿using Beamable.Samples.GPW.Data;
+﻿using Beamable.Samples.GPW.Views;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Beamable.Samples.GPW
 {
@@ -11,15 +10,12 @@ namespace Beamable.Samples.GPW
    {
       //  Fields ---------------------------------------
       [SerializeField]
-      private Button _backButton = null;
-
-      [SerializeField]
-      private Configuration _configuration = null;
+      private LeaderboardUIView _leaderboardUIView = null;
 
       //  Unity Methods   ------------------------------
       protected void Start()
       {
-         _backButton.onClick.AddListener(BackButton_OnClicked);
+         _leaderboardUIView.BackButton.onClick.AddListener(BackButton_OnClicked);
          
          //
          SetupBeamable();
@@ -31,17 +27,18 @@ namespace Beamable.Samples.GPW
          // Every scene initializes as needed (Max 1 time per session)
          if (!GameController.Instance.IsInitialized)
          {
-            await GameController.Instance.Initialize(_configuration);
+            await GameController.Instance.Initialize(_leaderboardUIView.Configuration);
          }
       }
 
       //  Event Handlers -------------------------------
       private void BackButton_OnClicked()
       {
-         _backButton.interactable = false;
-
-         StartCoroutine(GPWHelper.LoadScene_Coroutine(_configuration.IntroSceneName,
-            _configuration.DelayBeforeLoadScene));
+         _leaderboardUIView.BackButton.interactable = false;
+         
+         StartCoroutine(GPWHelper.LoadScene_Coroutine(
+            GameController.Instance.RuntimeDataStorage.RuntimeData.PreviousSceneName,
+            _leaderboardUIView.Configuration.DelayBeforeLoadScene));
       }
    }
 }
