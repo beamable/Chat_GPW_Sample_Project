@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tags: []
   icon:
-    m_AssetGUID: f819a6beb22c04c8d9f8222f930252b5
-    m_SubObjectName: icon
+    m_AssetGUID: bd5a04c6a03ecd143ba9ae41f83b9bb5
+    m_SubObjectName: chocolate
     m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   clientPermission:

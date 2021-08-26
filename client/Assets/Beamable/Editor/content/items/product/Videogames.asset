@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tags: []
   icon:
-    m_AssetGUID: f819a6beb22c04c8d9f8222f930252b5
-    m_SubObjectName: icon
+    m_AssetGUID: 2e2175da677e5c447bc161df94efcafe
+    m_SubObjectName: videogames
     m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   clientPermission:

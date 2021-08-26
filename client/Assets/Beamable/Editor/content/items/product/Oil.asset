@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tags: []
   icon:
-    m_AssetGUID: f819a6beb22c04c8d9f8222f930252b5
-    m_SubObjectName: icon
+    m_AssetGUID: 07bc1cf245189354ea5e7f4c6e69eb6c
+    m_SubObjectName: oil
     m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   clientPermission:

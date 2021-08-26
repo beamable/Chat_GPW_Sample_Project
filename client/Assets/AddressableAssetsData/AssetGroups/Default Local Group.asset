@@ -16,7 +16,67 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: acb6e0de4068c8045b927b016bff929b
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: bd5a04c6a03ecd143ba9ae41f83b9bb5
+    m_Address: Assets/Art/Sprites/Products/chocolate.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 4006c644e5d4efb43906f966653940b9
+    m_Address: Assets/Art/Sprites/Products/coffee.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 4cc38f753bc4c1b47804048024dfdc18
+    m_Address: Assets/Art/Sprites/Products/fruits.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ac5d68a2fd069c941907495cb1caf0d7
+    m_Address: Assets/Art/Sprites/Products/gold.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d916d2ae0b72aeb4782f8f0d3218ba53
+    m_Address: Assets/Art/Sprites/Products/meat.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 07bc1cf245189354ea5e7f4c6e69eb6c
+    m_Address: Assets/Art/Sprites/Products/oil.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7f6806759e7005a429110ab3f777be24
+    m_Address: Assets/Art/Sprites/Products/silver.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1ef3ef28fe4c130499aed5291b3f0143
+    m_Address: Assets/Art/Sprites/Products/solar.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e8c0d723e1e7312499a801d3d8481628
+    m_Address: Assets/Art/Sprites/Products/vegetables.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 2e2175da677e5c447bc161df94efcafe
+    m_Address: Assets/Art/Sprites/Products/videogames.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4309a4b5e831a23439f75ffddcaab1b8, type: 2}
   m_SchemaSet:

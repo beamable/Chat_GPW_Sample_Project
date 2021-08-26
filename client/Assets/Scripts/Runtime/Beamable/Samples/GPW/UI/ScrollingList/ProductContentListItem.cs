@@ -52,8 +52,8 @@ namespace Beamable.Samples.GPW.UI.ScrollingList
             int priceThem = _productContentView.Price;
             int priceMe = 02;
             
-            stringBuilder.AppendLine($"Avail: #{countThem:000}   ${priceThem:000}");
-            stringBuilder.AppendLine($"Owned: #{countMe:000}   ${priceMe:000}");
+            stringBuilder.AppendLine($"Available #{countThem:000}   ${priceThem:000}");
+            stringBuilder.AppendLine($"Owned    #{countMe:000}   ${priceMe:000}");
             
             _detailsText.text = stringBuilder.ToString();
             _buyButton.onClick.RemoveAllListeners();

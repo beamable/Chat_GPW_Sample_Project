@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tags: []
   icon:
-    m_AssetGUID: f819a6beb22c04c8d9f8222f930252b5
-    m_SubObjectName: icon
+    m_AssetGUID: 4cc38f753bc4c1b47804048024dfdc18
+    m_SubObjectName: fruits
     m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   clientPermission:
