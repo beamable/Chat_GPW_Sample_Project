@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Beamable.Api.Inventory;
+using Beamable.Api.Leaderboard;
+using Beamable.Common.Api;
 using Beamable.Common.Api.Inventory;
+using Beamable.Common.Leaderboards;
 using Beamable.Experimental.Api.Chat;
+using Beamable.Samples.Core.Data;
 using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data.Storage;
@@ -25,8 +29,6 @@ namespace Beamable.Samples.GPW.Data
 		public ChatViewEvent OnChatViewChanged = new ChatViewEvent();
 		
 		//  Properties  ----------------------------------
-		public InventoryService InventoryService { get { return _inventoryService; }}
-		public long LocalPlayerDbid { get { return _localPlayerDbid; } set { _localPlayerDbid = value; } }
 		public bool HasChatView { get { return ChatView != null; }}
 		public ChatView ChatView { get { return _chatView; }}
 		
@@ -35,6 +37,8 @@ namespace Beamable.Samples.GPW.Data
 		private ChatView _chatView = null;
 		private IBeamableAPI _beamableAPI = null;
 		private InventoryService _inventoryService = null;
+		private LeaderboardService _leaderboardService = null;
+		private LeaderboardContent _leaderboardContent = null;
 		private InventoryView _inventoryView = null;
 		private bool _isInitialized = false;
 		private const string ContentType = "items.product";
@@ -50,17 +54,32 @@ namespace Beamable.Samples.GPW.Data
 				_beamableAPI = await Beamable.API.Instance;
 				_localPlayerDbid = _beamableAPI.User.id;
 				
+				/////////////////////////////
+				// ChatService
+				/////////////////////////////
+				_chatService = _beamableAPI.Experimental.ChatService;
+				_chatService.Subscribe(ChatService_OnChanged);
+				
+				/////////////////////////////
 				// InventoryService
+				/////////////////////////////
 				_inventoryService = _beamableAPI.InventoryService;
 				_inventoryService.Subscribe(ContentType, InventoryService_OnChanged);
 				
-				// ChatService
-				_chatService = _beamableAPI.Experimental.ChatService;
-				_chatService.Subscribe(ChatService_OnChanged);
+				/////////////////////////////
+				// Leaderboard
+				/////////////////////////////
+				_leaderboardService = _beamableAPI.LeaderboardService;
+				
+				_leaderboardContent = await configuration.LeaderboardRef.Resolve();
+				await PopulateLeaderboardWithMockData(configuration);
+
 				
 				_isInitialized = true;
 			}
 		}
+
+
 
 		#region ChatService
 		
@@ -294,7 +313,33 @@ namespace Beamable.Samples.GPW.Data
         }
         
 		#endregion
-        
+
+		#region Leaderboards
+
+		/// <summary>
+		/// For cosmetics, set some mock scores for display
+		/// </summary>
+		/// <param name="configuration"></param>
+		private async Task PopulateLeaderboardWithMockData(Configuration configuration)
+		{
+			MockDataCreator.PopulateLeaderboardWithMockData(_beamableAPI,
+				_leaderboardContent,
+				configuration.LeaderboardRowCountMin,
+				configuration.LeaderboardScoreMin,
+				configuration.LeaderboardScoreMax);
+		}
+		
+		/// <summary>
+		/// Send the users real score at the end of play
+		/// </summary>
+		/// <param name="score"></param>
+		/// <returns></returns>
+		public async Task<EmptyResponse> SetLeaderboardScore(double score)
+		{
+			return await _leaderboardService.SetScore(_leaderboardContent.Id, score);
+		}
+
+		#endregion
         //  Event Handlers  -------------------------------
         private void InventoryService_OnChanged(InventoryView inventoryView)
         {
@@ -324,5 +369,7 @@ namespace Beamable.Samples.GPW.Data
         {
 	        OnChatViewChanged.Invoke(_chatView);
         }
+
+
 	}
 }

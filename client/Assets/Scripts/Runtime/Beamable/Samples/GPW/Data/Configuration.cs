@@ -31,6 +31,7 @@ namespace Beamable.Samples.GPW.Data
       public string Scene04LeaderboardName { get { return _scene04LeaderboardName; } }
       
       public float DelayBeforeLoadScene { get { return _delayBeforeLoadScene; } }
+      public float DelayAfterDataLoading { get { return _delayAfterDataLoading; } }
       public float DelayFadeInUI { get { return _delayFadeInUI; } }
 
       public RemoteConfigurationRef RemoteConfigurationRef { get { return _remoteConfigurationRef; } }
@@ -74,8 +75,11 @@ namespace Beamable.Samples.GPW.Data
 
       [Header("Cosmetics")]
       [SerializeField]
-      private float _delayBeforeLoadScene = 0;
+      private float _delayBeforeLoadScene = 0.25f;
       
+      [SerializeField]
+      private float _delayAfterDataLoading = 0.25f;
+         
       [SerializeField]
       private float _delayFadeInUI = 0.25f;
 

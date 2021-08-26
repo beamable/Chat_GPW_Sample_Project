@@ -21,7 +21,8 @@ MonoBehaviour:
     Id: remote_configuration.RemoteConfiguration
   _leaderboardRef:
     Id: leaderboards.Leaderboard
-  _delayBeforeLoadScene: 0.1
+  _delayBeforeLoadScene: 0.25
+  _delayAfterDataLoading: 1.5
   _delayFadeInUI: 0.25
   _leaderboardRowCountMin: 10
   _leaderboardScoreMin: 100

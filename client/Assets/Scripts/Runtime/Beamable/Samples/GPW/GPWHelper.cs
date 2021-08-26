@@ -32,7 +32,7 @@ namespace Beamable.Samples.GPW
             Debug.Log($"LoadScene() to {sceneName}");
          }
 
-         yield return new WaitForSeconds(delayBeforeLoading);
+         yield return new WaitForSeconds(delayBeforeLoading/1000);
          SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
       }
 

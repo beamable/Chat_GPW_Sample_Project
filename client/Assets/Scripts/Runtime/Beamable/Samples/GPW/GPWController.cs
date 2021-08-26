@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
+using Beamable.Common.Api;
 using Beamable.Common.Api.Inventory;
-using Beamable.Common.Leaderboards;
 using Beamable.Experimental.Api.Chat;
 using Beamable.Samples.Core.Components;
-using Beamable.Samples.Core.Data;
 using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
@@ -24,14 +23,14 @@ namespace Beamable.Samples.GPW
 
         
         //  Fields  --------------------------------------
-        
         private RuntimeDataStorage _runtimeDataStorage = new RuntimeDataStorage();
         private PersistentDataStorage _persistentDataStorage = new PersistentDataStorage();
         private GameServices _gameServices = new GameServices();
+        private Configuration _configuration = null;
         private bool _isInitialized = false;
 
         //  Other Methods  --------------------------------
-        public async Task Initialize(Configuration configuration)
+        public async Task Initialize(Configuration configuration2)
         {
             if (!IsInitialized)
             {
@@ -39,73 +38,15 @@ namespace Beamable.Samples.GPW
                 // GameServices
                 /////////////////////////////
                 IBeamableAPI beamableAPI = await Beamable.API.Instance;
+                _configuration = configuration2;
                 _gameServices.OnInventoryViewChanged.AddListener(InventoryService_OnChanged);
                 _runtimeDataStorage.OnChanged.AddListener(RuntimeDataStorage_OnChanged);
                 _persistentDataStorage.OnChanged.AddListener(PersistentDataStorage_OnChanged);
-                await _gameServices.Initialize(configuration);
-                await _runtimeDataStorage.Initialize(configuration);
-                await _persistentDataStorage.Initialize(configuration);
-
-                /////////////////////////////
-                // Money
-                /////////////////////////////
-                _persistentDataStorage.PersistentData.BankAmount = 
-                    _runtimeDataStorage.RuntimeData.RemoteConfiguration.BankAmountInitial;
-                
-                _persistentDataStorage.PersistentData.CashAmount = 
-                    _runtimeDataStorage.RuntimeData.RemoteConfiguration.CashAmountInitial;
-                
-                _persistentDataStorage.PersistentData.DebitAmount = 
-                    _runtimeDataStorage.RuntimeData.RemoteConfiguration.DebtAmountInitial;
-                
-                /////////////////////////////
-                // Chat
-                /////////////////////////////
-                while (!_gameServices.HasChatView)
-                {
-                    await Task.Delay(100);
-                }
-                
-                // Chat - Global Room
-                await _gameServices.CreateRoomSafe(GPWConstants.ChatRoomNameGlobal);
-                
-                // Chat - Direct Room - TODO: Should I use the existing 'DirectRooms' 
-                // available on the chatView instance?
-                await _gameServices.CreateRoomSafe(GPWConstants.GetChatRoomNameDirect());
-                
-                // Chat - Location Rooms
-                foreach (LocationContentView locationContentView in _runtimeDataStorage.RuntimeData.LocationContentViews)
-                {
-                    await _gameServices.CreateRoomSafe(
-                        GPWConstants.GetChatRoomNameLocation(locationContentView.LocationContent));
-                }
-                
-                // When running this scene directly, go back to intro scene
-                // When running in production, go to the previous scene
-                _runtimeDataStorage.RuntimeData.PreviousSceneName = configuration.Scene01IntroName;
-                
-                // Default to global chat
-                _runtimeDataStorage.RuntimeData.ChatMode = ChatMode.Global;
-
-                /////////////////////////////
-                // Turns
-                /////////////////////////////
-                _persistentDataStorage.PersistentData.TurnCurrent = 1;
-                _persistentDataStorage.PersistentData.TurnsTotal = 
-                    _runtimeDataStorage.RuntimeData.RemoteConfiguration.TurnsTotal;
-                
+                await ResetGame();
                 IsInitialized = true;
-                _persistentDataStorage.OnChanged.Invoke(_persistentDataStorage);
                 
-                /////////////////////////////
-                // Leaderboard
-                /////////////////////////////
-                LeaderboardContent leaderboardContent = await configuration.LeaderboardRef.Resolve();
-                MockDataCreator.PopulateLeaderboardWithMockData(beamableAPI,
-                    leaderboardContent,
-                    configuration.LeaderboardRowCountMin,
-                    configuration.LeaderboardScoreMin,
-                    configuration.LeaderboardScoreMax);
+                
+
             }
         }
         
@@ -162,8 +103,7 @@ namespace Beamable.Samples.GPW
             
             // Advance the turn counter
             PersistentDataStorage.PersistentData.TurnCurrent++;
-            
-            //TODO: Check for gameover (turns==30)
+
         }
         
         public void TransferCashToBank(int amountToAddToBank)
@@ -179,17 +119,26 @@ namespace Beamable.Samples.GPW
             }
         }
       
-        public void TransferCashToDebt(int amountToAddToDebt)
+        public void TransferCashToDebt(int amountToPayoffDebt)
         {
             // The amount may be positive or negative
-            // Check that both balances will be above zero
-            if (_persistentDataStorage.PersistentData.CashAmount - amountToAddToDebt >= 0 && 
-                _persistentDataStorage.PersistentData.DebitAmount + amountToAddToDebt >= 0)
+            // Check that both balances will be above zeros
+            if (_persistentDataStorage.PersistentData.CashAmount - amountToPayoffDebt >= 0 && 
+                _persistentDataStorage.PersistentData.DebitAmount + amountToPayoffDebt >= 0)
             {
-                _persistentDataStorage.PersistentData.CashAmount -= amountToAddToDebt;
-                _persistentDataStorage.PersistentData.DebitAmount += amountToAddToDebt;
+                _persistentDataStorage.PersistentData.CashAmount += amountToPayoffDebt;
+                _persistentDataStorage.PersistentData.DebitAmount += amountToPayoffDebt;
                 _persistentDataStorage.ForceRefresh();
             }
+        }
+        
+        public double CalculatedCurrentScore()
+        {
+            int cashAmount = GPWController.Instance.PersistentDataStorage.PersistentData.CashAmount;
+            int bankAmount = GPWController.Instance.PersistentDataStorage.PersistentData.BankAmount;
+            int debtAmount = GPWController.Instance.PersistentDataStorage.PersistentData.DebitAmount;
+
+            return cashAmount + bankAmount - debtAmount;
         }
         
         public bool HasCurrentRoomHandle
@@ -256,6 +205,68 @@ namespace Beamable.Samples.GPW
                 _persistentDataStorage.PersistentData.LocationContentViewCurrent = 
                     runtimeDataStorage.RuntimeData.LocationContentViews[0];
             }
+        }
+
+
+        public async Task<EmptyResponse> ResetGame()
+        {
+            /////////////////////////////
+            // Systems
+            /////////////////////////////
+            await _gameServices.Initialize(_configuration);
+            await _runtimeDataStorage.Initialize(_configuration);
+            await _persistentDataStorage.Initialize(_configuration);
+        
+            /////////////////////////////
+            // Money
+            /////////////////////////////
+            _persistentDataStorage.PersistentData.BankAmount = 
+                _runtimeDataStorage.RuntimeData.RemoteConfiguration.BankAmountInitial;
+            
+            _persistentDataStorage.PersistentData.CashAmount = 
+                _runtimeDataStorage.RuntimeData.RemoteConfiguration.CashAmountInitial;
+            
+            _persistentDataStorage.PersistentData.DebitAmount = 
+                _runtimeDataStorage.RuntimeData.RemoteConfiguration.DebtAmountInitial;
+            
+            /////////////////////////////
+            // Chat
+            /////////////////////////////
+            while (!_gameServices.HasChatView)
+            {
+                await Task.Delay(100);
+            }
+            
+            // Chat - Global Room
+            await _gameServices.CreateRoomSafe(GPWConstants.ChatRoomNameGlobal);
+            
+            // Chat - Direct Room - TODO: Should I use the existing 'DirectRooms' 
+            // available on the chatView instance?
+            await _gameServices.CreateRoomSafe(GPWConstants.GetChatRoomNameDirect());
+            
+            // Chat - Location Rooms
+            foreach (LocationContentView locationContentView in _runtimeDataStorage.RuntimeData.LocationContentViews)
+            {
+                await _gameServices.CreateRoomSafe(
+                    GPWConstants.GetChatRoomNameLocation(locationContentView.LocationContent));
+            }
+            
+            // When running this scene directly, go back to intro scene
+            // When running in production, go to the previous scene
+            _runtimeDataStorage.RuntimeData.PreviousSceneName = _configuration.Scene01IntroName;
+            
+            // Default to global chat
+            _runtimeDataStorage.RuntimeData.ChatMode = ChatMode.Global;
+
+            /////////////////////////////
+            // Turns
+            /////////////////////////////
+            _persistentDataStorage.PersistentData.TurnCurrent = 1;
+            _persistentDataStorage.PersistentData.TurnsTotal = 
+                _runtimeDataStorage.RuntimeData.RemoteConfiguration.TurnsTotal;
+            _persistentDataStorage.OnChanged.Invoke(_persistentDataStorage);
+
+            return new EmptyResponse();
         }
     }
 }

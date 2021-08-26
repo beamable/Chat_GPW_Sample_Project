@@ -19,7 +19,7 @@ namespace Beamable.Samples.GPW.Data.Storage
 		{
 			get
 			{
-				return TurnCurrent >= TurnsTotal;
+				return TurnCurrent >= 2;
 			}
 		}
 	}

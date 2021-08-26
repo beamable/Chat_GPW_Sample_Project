@@ -1,5 +1,7 @@
 ﻿using System;
+using Beamable.Samples.Core.UI.DialogSystem;
 using Beamable.Samples.Core.Utilities;
+using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Views;
 using UnityEngine;
 
@@ -107,10 +109,16 @@ namespace Beamable.Samples.GPW
       }
 
 
-      private void StartGameButton_OnClicked()
+      private async void StartGameButton_OnClicked()
       {
          _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
 
+         // Wait
+         _scene01IntroUIView.DialogSystem.ShowDialogBoxLoading();
+         await GPWController.Instance.ResetGame();
+         
+         // Load Scene
+         _scene01IntroUIView.DialogSystem.HideDialogBox();
          StartCoroutine(GPWHelper.LoadScene_Coroutine(
             _scene01IntroUIView.Configuration.Scene02GameName,
             _scene01IntroUIView.Configuration.DelayBeforeLoadScene));
@@ -119,6 +127,8 @@ namespace Beamable.Samples.GPW
 
       private void LeaderboardButton_OnClicked()
       {
+         _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
+         
          StartCoroutine(GPWHelper.LoadScene_Coroutine(
             _scene01IntroUIView.Configuration.Scene04LeaderboardName,
             _scene01IntroUIView.Configuration.DelayBeforeLoadScene));
@@ -135,6 +145,8 @@ namespace Beamable.Samples.GPW
       
       private void QuitButton_OnClicked()
       {
+         _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
+         
          _scene01IntroUIView.DialogSystem.ShowDialogBoxConfirmation(
             delegate
             {

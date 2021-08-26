@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 using AirFishLab.ScrollingList;
+using Beamable.Common.Api.Inventory;
 using Beamable.Samples.Core.UI.DialogSystem;
+using Beamable.Samples.Core.UI.ScrollingList;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data.Storage;
 using Beamable.Samples.GPW.UI.ScrollingList;
@@ -20,6 +24,9 @@ namespace Beamable.Samples.GPW
       //  Fields ---------------------------------------
       [SerializeField]
       private Scene02GameUIView _scene02GameUIView = null;
+      private bool _isReadyRuntimeDataStorage = false;
+      private bool _isReadyProductContentList = false;
+      private bool _isReadyInventoryView = false;
       
       //  Unity Methods   ------------------------------
       protected void Start()
@@ -34,7 +41,8 @@ namespace Beamable.Samples.GPW
          _scene02GameUIView.LeaderboardButton.onClick.AddListener(LeaderboardButton_OnClicked);
          _scene02GameUIView.QuitButton.onClick.AddListener(QuitButton_OnClicked);
          
-         //
+         // Wait
+         _scene02GameUIView.DialogSystem.ShowDialogBoxLoading();
          SetupBeamable();
          
       }
@@ -49,6 +57,8 @@ namespace Beamable.Samples.GPW
          // Setup Storage
          GPWController.Instance.PersistentDataStorage.OnChanged.AddListener(PersistentDataStorage_OnChanged);
          GPWController.Instance.RuntimeDataStorage.OnChanged.AddListener(RuntimeDataStorage_OnChanged);
+         GPWController.Instance.GameServices.OnInventoryViewChanged.AddListener(GameServices_OnInventoryViewChanged);
+         
          
          // Every scene initializes as needed (Max 1 time per session)
          if (!GPWController.Instance.IsInitialized)
@@ -62,62 +72,42 @@ namespace Beamable.Samples.GPW
             GPWController.Instance.GameServices.ForceRefresh();
          }
       }
+      
+      private async void CheckIsSceneReady()
+      {
+         if (_isReadyRuntimeDataStorage && _isReadyProductContentList && _isReadyInventoryView)
+         {
+            await Task.Delay((int)_scene02GameUIView.Configuration.DelayAfterDataLoading*1000);
+            _scene02GameUIView.DialogSystem.HideDialogBox();
+         }
+      }
 
+      private void QuitGameSafe(bool willConfirm)
+      {
+         if (willConfirm)
+         {
+            _scene02GameUIView.DialogSystem.ShowDialogBoxConfirmation(
+               delegate
+               {
+                  StartCoroutine(GPWHelper.LoadScene_Coroutine(
+                     _scene02GameUIView.Configuration.Scene01IntroName,
+                     _scene02GameUIView.Configuration.DelayBeforeLoadScene));
+               });
+         }
+         else
+         {
+            StartCoroutine(GPWHelper.LoadScene_Coroutine(
+               _scene02GameUIView.Configuration.Scene01IntroName,
+               _scene02GameUIView.Configuration.DelayBeforeLoadScene));
+         }
+ 
+      }
       
       //  Event Handlers -------------------------------
       
       private void TravelButton_OnClicked()
       {
          GPWController.Instance.GoToLocation();
-  }
-      
-      private void BankButton_OnClicked()
-      {
-         _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
-            _scene02GameUIView.DialogSystem.DialogUIPrefab,
-            "Bank",
-            "Transfer from CASH → BANK?",
-            new List<DialogButtonData>
-            {
-               new DialogButtonData("+100", delegate
-               {
-                  GPWController.Instance.TransferCashToBank(100);
-               }),
-               new DialogButtonData("-100", delegate
-               {
-                  GPWController.Instance.TransferCashToBank(-100);
-               }),
-               new DialogButtonData("Ok", delegate
-               {
-                  _scene02GameUIView.DialogSystem.HideDialogBox();
-               })
-            });
-      }
-
-
-      private void DebtButton_OnClicked()
-      {
-         _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
-            _scene02GameUIView.DialogSystem.DialogUIPrefab,
-            "Transfer from CASH → DEBT?",
-            $"DEBT increases by " +
-            $"{GPWController.Instance.RuntimeDataStorage.RuntimeData.DebtInterestCurrent}% every TURN.",
-            new List<DialogButtonData>
-            {
-               new DialogButtonData("+100", delegate
-               {
-                  GPWController.Instance.TransferCashToDebt(100);
-               }),
-               new DialogButtonData("-100", delegate
-               {
-                  GPWController.Instance.TransferCashToDebt(-100);
-               }),
-               new DialogButtonData("Ok", delegate
-               {
-                  _scene02GameUIView.DialogSystem.HideDialogBox();
-               })
-            });
-         
       }
       
       private void ChatButton_OnClicked()
@@ -138,16 +128,12 @@ namespace Beamable.Samples.GPW
       
       private void QuitButton_OnClicked()
       {
-         _scene02GameUIView.DialogSystem.ShowDialogBoxConfirmation(
-            delegate
-            {
-               StartCoroutine(GPWHelper.LoadScene_Coroutine(
-                  _scene02GameUIView.Configuration.Scene01IntroName,
-                  _scene02GameUIView.Configuration.DelayBeforeLoadScene));
-            });
+         QuitGameSafe(true);
+
       }
-      
-      
+
+
+
       private async void ProductContentListItem_OnBuy(ProductContentView productContentView)
       {
          var canBuyItem = await GPWController.Instance.GameServices.
@@ -181,12 +167,106 @@ namespace Beamable.Samples.GPW
                    $"isSuccessful = {isSuccessful}");
       }
       
+      
+      private void BankButton_OnClicked()
+      {
+         _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
+            _scene02GameUIView.DialogSystem.DialogUIPrefab,
+            $"Transfer from CASH → BANK",
+            "Positive BANK will help your final score.\n\n\nBANK increases by " +
+            $"{GPWController.Instance.RuntimeDataStorage.RuntimeData.BankInterestCurrent}% every TURN.",
+            new List<DialogButtonData>
+            {
+               new DialogButtonData("+100", delegate
+               {
+                  GPWController.Instance.TransferCashToBank(100);
+               }),
+               new DialogButtonData("-100", delegate
+               {
+                  GPWController.Instance.TransferCashToBank(-100);
+               }),
+               new DialogButtonData("Ok", delegate
+               {
+                  _scene02GameUIView.DialogSystem.HideDialogBox();
+               })
+            });
+      }
+
+
+      private void DebtButton_OnClicked()
+      {
+         _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
+            _scene02GameUIView.DialogSystem.DialogUIPrefab,
+            "Transfer from CASH → DEBT?",
+            $"Positive DEBT will hurt your final score.\n\n\nDEBT increases by " +
+            $"{GPWController.Instance.RuntimeDataStorage.RuntimeData.DebtInterestCurrent}% every TURN.",
+            new List<DialogButtonData>
+            {
+               new DialogButtonData("+100", delegate
+               {
+                  GPWController.Instance.TransferCashToDebt(-100);
+               }),
+               new DialogButtonData("-100", delegate
+               {
+                  GPWController.Instance.TransferCashToDebt(100);
+               }),
+               new DialogButtonData("Ok", delegate
+               {
+                  _scene02GameUIView.DialogSystem.HideDialogBox();
+               })
+            });
+         
+      }
+
+      
       private async void PersistentDataStorage_OnChanged(SubStorage subStorage)
       {
          PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
          _scene02GameUIView.PersistentData = persistentDataStorage.PersistentData;
 
          ProductContentListRefresh();
+         
+         if (persistentDataStorage.PersistentData.IsGameOver)
+         {
+            //
+            int turnCurrent = GPWController.Instance.PersistentDataStorage.PersistentData.TurnCurrent;
+            int turnsTotal = GPWController.Instance.PersistentDataStorage.PersistentData.TurnsTotal;
+            //
+            int cashAmount = GPWController.Instance.PersistentDataStorage.PersistentData.CashAmount;
+            int bankAmount = GPWController.Instance.PersistentDataStorage.PersistentData.BankAmount;
+            int debtAmount = GPWController.Instance.PersistentDataStorage.PersistentData.DebitAmount;
+            double score = GPWController.Instance.CalculatedCurrentScore();
+            
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"CASH + BANK - DEBT = FINAL SCORE");
+            stringBuilder.AppendLine($"{cashAmount} + {bankAmount} - {debtAmount} = {score}");
+            stringBuilder.AppendLine();
+            
+            int itemsCurrent = GPWController.Instance.RuntimeDataStorage.RuntimeData.ItemsCurrent;
+            if (itemsCurrent > 0)
+            {
+               stringBuilder.AppendLine($"TIP: Sell all items before turn {turnsTotal}.");
+            }
+            
+            _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
+               _scene02GameUIView.DialogSystem.DialogUIPrefab,
+               $"Turn {turnCurrent}/{turnsTotal} - Game Over! ",
+               stringBuilder.ToString(),
+               new List<DialogButtonData>
+               {
+                  new DialogButtonData($"Submit Score", async delegate
+                  {
+                     await GPWController.Instance.GameServices.SetLeaderboardScore(score);
+                     _scene02GameUIView.DialogSystem.HideDialogBox();
+                     QuitGameSafe(false);
+                  }),
+                  new DialogButtonData("Quit", delegate
+                  {
+                     _scene02GameUIView.DialogSystem.HideDialogBox();
+                     QuitGameSafe(false);
+                  })
+               });
+         }
    
       }
 
@@ -211,12 +291,14 @@ namespace Beamable.Samples.GPW
       {
          RuntimeDataStorage runtimeDataStorage = subStorage as RuntimeDataStorage;
          _scene02GameUIView.RuntimeData = runtimeDataStorage.RuntimeData;
+
+         _isReadyRuntimeDataStorage = true;
+         CheckIsSceneReady();
       }
-      
-      
-      private void ProductContentList_OnInitialized(CircularScrollingList circularScrollingList)
+
+      private void ProductContentList_OnInitialized(ScrollingList scrollingList)
       {
-         foreach (ListBox listBox in circularScrollingList.ListBoxes)
+         foreach (ListBox listBox in scrollingList.ListBoxes)
          {
             ProductContentListItem productContentListItem = listBox as ProductContentListItem;
             
@@ -226,7 +308,18 @@ namespace Beamable.Samples.GPW
             productContentListItem.OnBuy.AddListener(ProductContentListItem_OnBuy);
             productContentListItem.OnSell.AddListener(ProductContentListItem_OnSell);
          }
+         
+         _isReadyProductContentList = true;
+         CheckIsSceneReady();
       }
       
+      private void GameServices_OnInventoryViewChanged(InventoryView inventoryView)
+      {
+         _isReadyInventoryView = true;
+         CheckIsSceneReady();
+         
+      }
+      
+
    }
 }

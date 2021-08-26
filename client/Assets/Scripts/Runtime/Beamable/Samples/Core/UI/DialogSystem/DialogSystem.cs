@@ -18,6 +18,7 @@ namespace Beamable.Samples.Core.UI.DialogSystem
         //  Fields ---------------------------------------
         [SerializeField] 
         private GameObject _dialogParent = null;
+        
         [SerializeField] 
         private DialogUI _dialogUIPrefab = null;
        
@@ -26,7 +27,7 @@ namespace Beamable.Samples.Core.UI.DialogSystem
         //  Constructor ---------------------------------------
         
         //  Other Methods ---------------------------------------
-        public void ShowDialogBox<T>(T dialogUIPrefab, 
+        public T ShowDialogBox<T>(T dialogUIPrefab, 
             string titleText,
             string bodyText,
             List<DialogButtonData> dialogButtonDatas) where  T : DialogUI
@@ -35,6 +36,7 @@ namespace Beamable.Samples.Core.UI.DialogSystem
             _currentDialogUI.DialogButtonDatas = dialogButtonDatas;
             _currentDialogUI.TitleText.text = titleText;
             _currentDialogUI.BodyText.text = bodyText;
+            return _currentDialogUI as T;
         }
 
         public void HideDialogBox()
@@ -48,9 +50,14 @@ namespace Beamable.Samples.Core.UI.DialogSystem
             _currentDialogUI = null;
         }
 
-        public void ShowDialogBoxConfirmation(Action action)
+        /// <summary>
+        /// Show "Are you sure?"
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public DialogUI ShowDialogBoxConfirmation(Action action)
         {
-            ShowDialogBox<DialogUI>(
+            return ShowDialogBox<DialogUI>(
                 DialogUIPrefab,
                 "Confirmation",
                 "Are you sure?",
@@ -66,6 +73,24 @@ namespace Beamable.Samples.Core.UI.DialogSystem
                         HideDialogBox();
                     })
                 });
+        }
+        
+        /// <summary>
+        /// Show "Loading..."
+        /// </summary>
+        /// <param name="bodyText"></param>
+        /// <returns></returns>
+        public DialogUI ShowDialogBoxLoading(string bodyText = "")
+        {
+            DialogUI dialogUI = ShowDialogBox<DialogUI>(
+                DialogUIPrefab,
+                "Loading...",
+                bodyText,
+                new List<DialogButtonData>());
+            
+            dialogUI.RectTransform.sizeDelta = new Vector2(dialogUI.RectTransform.sizeDelta.x, 220);
+            
+            return dialogUI;
         }
     }
 }

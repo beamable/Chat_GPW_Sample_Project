@@ -133,8 +133,8 @@ namespace Beamable.Samples.GPW.Data.Storage
                 double DebtInterestCurrent = _runtimeData.RemoteConfiguration.DebtInterestMin +
                                              random.NextDouble() * _runtimeData.RemoteConfiguration.DebtInterestMax;
 
-                _runtimeData.BankInterestCurrent = (float)BankInterestCurrent;
-                _runtimeData.DebtInterestCurrent = (float)DebtInterestCurrent;
+                _runtimeData.BankInterestCurrent = (float)Math.Round(BankInterestCurrent, 2);
+                _runtimeData.DebtInterestCurrent = (float)Math.Round(DebtInterestCurrent, 2);
                 
                 ForceRefresh();
                 IsInitialized = true;
