@@ -1,7 +1,6 @@
 ﻿using TMPro;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Beamable.Samples.Core.UI
@@ -16,7 +15,8 @@ namespace Beamable.Samples.Core.UI
    {
       public InputField.SubmitEvent OnValueSubmitted = new InputField.SubmitEvent();
       public InputField.OnChangeEvent OnValueChanged = new InputField.OnChangeEvent();
-      
+      public UnityEvent OnValueCleared = new UnityEvent();
+
       //  Properties --------------------------------------
       public TMP_InputField InputField { get { return _inputField;}}
       public Button ChatInputSubmitButton { get { return _chatInputSubmitButton;}}
@@ -108,6 +108,8 @@ namespace Beamable.Samples.Core.UI
       
       private void ChatInputClearButton_OnClicked()
       {
+         OnValueCleared.Invoke();
+         
          _inputField.text = "";
          ChatInput_OnValueChanged(_inputField.text);
       }

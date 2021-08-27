@@ -25,6 +25,7 @@ namespace Beamable.Samples.GPW
       {
          _scene03ChatUIView.ScrollingText.SetText("");
          _scene03ChatUIView.ChatInputUI.OnValueSubmitted.AddListener(ChatInputUI_OnValueSubmitted);
+         _scene03ChatUIView.ChatInputUI.OnValueCleared.AddListener(ChatInputUI_OnValueCleared);
          
          //
          _scene03ChatUIView.GlobalChatButton.onClick.AddListener(GlobalChatButton_OnClicked);
@@ -77,20 +78,29 @@ namespace Beamable.Samples.GPW
          _scene03ChatUIView.ChatInputUI.Select();
       }
       
+      private async void ChatInputUI_OnValueCleared()
+      {
+         GPWHelper.PlayAudioClipSecondaryClick();
+      }
+      
+         
       private void GlobalChatButton_OnClicked()
       {
+         GPWHelper.PlayAudioClipSecondaryClick();
          GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode = ChatMode.Global;
          GPWController.Instance.RuntimeDataStorage.ForceRefresh();
       }
       
       private void LocationChatButton_OnClicked()
       {
+         GPWHelper.PlayAudioClipSecondaryClick();
          GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode = ChatMode.Location;
          GPWController.Instance.RuntimeDataStorage.ForceRefresh();
       }
       
       private void DirectChatButton_OnClicked()
       {
+         GPWHelper.PlayAudioClipSecondaryClick();
          GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode = ChatMode.Direct;
          GPWController.Instance.RuntimeDataStorage.ForceRefresh();
       }

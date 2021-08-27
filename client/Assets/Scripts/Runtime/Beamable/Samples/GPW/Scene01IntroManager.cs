@@ -119,6 +119,7 @@ namespace Beamable.Samples.GPW
          
          // Load Scene
          _scene01IntroUIView.DialogSystem.HideDialogBox();
+        
          StartCoroutine(GPWHelper.LoadScene_Coroutine(
             _scene01IntroUIView.Configuration.Scene02GameName,
             _scene01IntroUIView.Configuration.DelayBeforeLoadScene));
@@ -136,20 +137,26 @@ namespace Beamable.Samples.GPW
       
       private void ResetButton_OnClicked()
       {
+         GPWHelper.PlayAudioClipPrimaryClick();
+         
          _scene01IntroUIView.DialogSystem.ShowDialogBoxConfirmation(
             delegate
             {
+               GPWHelper.PlayAudioClipSecondaryClick();
                ExampleProjectHacks.ClearDeviceUsersAndReloadScene();
             });
       }
       
       private void QuitButton_OnClicked()
       {
+         GPWHelper.PlayAudioClipPrimaryClick();
+         
          _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
          
          _scene01IntroUIView.DialogSystem.ShowDialogBoxConfirmation(
             delegate
             {
+               GPWHelper.PlayAudioClipSecondaryClick();
                GPWHelper.QuitSafe();
             });
       }

@@ -19,9 +19,19 @@ namespace Beamable.Samples.GPW
    {
 
       //  Other Methods ---------------------------   -----
-      public static IEnumerator LoadScene_Coroutine(string sceneName, float delayBeforeLoading)
+      public static void PlayAudioClipPrimaryClick()
       {
          SoundManager.Instance.PlayAudioClip(SoundConstants.Click01);
+      }
+      
+      public static void PlayAudioClipSecondaryClick()
+      {
+         SoundManager.Instance.PlayAudioClip(SoundConstants.Click02);
+      }
+      
+      public static IEnumerator LoadScene_Coroutine(string sceneName, float delayBeforeLoading)
+      {
+         PlayAudioClipPrimaryClick();
          
          //Store previous scene. Useful for some 'back' buttons
          GPWController.Instance.RuntimeDataStorage.RuntimeData.PreviousSceneName = 

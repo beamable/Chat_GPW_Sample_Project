@@ -89,6 +89,7 @@ namespace Beamable.Samples.GPW
             _scene02GameUIView.DialogSystem.ShowDialogBoxConfirmation(
                delegate
                {
+                  GPWHelper.PlayAudioClipSecondaryClick();
                   StartCoroutine(GPWHelper.LoadScene_Coroutine(
                      _scene02GameUIView.Configuration.Scene01IntroName,
                      _scene02GameUIView.Configuration.DelayBeforeLoadScene));
@@ -107,6 +108,7 @@ namespace Beamable.Samples.GPW
       
       private void TravelButton_OnClicked()
       {
+         GPWHelper.PlayAudioClipSecondaryClick();
          GPWController.Instance.GoToLocation();
       }
       
@@ -128,10 +130,74 @@ namespace Beamable.Samples.GPW
       
       private void QuitButton_OnClicked()
       {
+         GPWHelper.PlayAudioClipSecondaryClick();
          QuitGameSafe(true);
-
       }
 
+
+      private void BankButton_OnClicked()
+      {
+         
+         GPWHelper.PlayAudioClipSecondaryClick();
+         
+         
+         _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
+            _scene02GameUIView.DialogSystem.DialogUIPrefab,
+            $"Transfer from CASH → BANK",
+            "Positive BANK will help your final score.\n\n\nBANK increases by " +
+            $"{GPWController.Instance.RuntimeDataStorage.RuntimeData.BankInterestCurrent}% every TURN.",
+            new List<DialogButtonData>
+            {
+               new DialogButtonData("+100", delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  GPWController.Instance.TransferCashToBank(100);
+               }),
+               new DialogButtonData("-100", delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  GPWController.Instance.TransferCashToBank(-100);
+               }),
+               new DialogButtonData("Ok", delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  _scene02GameUIView.DialogSystem.HideDialogBox();
+               })
+            });
+      }
+
+
+      private void DebtButton_OnClicked()
+      {
+         
+         GPWHelper.PlayAudioClipSecondaryClick();
+         
+         
+         _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
+            _scene02GameUIView.DialogSystem.DialogUIPrefab,
+            "Transfer from CASH → DEBT?",
+            $"Positive DEBT will hurt your final score.\n\n\nDEBT increases by " +
+            $"{GPWController.Instance.RuntimeDataStorage.RuntimeData.DebtInterestCurrent}% every TURN.",
+            new List<DialogButtonData>
+            {
+               new DialogButtonData("+100", delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  GPWController.Instance.TransferCashToDebt(-100);
+               }),
+               new DialogButtonData("-100", delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  GPWController.Instance.TransferCashToDebt(100);
+               }),
+               new DialogButtonData("Ok", delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  _scene02GameUIView.DialogSystem.HideDialogBox();
+               })
+            });
+         
+      }
 
 
       private async void ProductContentListItem_OnBuy(ProductContentView productContentView)
@@ -168,56 +234,6 @@ namespace Beamable.Samples.GPW
       }
       
       
-      private void BankButton_OnClicked()
-      {
-         _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
-            _scene02GameUIView.DialogSystem.DialogUIPrefab,
-            $"Transfer from CASH → BANK",
-            "Positive BANK will help your final score.\n\n\nBANK increases by " +
-            $"{GPWController.Instance.RuntimeDataStorage.RuntimeData.BankInterestCurrent}% every TURN.",
-            new List<DialogButtonData>
-            {
-               new DialogButtonData("+100", delegate
-               {
-                  GPWController.Instance.TransferCashToBank(100);
-               }),
-               new DialogButtonData("-100", delegate
-               {
-                  GPWController.Instance.TransferCashToBank(-100);
-               }),
-               new DialogButtonData("Ok", delegate
-               {
-                  _scene02GameUIView.DialogSystem.HideDialogBox();
-               })
-            });
-      }
-
-
-      private void DebtButton_OnClicked()
-      {
-         _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
-            _scene02GameUIView.DialogSystem.DialogUIPrefab,
-            "Transfer from CASH → DEBT?",
-            $"Positive DEBT will hurt your final score.\n\n\nDEBT increases by " +
-            $"{GPWController.Instance.RuntimeDataStorage.RuntimeData.DebtInterestCurrent}% every TURN.",
-            new List<DialogButtonData>
-            {
-               new DialogButtonData("+100", delegate
-               {
-                  GPWController.Instance.TransferCashToDebt(-100);
-               }),
-               new DialogButtonData("-100", delegate
-               {
-                  GPWController.Instance.TransferCashToDebt(100);
-               }),
-               new DialogButtonData("Ok", delegate
-               {
-                  _scene02GameUIView.DialogSystem.HideDialogBox();
-               })
-            });
-         
-      }
-
       
       private async void PersistentDataStorage_OnChanged(SubStorage subStorage)
       {
@@ -248,6 +264,8 @@ namespace Beamable.Samples.GPW
                stringBuilder.AppendLine($"TIP: Sell all items before turn {turnsTotal}.");
             }
             
+            GPWHelper.PlayAudioClipSecondaryClick();
+            
             _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
                _scene02GameUIView.DialogSystem.DialogUIPrefab,
                $"Turn {turnCurrent}/{turnsTotal} - Game Over! ",
@@ -256,12 +274,14 @@ namespace Beamable.Samples.GPW
                {
                   new DialogButtonData($"Submit Score", async delegate
                   {
+                     GPWHelper.PlayAudioClipSecondaryClick();
                      await GPWController.Instance.GameServices.SetLeaderboardScore(score);
                      _scene02GameUIView.DialogSystem.HideDialogBox();
                      QuitGameSafe(false);
                   }),
                   new DialogButtonData("Quit", delegate
                   {
+                     GPWHelper.PlayAudioClipSecondaryClick();
                      _scene02GameUIView.DialogSystem.HideDialogBox();
                      QuitGameSafe(false);
                   })

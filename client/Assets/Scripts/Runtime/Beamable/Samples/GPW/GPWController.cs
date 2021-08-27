@@ -200,7 +200,8 @@ namespace Beamable.Samples.GPW
             InventoryView inventoryView = runtimeDataStorage.RuntimeData.InventoryView;
 
             if (_persistentDataStorage?.PersistentData?.LocationContentViewCurrent == null &&
-                runtimeDataStorage?.RuntimeData?.LocationContentViews != null)
+                runtimeDataStorage?.RuntimeData?.LocationContentViews != null && 
+                runtimeDataStorage?.RuntimeData?.LocationContentViews.Count > 0)
             {
                 _persistentDataStorage.PersistentData.LocationContentViewCurrent = 
                     runtimeDataStorage.RuntimeData.LocationContentViews[0];

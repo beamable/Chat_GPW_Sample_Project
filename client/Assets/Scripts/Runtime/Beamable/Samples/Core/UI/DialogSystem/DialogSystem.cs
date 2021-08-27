@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Beamable.Samples.GPW;
 using UnityEngine;
 
 namespace Beamable.Samples.Core.UI.DialogSystem
@@ -70,6 +71,7 @@ namespace Beamable.Samples.Core.UI.DialogSystem
                     }),
                     new DialogButtonData("Cancel", delegate
                     {
+                        GPWHelper.PlayAudioClipSecondaryClick();
                         HideDialogBox();
                     })
                 });

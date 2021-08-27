@@ -203,9 +203,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1978513655597950837}
   - component: {fileID: 1978513655597950836}
-  - component: {fileID: 1978513655597950839}
   - component: {fileID: 1978513655597950838}
   - component: {fileID: 1978513655597950834}
+  - component: {fileID: 6384734933772405746}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -270,14 +270,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &1978513655597950839
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1978513655597950793}
-  m_Enabled: 1
 --- !u!114 &1978513655597950838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -326,6 +318,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_MaxRayIntersections: 0
+--- !u!81 &6384734933772405746
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1978513655597950793}
+  m_Enabled: 1
 --- !u!1001 &1978513653835052575
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -381,7 +381,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3755773903047359794, guid: ce75dbe42701531459160111a5b56ee2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ce75dbe42701531459160111a5b56ee2, type: 3}
 --- !u!4 &8628923336147902470 stripped
 Transform:
