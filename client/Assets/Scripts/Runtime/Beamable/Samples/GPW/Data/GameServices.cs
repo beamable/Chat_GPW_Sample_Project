@@ -334,9 +334,23 @@ namespace Beamable.Samples.GPW.Data
 		/// </summary>
 		/// <param name="score"></param>
 		/// <returns></returns>
-		public async Task<EmptyResponse> SetLeaderboardScore(double score)
+		public async Task<EmptyResponse> SetLeaderboardScoreAndWriteAlias(double score)
 		{
-			return await _leaderboardService.SetScore(_leaderboardContent.Id, score);
+			// Get alias
+			string alias = await MockDataCreator.GetCurrentUserAlias(
+				_beamableAPI.StatsService, _localPlayerDbid);
+
+			// Missing Write a new name
+			if (string.IsNullOrEmpty(alias))
+			{
+				alias = GPWConstants.DefaultAlias;
+				await MockDataCreator.SetCurrentUserAlias( _beamableAPI.StatsService, alias);
+			}
+			
+			// Write the score
+			 await _leaderboardService.SetScore(_leaderboardContent.Id, score);
+
+			 return new EmptyResponse();
 		}
 
 		#endregion

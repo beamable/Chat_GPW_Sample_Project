@@ -275,7 +275,7 @@ namespace Beamable.Samples.GPW
                   new DialogButtonData($"Submit Score", async delegate
                   {
                      GPWHelper.PlayAudioClipSecondaryClick();
-                     await GPWController.Instance.GameServices.SetLeaderboardScore(score);
+                     await GPWController.Instance.GameServices.SetLeaderboardScoreAndWriteAlias(score);
                      _scene02GameUIView.DialogSystem.HideDialogBox();
                      QuitGameSafe(false);
                   }),

@@ -26,6 +26,8 @@ namespace Beamable.Samples.GPW
       private static string ChatRoomNameLocation = "Location";
       private static string ChatRoomNameDirect = "Direct";
       private static string ChatRoomNameSeparator = "_";
+      public static string DefaultAlias = "This is you! :)";
+
       public static string GetChatRoomNameLocation(LocationContent locationContent)
       {
          return ChatRoomNameLocation +

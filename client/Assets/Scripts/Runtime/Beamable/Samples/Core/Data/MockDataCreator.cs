@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Beamable.Api.Auth;
 using Beamable.Api.Leaderboard;
 using Beamable.Api.Stats;
+using Beamable.Common.Api;
 using Beamable.Common.Api.Leaderboards;
 using Beamable.Common.Leaderboards;
 using Beamable.Samples.GPW;
@@ -94,13 +96,25 @@ namespace Beamable.Samples.Core.Data
       /// </summary>
       /// <param name="statsService"></param>
       /// <param name="alias"></param>
-      private static async void SetCurrentUserAlias(StatsService statsService, string alias)
+      public static async Task<EmptyResponse> SetCurrentUserAlias(StatsService statsService, string alias)
       {
          await statsService.SetStats("public", new Dictionary<string, string>()
             {
                { "alias", alias },
             });
+
+         return new EmptyResponse();
       }
+      
+      public static async Task<string> GetCurrentUserAlias(StatsService statsService, long dbid)
+      {
+         var stats = await statsService.GetStats("client", "public", "player", dbid );
+         
+         string alias = CreateNewRandomAlias("User");
+         stats.TryGetValue("alias", out alias);
+         return alias;
+      }
+
 
 
       /// <summary>
