@@ -82,10 +82,11 @@ namespace Beamable.Samples.GPW
       
       private async void CheckIsSceneReady()
       {
-         if (_isReadyRuntimeDataStorage && _isReadyProductContentList && _isReadyInventoryView)
+         if (_isReadyRuntimeDataStorage && 
+             _isReadyProductContentList && 
+             _isReadyInventoryView)
          {
-            
-            _scene02GameUIView.DialogSystem.HideDialogBox();
+            await _scene02GameUIView.DialogSystem.HideDialogBox();
          }
       }
 
@@ -147,7 +148,6 @@ namespace Beamable.Samples.GPW
          
          GPWHelper.PlayAudioClipSecondaryClick();
          
-         
          _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
             _scene02GameUIView.DialogSystem.DialogUIPrefab,
             $"Transfer from CASH → BANK",
@@ -165,10 +165,10 @@ namespace Beamable.Samples.GPW
                   GPWHelper.PlayAudioClipSecondaryClick();
                   GPWController.Instance.TransferCashToBank(-100);
                }),
-               new DialogButtonData("Ok", delegate
+               new DialogButtonData("Ok", async delegate
                {
                   GPWHelper.PlayAudioClipSecondaryClick();
-                  _scene02GameUIView.DialogSystem.HideDialogBox();
+                  await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
                })
             });
       }
@@ -178,7 +178,6 @@ namespace Beamable.Samples.GPW
       {
          
          GPWHelper.PlayAudioClipSecondaryClick();
-         
          
          _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
             _scene02GameUIView.DialogSystem.DialogUIPrefab,
@@ -197,10 +196,10 @@ namespace Beamable.Samples.GPW
                   GPWHelper.PlayAudioClipSecondaryClick();
                   GPWController.Instance.TransferCashToDebt(100);
                }),
-               new DialogButtonData("Ok", delegate
+               new DialogButtonData("Ok", async delegate
                {
                   GPWHelper.PlayAudioClipSecondaryClick();
-                  _scene02GameUIView.DialogSystem.HideDialogBox();
+                  await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
                })
             });
          
@@ -242,7 +241,7 @@ namespace Beamable.Samples.GPW
       
       
       
-      private async void PersistentDataStorage_OnChanged(SubStorage subStorage)
+      private void PersistentDataStorage_OnChanged(SubStorage subStorage)
       {
          PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
          _scene02GameUIView.PersistentData = persistentDataStorage.PersistentData;
@@ -283,13 +282,13 @@ namespace Beamable.Samples.GPW
                   {
                      GPWHelper.PlayAudioClipSecondaryClick();
                      await GPWController.Instance.GameServices.GetOrCreateAliasAndSetLeaderboardScore(score);
-                     _scene02GameUIView.DialogSystem.HideDialogBox();
+                     await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
                      QuitGameSafe(false);
                   }),
-                  new DialogButtonData("Quit", delegate
+                  new DialogButtonData("Quit", async delegate
                   {
                      GPWHelper.PlayAudioClipSecondaryClick();
-                     _scene02GameUIView.DialogSystem.HideDialogBox();
+                     await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
                      QuitGameSafe(false);
                   })
                });

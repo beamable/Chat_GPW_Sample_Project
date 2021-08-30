@@ -3,9 +3,11 @@ using UnityEngine;
 using System;
 using System.Collections;
 using Beamable.Samples.Core.Audio;
+using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.Core.Utilities;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
+using Beamable.Samples.GPW.Data.Storage;
 using Beamable.UI.Scripts;
 using TMPro;
 using UnityEngine.AddressableAssets;
@@ -27,6 +29,7 @@ namespace Beamable.Samples.GPW
       public static string DefaultLocalAlias = "This is you! :)";
       public static string DefaultRemoteAliasPrefix = "Player";
       public static string Intro = "Intro";
+      public static string Reset = "Reset";
       public static string Game = "Game";
 
       public static string GetChatRoomNameGlobal()
@@ -51,6 +54,28 @@ namespace Beamable.Samples.GPW
                 dbid01 +
                 ChatRoomNameSeparator +
                 dbid02;
+      }
+      
+      public static string GetChatRoomTopic(ChatMode chatMode)
+      {
+         string topic = "";
+         switch (chatMode)
+         {
+            case ChatMode.Global:
+               topic = "Discuss global prices";
+               break;
+            case ChatMode.Location:
+               topic = "Discuss local prices";
+               break;
+            case ChatMode.Direct:
+               topic = "Discuss game strategies";
+               break;
+            default:
+               SwitchDefaultException.Throw(chatMode);
+               break;
+         }
+
+         return topic;
       }
 
       //  Other Methods ---------------------------   -----
@@ -294,5 +319,7 @@ namespace Beamable.Samples.GPW
       {
          button.GetComponentInChildren<TextMeshProUGUI>().text = $"{line1}";
       }
+
+
    }
 }

@@ -34,6 +34,7 @@ namespace Beamable.Samples.GPW
          _scene01IntroUIView.QuitButton.onClick.AddListener(QuitButton_OnClicked);
          
          // Load
+         _scene01IntroUIView.DialogSystem.ShowDialogBoxLoading(GPWHelper.Intro);
          SetupBeamable();
       }
 
@@ -85,6 +86,7 @@ namespace Beamable.Samples.GPW
       /// </summary>
       private void RenderUI()
       {
+        
          long dbid = 0;
          if (_isConnected)
          {
@@ -103,10 +105,12 @@ namespace Beamable.Samples.GPW
       
 
       //  Event Handlers -------------------------------
-      private void ConnectivityService_OnConnectivityChanged(bool isConnected)
+      private async void ConnectivityService_OnConnectivityChanged(bool isConnected)
       {
          _isConnected = isConnected;
+         
          RenderUI();
+         await _scene01IntroUIView.DialogSystem.HideDialogBox();
       }
 
 
@@ -115,7 +119,7 @@ namespace Beamable.Samples.GPW
          _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
 
          // Wait
-         _scene01IntroUIView.DialogSystem.ShowDialogBoxLoading(GPWHelper.Intro);
+         _scene01IntroUIView.DialogSystem.ShowDialogBoxLoading(GPWHelper.Reset);
          await GPWController.Instance.ResetGame();
          
          // Load Scene

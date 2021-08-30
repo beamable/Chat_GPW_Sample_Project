@@ -3,6 +3,7 @@ using Beamable.Common.Api;
 using Beamable.Common.Api.Inventory;
 using Beamable.Experimental.Api.Chat;
 using Beamable.Samples.Core.Components;
+using Beamable.Samples.Core.Debugging;
 using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
@@ -167,6 +168,7 @@ namespace Beamable.Samples.GPW
                 case ChatMode.Direct:
                     currentRoomName = GPWHelper.GetChatRoomNameDirect();
                     break;
+                default:
                     SwitchDefaultException.Throw(_runtimeDataStorage.RuntimeData.ChatMode);
                     break;
             }
@@ -180,35 +182,6 @@ namespace Beamable.Samples.GPW
         }
 
         
-        //  Event Handlers  -------------------------------
-        private void InventoryService_OnChanged(InventoryView inventoryView)
-        {
-            _runtimeDataStorage.RuntimeData.InventoryView = inventoryView;
-            _runtimeDataStorage.ForceRefresh();
-        }
-        
-        
-        private void PersistentDataStorage_OnChanged(SubStorage subStorage)
-        {
-            PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
-        }
-      
-      
-        private void RuntimeDataStorage_OnChanged(SubStorage subStorage)
-        {
-            RuntimeDataStorage runtimeDataStorage = subStorage as RuntimeDataStorage;
-            InventoryView inventoryView = runtimeDataStorage.RuntimeData.InventoryView;
-
-            if (_persistentDataStorage?.PersistentData?.LocationContentViewCurrent == null &&
-                runtimeDataStorage?.RuntimeData?.LocationContentViews != null && 
-                runtimeDataStorage?.RuntimeData?.LocationContentViews.Count > 0)
-            {
-                _persistentDataStorage.PersistentData.LocationContentViewCurrent = 
-                    runtimeDataStorage.RuntimeData.LocationContentViews[0];
-            }
-        }
-
-
         public async Task<EmptyResponse> ResetGame()
         {
             /////////////////////////////
@@ -268,6 +241,44 @@ namespace Beamable.Samples.GPW
             _persistentDataStorage.OnChanged.Invoke(_persistentDataStorage);
 
             return new EmptyResponse();
+        }
+        
+        
+        //  Event Handlers  -------------------------------
+        private void InventoryService_OnChanged(InventoryView inventoryView)
+        {
+            Configuration.Debugger.Log("GPWController.InventoryService_OnChanged()", 
+                DebugLogLevel.Verbose);
+            
+            _runtimeDataStorage.RuntimeData.InventoryView = inventoryView;
+            _runtimeDataStorage.ForceRefresh();
+        }
+        
+        
+        private void PersistentDataStorage_OnChanged(SubStorage subStorage)
+        {
+            Configuration.Debugger.Log("GPWController.PersistentDataStorage_OnChanged()", 
+                DebugLogLevel.Verbose);
+            
+            PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
+        }
+      
+      
+        private void RuntimeDataStorage_OnChanged(SubStorage subStorage)
+        {
+            Configuration.Debugger.Log("GPWController.RuntimeDataStorage_OnChanged()", 
+                DebugLogLevel.Verbose);
+            
+            RuntimeDataStorage runtimeDataStorage = subStorage as RuntimeDataStorage;
+            InventoryView inventoryView = runtimeDataStorage.RuntimeData.InventoryView;
+
+            if (_persistentDataStorage?.PersistentData?.LocationContentViewCurrent == null &&
+                runtimeDataStorage?.RuntimeData?.LocationContentViews != null && 
+                runtimeDataStorage?.RuntimeData?.LocationContentViews.Count > 0)
+            {
+                _persistentDataStorage.PersistentData.LocationContentViewCurrent = 
+                    runtimeDataStorage.RuntimeData.LocationContentViews[0];
+            }
         }
     }
 }

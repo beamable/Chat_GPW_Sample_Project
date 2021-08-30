@@ -16,8 +16,6 @@ namespace Beamable.Samples.GPW
       public Scene03ChatUIView Scene03ChatUIView { get { return _scene03ChatUIView; } }
 
       //  Fields ---------------------------------------
-      private IBeamableAPI _beamableAPI = null;
-      
       [SerializeField]
       private Scene03ChatUIView _scene03ChatUIView = null;
       
@@ -105,7 +103,8 @@ namespace Beamable.Samples.GPW
          _scene03ChatUIView.ChatInputUI.Select();
       }
       
-      private async void ChatInputUI_OnValueCleared()
+      
+      private void ChatInputUI_OnValueCleared()
       {
          GPWHelper.PlayAudioClipSecondaryClick();
       }
@@ -175,8 +174,14 @@ namespace Beamable.Samples.GPW
   
          RoomHandle roomHandle = GPWController.Instance.GetCurrentRoomHandle();
 
+         ChatMode chatMode = GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode;
          StringBuilder stringBuilder = new StringBuilder();
-         stringBuilder.AppendLine($"Room: {roomHandle.Name}     |     Messages: ({roomHandle.Messages.Count})").AppendLine();
+         stringBuilder.AppendLine("---- Chat Room ----");
+         stringBuilder.AppendLine($"Title: {roomHandle.Name}");
+         stringBuilder.AppendLine($"Topic: {GPWHelper.GetChatRoomTopic (chatMode)}");
+         stringBuilder.AppendLine($"Players: {roomHandle.Players.Count}");
+         stringBuilder.AppendLine($"Messages: {roomHandle.Messages.Count}");
+         stringBuilder.AppendLine().AppendLine();
          
          foreach (Message message in roomHandle.Messages)
          {

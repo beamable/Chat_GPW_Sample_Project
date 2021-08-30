@@ -37,10 +37,13 @@ namespace Beamable.Samples.Core.UI.DialogSystem
 
         [SerializeField] 
         private Configuration _configuration = null;
-
         
         private DialogUI _currentDialogUI = null;
         private int _delayBeforeHideDialogBox = 0;
+        private static string ConfirmationText = "Confirmation";
+        private static string AreYouSureText = "Are you sure?";
+        private static string OkText = "Ok";
+        private static string CancelText = "Cancel";
 
         //  Constructor ---------------------------------------
         
@@ -63,14 +66,22 @@ namespace Beamable.Samples.Core.UI.DialogSystem
 
         public async Task<EmptyResponse> HideDialogBox()
         {
+            return await HideDialogBoxInternal(_delayBeforeHideDialogBox);
+        }
+        public async Task<EmptyResponse> HideDialogBoxImmediate()
+        {
+            return await HideDialogBoxInternal(0);
+        }
+        private async Task<EmptyResponse> HideDialogBoxInternal(int durationFadeIn)
+        {
             if (_currentDialogUI != null)
             {
-                // For cosmetics have a short delay
-                await Task.Delay(_delayBeforeHideDialogBox);
+                // For cosmetics have a short durationFadeIn
+                await Task.Delay(durationFadeIn);
 
-                // For cosmetics have a short delay
+                // For cosmetics have a short durationFadeIn
                 TweenHelper.CanvasGroupDoFade(_dialogParentCanvasGroup,
-                    1, 0, _configuration.DelayFadeInUI, 0).onComplete = () =>
+                    1, 0, _configuration.DelayFadeInUI , 0).onComplete = () =>
                 {
                     GameObject.Destroy(_currentDialogUI.gameObject);
                     _currentDialogUI = null;
@@ -79,6 +90,8 @@ namespace Beamable.Samples.Core.UI.DialogSystem
             }
             return new EmptyResponse();
         }
+        
+
 
         /// <summary>
         /// Show "Are you sure?"
@@ -87,21 +100,22 @@ namespace Beamable.Samples.Core.UI.DialogSystem
         /// <returns></returns>
         public DialogUI ShowDialogBoxConfirmation(Action action)
         {
+ 
             return ShowDialogBox<DialogUI>(
                 DialogUIPrefab,
-                "Confirmation",
-                "Are you sure?",
+                ConfirmationText,
+                AreYouSureText,
                 new List<DialogButtonData>
                 {
-                    new DialogButtonData("Ok", delegate
+                    new DialogButtonData(OkText, async delegate
                     {
                         action.Invoke();
-                        HideDialogBox();
+                        await HideDialogBoxImmediate();
                     }),
-                    new DialogButtonData("Cancel", delegate
+                    new DialogButtonData(CancelText, async delegate
                     {
                         GPWHelper.PlayAudioClipSecondaryClick();
-                        HideDialogBox();
+                        await HideDialogBoxImmediate();
                     })
                 });
         }

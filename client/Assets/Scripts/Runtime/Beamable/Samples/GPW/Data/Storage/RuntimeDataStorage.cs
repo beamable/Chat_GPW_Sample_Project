@@ -64,12 +64,10 @@ namespace Beamable.Samples.GPW.Data.Storage
     public class RuntimeDataStorage : SubStorage<RuntimeDataStorage>
     {
         //  Properties  ----------------------------------
-        public RuntimeData RuntimeData { get { return _runtimeData; ForceRefresh(); } }
+        public RuntimeData RuntimeData { get { return _runtimeData; } }
   
         //  Fields  --------------------------------------
-        private IBeamableAPI _beamableAPI = null;
         private RuntimeData _runtimeData = new RuntimeData();
-        
         
         //  Unity Methods  --------------------------------
 

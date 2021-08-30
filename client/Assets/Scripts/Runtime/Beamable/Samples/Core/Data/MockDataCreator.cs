@@ -32,7 +32,7 @@ namespace Beamable.Samples.Core.Data
       /// <param name="leaderboardRowCountMin"></param>
       /// <param name="leaderboardScoreMin"></param>
       /// <param name="leaderboardScoreMax"></param>
-      public static async void PopulateLeaderboardWithMockData(IBeamableAPI beamableAPI,
+      public static async Task<string> PopulateLeaderboardWithMockData(IBeamableAPI beamableAPI,
          LeaderboardContent leaderboardContent, 
          int leaderboardRowCountMin, int leaderboardScoreMin, int leaderboardScoreMax)
       {
@@ -50,10 +50,10 @@ namespace Beamable.Samples.Core.Data
          int currentRowCount = leaderboardView.rankings.Count;
          int targetRowCount = leaderboardRowCountMin;
 
-         StringBuilder stringBuilder = new StringBuilder();
-         stringBuilder.AppendLine($"PopulateLeaderboardWithMockData() ...");
-         stringBuilder.AppendLine();
-         stringBuilder.AppendLine($"* Before, rowCount={currentRowCount}");
+         StringBuilder loggingResult = new StringBuilder();
+         loggingResult.AppendLine($"PopulateLeaderboardWithMockData() ...");
+         loggingResult.AppendLine();
+         loggingResult.AppendLine($"* Before, rowCount={currentRowCount}");
 
          if (currentRowCount < targetRowCount)
          {
@@ -66,29 +66,29 @@ namespace Beamable.Samples.Core.Data
 
                // Rename NEW user
                string alias = CreateNewRandomAlias("User");
-               SetCurrentUserAlias(statsService, alias);
+              await SetCurrentUserAlias(statsService, alias);
            
                // Submit mock score for NEW user
                double mockScore = UnityEngine.Random.Range(leaderboardScoreMin, leaderboardScoreMax);
                mockScore = GPWHelper.GetRoundedScore(mockScore);
                await leaderboardService.SetScore(leaderboardContent.Id, mockScore);
 
-               stringBuilder.AppendLine($"* During, Created Mock User. Alias={alias}, score:{mockScore}");
+               loggingResult.AppendLine($"* During, Created Mock User. Alias={alias}, score:{mockScore}");
 
             }
          }
 
          LeaderBoardView leaderboardViewAfter = await leaderboardService.GetBoard(leaderboardContent.Id, 0, 100);
          int currentRowCountAfter = leaderboardViewAfter.rankings.Count;
-         stringBuilder.AppendLine($"* After, rowCount={currentRowCountAfter}");
-         stringBuilder.AppendLine().AppendLine();
+         loggingResult.AppendLine($"* After, rowCount={currentRowCountAfter}");
+         loggingResult.AppendLine().AppendLine();
          
-         Debug.Log(stringBuilder.ToString());
-
          // Login again as local user
          var deviceUsers = await beamableAPI.GetDeviceUsers();
          var user = deviceUsers.First(bundle => bundle.User.id == localDbid);
          await beamableAPI.ApplyToken(user.Token);
+
+         return loggingResult.ToString();
       }
 
       /// <summary>

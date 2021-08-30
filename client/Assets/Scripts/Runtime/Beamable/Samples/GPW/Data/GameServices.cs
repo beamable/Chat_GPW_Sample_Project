@@ -8,6 +8,7 @@ using Beamable.Common.Api.Inventory;
 using Beamable.Common.Leaderboards;
 using Beamable.Experimental.Api.Chat;
 using Beamable.Samples.Core.Data;
+using Beamable.Samples.Core.Debugging;
 using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data.Storage;
@@ -280,7 +281,7 @@ namespace Beamable.Samples.GPW.Data
 				inventoryUpdateBuilder.AddItem(contentId);
 			}
 
-			_inventoryService.Update(inventoryUpdateBuilder);
+			await _inventoryService.Update(inventoryUpdateBuilder);
 
 			return true;
 		}
@@ -340,11 +341,13 @@ namespace Beamable.Samples.GPW.Data
 		/// <param name="configuration"></param>
 		private async Task PopulateLeaderboardWithMockData(Configuration configuration)
 		{
-			MockDataCreator.PopulateLeaderboardWithMockData(_beamableAPI,
+			string loggingResult = await MockDataCreator.PopulateLeaderboardWithMockData(_beamableAPI,
 				_leaderboardContent,
 				configuration.LeaderboardRowCountMin,
 				configuration.LeaderboardScoreMin,
 				configuration.LeaderboardScoreMax);
+			
+			Configuration.Debugger.Log(loggingResult, DebugLogLevel.Simple);
 		}
 
 		public async Task<string> GetOrCreateAlias(long dbid)
@@ -359,25 +362,23 @@ namespace Beamable.Samples.GPW.Data
 				alias = await MockDataCreator.GetCurrentUserAlias(
 					_beamableAPI.StatsService, dbid);
 			}
-			else
-			{
-				Debug.Log("Found in cache: " + alias);
-			}
 				
 			// Missing? Create new, and write to stats
 			if (string.IsNullOrEmpty(alias))
 			{
 				if (dbid == _localPlayerDbid)
 				{
+					// Only WRITE the local player
 					alias = GPWHelper.DefaultLocalAlias;
+					await MockDataCreator.SetCurrentUserAlias(_beamableAPI.StatsService, alias);
 				}
 				else
 				{
 					alias = MockDataCreator.CreateNewRandomAlias(GPWHelper.DefaultRemoteAliasPrefix);
-					_aliasCacheDictionary.Add(dbid, alias);
 				}
-
-				await MockDataCreator.SetCurrentUserAlias(_beamableAPI.StatsService, alias);
+				
+				// Store in cache
+				_aliasCacheDictionary.Add(dbid, alias);
 			}
 
 			return alias;
@@ -403,7 +404,6 @@ namespace Beamable.Samples.GPW.Data
 		//  Event Handlers  -------------------------------
 		private void InventoryService_OnChanged(InventoryView inventoryView)
 		{
-			Debug.Log("Game.InventoryService_OnChanged()");
 			_inventoryView = inventoryView;
 
 			OnInventoryViewChanged.Invoke(inventoryView);
@@ -411,7 +411,6 @@ namespace Beamable.Samples.GPW.Data
 
 		private void ChatService_OnChanged(ChatView chatView)
 		{
-			Debug.Log("Game.ChatService_OnChanged()");
 			_chatView = chatView;
 
 			foreach (RoomHandle roomHandle in _chatView.roomHandles)

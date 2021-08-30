@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3911db0875ba10f4e865abf8c7093ed0, type: 3}
   m_Name: Configuration
   m_EditorClassIdentifier: 
-  _isDemoMode: 1
+  _debugLogLevel: 0
   _scene01IntroName: Scene01Intro
   _scene02GameName: Scene02Game
   _scene03ChatName: Scene03Chat
@@ -24,6 +24,7 @@ MonoBehaviour:
   _delayBeforeLoadScene: 0.25
   _delayAfterDataLoading: 1.5
   _delayFadeInUI: 0.25
-  _leaderboardRowCountMin: 10
+  _dialogBoxLoadingText: Loading {0}...
+  _leaderboardRowCountMin: 9
   _leaderboardScoreMin: 100
   _leaderboardScoreMax: 1000

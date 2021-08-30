@@ -89,7 +89,7 @@ namespace Beamable.Samples.Core.UI
          Refresh();
       }
       
-      private async void ChatInputSubmitButton_OnClicked()
+      private void ChatInputSubmitButton_OnClicked()
       {
          if (string.IsNullOrEmpty(_inputField.text))
          {

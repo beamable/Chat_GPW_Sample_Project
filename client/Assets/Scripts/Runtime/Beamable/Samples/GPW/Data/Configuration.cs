@@ -83,7 +83,7 @@ namespace Beamable.Samples.GPW.Data
       
       [Header("Leaderboard (Mock Data)")] 
       [SerializeField]
-      private int _leaderboardRowCountMin = 10;
+      private int _leaderboardRowCountMin = 9;
       
       [SerializeField]
       private int _leaderboardScoreMin = 100;

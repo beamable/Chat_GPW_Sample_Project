@@ -105,6 +105,7 @@ namespace Beamable.Samples.GPW.Views
                case ChatMode.Direct:
                   _directChatButton.Select();
                   break;
+               default:
                   SwitchDefaultException.Throw(_runtimeData.ChatMode);
                   break;
             }
