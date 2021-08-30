@@ -1,5 +1,5 @@
-﻿using System;
-using Beamable.Common.Leaderboards;
+﻿using Beamable.Common.Leaderboards;
+using Beamable.Samples.Core.Data;
 using Beamable.Samples.GPW.Content;
 using UnityEngine;
 
@@ -14,15 +14,12 @@ namespace Beamable.Samples.GPW.Data
       menuName = BeamableConstants.MENU_ITEM_PATH_ASSETS_BEAMABLE_SAMPLES + "/" +
       "Multiplayer/Create New " + Title,
       order = BeamableConstants.MENU_ITEM_PATH_ASSETS_BEAMABLE_ORDER_1)]
-   public class Configuration : ScriptableObject
+   public class Configuration : BaseConfiguration
    {
       //  Constants  -----------------------------------
       private const string Title = "Configuration";
 
       //  Properties -----------------------------------
-      
-      //TODO: Remove this and add logging?
-      public bool IsDemoMode { get { return _isDemoMode; } }
       
       public string Scene01IntroName { get { return _scene01IntroName; } }
 
@@ -46,16 +43,11 @@ namespace Beamable.Samples.GPW.Data
 
       //  Fields ---------------------------------------
       
-      /// <summary>
-      /// Determines if we are demo mode. Demo mode does several operations
-      /// which are not recommended in a production project including 
-      /// creating mock data for the game.
-      /// </summary>
-      [Header("Debug")]
-      [SerializeField]
-      private bool _isDemoMode = true;
-      
+      // BUG: Unity renders the following 2 "Header" attributes
+      // in reverse order. So keep as shown here
       [Header("Scene Names")]
+      [Header("Child Fields")]
+     
       [SerializeField]
       private string _scene01IntroName = "";
 
@@ -67,7 +59,6 @@ namespace Beamable.Samples.GPW.Data
       
       [SerializeField]
       private string _scene04LeaderboardName = "";
-
 
       [Header("Content")] 
       [SerializeField]
@@ -102,10 +93,12 @@ namespace Beamable.Samples.GPW.Data
 
       
       //  Unity Methods ---------------------------------------
-      protected void OnValidate()
+      protected override void OnValidate()
       {
          // Example validation, remove as needed
          _delayFadeInUI = Mathf.Max(_delayFadeInUI, 0.25f);
+         
+         base.OnValidate();
       }
    }
 }

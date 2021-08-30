@@ -1,5 +1,12 @@
 namespace Beamable.Samples.Core.Debugging
 {
+    public enum DebugLogLevel
+    {
+        Disabled, 
+        Simple,
+        Verbose
+    }
+    
     /// <summary>
     /// Reduce console traffic by wrapping "Debug.Log" calls to use of this Debugger.
     /// </summary>

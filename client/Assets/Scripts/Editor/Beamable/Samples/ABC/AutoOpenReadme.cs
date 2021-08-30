@@ -10,7 +10,12 @@ namespace Beamable.Samples.GPW
 	[InitializeOnLoad]
 	public class AutoOpenReadme : ReadmeEditor
 	{
-		private const string Title = "TBF Readme";
+		// Edit per project
+		private const string ReadmeName = "GPW" + " " +  ReadmeDisplayName;
+		private const string ReadmeSubfolder = "/Chat/";
+		
+		// Do not edit
+		private const string ReadmeDisplayName = "Readme";
 		private const string FindAssetsFilter = "Readme t:Readme";
 		private const string SessionStateKeyWasAlreadyShown = "Beamable.Samples.TBF.AutoOpenReadme.wasAlreadyShown";
 		private static string[] FindAssetsFolders = new string[] { "Assets" };
@@ -30,8 +35,8 @@ namespace Beamable.Samples.GPW
 		}
 
 		[MenuItem(
-			BeamableConstants.MENU_ITEM_PATH_WINDOW_BEAMABLE_SAMPLES + "/Multiplayer/" +
-			BeamableConstants.OPEN + " " + Title,
+			BeamableConstants.MENU_ITEM_PATH_WINDOW_BEAMABLE_SAMPLES + ReadmeSubfolder +
+			BeamableConstants.OPEN + " " + ReadmeName,
 			priority = BeamableConstants.MENU_ITEM_PATH_WINDOW_PRIORITY_4)]
 		private static Readme SelectSpecificReadmeMenuItem()
 		{

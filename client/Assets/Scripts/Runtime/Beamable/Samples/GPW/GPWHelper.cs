@@ -4,6 +4,8 @@ using System;
 using System.Collections;
 using Beamable.Samples.Core.Audio;
 using Beamable.Samples.Core.Utilities;
+using Beamable.Samples.GPW.Content;
+using Beamable.Samples.GPW.Data;
 using Beamable.UI.Scripts;
 using TMPro;
 using UnityEngine.AddressableAssets;
@@ -17,6 +19,39 @@ namespace Beamable.Samples.GPW
    /// </summary>
    public static class GPWHelper
    {
+// Chat
+      public static string ChatRoomNameGlobal = "Global";
+      private static string ChatRoomNameLocation = "Location";
+      private static string ChatRoomNameDirect = "Direct";
+      private static string ChatRoomNameSeparator = "_";
+      public static string DefaultLocalAlias = "This is you! :)";
+      public static string DefaultRemoteAliasPrefix = "Player";
+      public static string Intro = "Intro";
+      public static string Game = "Game";
+
+      public static string GetChatRoomNameGlobal()
+      {
+         return ChatRoomNameGlobal;
+      }
+      
+      public static string GetChatRoomNameLocation(LocationContent locationContent)
+      {
+         return ChatRoomNameLocation +
+                ChatRoomNameSeparator +
+                locationContent.Title;
+      }
+      
+      public static string GetChatRoomNameDirect()
+      {
+         //TODO: pass in the 2 playerids that are chatting?
+         long dbid01 = 01;
+         long dbid02 = 01;
+         return ChatRoomNameDirect +
+                ChatRoomNameSeparator +
+                dbid01 +
+                ChatRoomNameSeparator +
+                dbid02;
+      }
 
       //  Other Methods ---------------------------   -----
       public static void PlayAudioClipPrimaryClick()
@@ -37,10 +72,7 @@ namespace Beamable.Samples.GPW
          GPWController.Instance.RuntimeDataStorage.RuntimeData.PreviousSceneName = 
             SceneManager.GetActiveScene().name;
          
-         if (GPWConstants.IsDebugLogging)
-         {
-            Debug.Log($"LoadScene() to {sceneName}");
-         }
+         Configuration.Debugger.Log($"LoadScene() to {sceneName}");
 
          yield return new WaitForSeconds(delayBeforeLoading/1000);
          SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);

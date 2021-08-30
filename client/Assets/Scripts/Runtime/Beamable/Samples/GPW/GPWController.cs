@@ -157,15 +157,15 @@ namespace Beamable.Samples.GPW
             switch (_runtimeDataStorage.RuntimeData.ChatMode)
             {
                 case ChatMode.Global:
-                    currentRoomName = GPWConstants.ChatRoomNameGlobal;
+                    currentRoomName = GPWHelper.ChatRoomNameGlobal;
                     break;
                 case ChatMode.Location:
                     LocationContent locationContent = _persistentDataStorage.
                         PersistentData.LocationContentViewCurrent.LocationContent;
-                    currentRoomName = GPWConstants.GetChatRoomNameLocation(locationContent);
+                    currentRoomName = GPWHelper.GetChatRoomNameLocation(locationContent);
                     break;
                 case ChatMode.Direct:
-                    currentRoomName = GPWConstants.GetChatRoomNameDirect();
+                    currentRoomName = GPWHelper.GetChatRoomNameDirect();
                     break;
                     SwitchDefaultException.Throw(_runtimeDataStorage.RuntimeData.ChatMode);
                     break;
@@ -239,17 +239,17 @@ namespace Beamable.Samples.GPW
             }
             
             // Chat - Global Room
-            await _gameServices.CreateRoomSafe(GPWConstants.ChatRoomNameGlobal);
+            await _gameServices.CreateRoomSafe(GPWHelper.ChatRoomNameGlobal);
             
             // Chat - Direct Room - TODO: Should I use the existing 'DirectRooms' 
             // available on the chatView instance?
-            await _gameServices.CreateRoomSafe(GPWConstants.GetChatRoomNameDirect());
+            await _gameServices.CreateRoomSafe(GPWHelper.GetChatRoomNameDirect());
             
             // Chat - Location Rooms
             foreach (LocationContentView locationContentView in _runtimeDataStorage.RuntimeData.LocationContentViews)
             {
                 await _gameServices.CreateRoomSafe(
-                    GPWConstants.GetChatRoomNameLocation(locationContentView.LocationContent));
+                    GPWHelper.GetChatRoomNameLocation(locationContentView.LocationContent));
             }
             
             // When running this scene directly, go back to intro scene

@@ -152,12 +152,9 @@ namespace Beamable.Samples.GPW.Data
 
 			bool isSuccess = wasAlreadyExisting || wasJustCreated;
 
-			if (GPWConstants.IsDebugLogging)
-			{
-				Debug.Log($"CreateRoomSafe() room={roomName}, " +
-				          $"wasAlreadyExisting={wasAlreadyExisting}, wasJustCreated={wasJustCreated}");
-
-			}
+			Configuration.Debugger.Log($"CreateRoomSafe() room={roomName}, " +
+			                           $"wasAlreadyExisting={wasAlreadyExisting}, " +
+			                           $"wasJustCreated={wasJustCreated}");
 	
 			return isSuccess;
 		}
@@ -372,11 +369,11 @@ namespace Beamable.Samples.GPW.Data
 			{
 				if (dbid == _localPlayerDbid)
 				{
-					alias = GPWConstants.DefaultLocalAlias;
+					alias = GPWHelper.DefaultLocalAlias;
 				}
 				else
 				{
-					alias = MockDataCreator.CreateNewRandomAlias(GPWConstants.DefaultRemoteAliasPrefix);
+					alias = MockDataCreator.CreateNewRandomAlias(GPWHelper.DefaultRemoteAliasPrefix);
 					_aliasCacheDictionary.Add(dbid, alias);
 				}
 

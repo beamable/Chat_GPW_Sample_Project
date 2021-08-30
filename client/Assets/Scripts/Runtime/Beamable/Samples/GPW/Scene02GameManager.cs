@@ -49,7 +49,7 @@ namespace Beamable.Samples.GPW
          // Load
          _scene02GameUIView.DialogSystem.DelayBeforeHideDialogBox =
             (int)_scene02GameUIView.Configuration.DelayAfterDataLoading * 1000;
-         _scene02GameUIView.DialogSystem.ShowDialogBoxLoading(GPWConstants.Game);
+         _scene02GameUIView.DialogSystem.ShowDialogBoxLoading(GPWHelper.Game);
          SetupBeamable();
          
       }
