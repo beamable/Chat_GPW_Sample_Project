@@ -147,6 +147,8 @@ namespace Beamable.Samples.GPW
       {
          
          GPWHelper.PlayAudioClipSecondaryClick();
+
+         int cashTransactionMin = GPWController.Instance.RuntimeDataStorage.RuntimeData.CashTransactionMin;
          
          _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
             _scene02GameUIView.DialogSystem.DialogUIPrefab,
@@ -155,17 +157,17 @@ namespace Beamable.Samples.GPW
             $"{GPWController.Instance.RuntimeDataStorage.RuntimeData.BankInterestCurrent}% every TURN.",
             new List<DialogButtonData>
             {
-               new DialogButtonData("+100", delegate
+               new DialogButtonData($"+{cashTransactionMin}", delegate
                {
                   GPWHelper.PlayAudioClipSecondaryClick();
-                  GPWController.Instance.TransferCashToBank(100);
+                  GPWController.Instance.TransferCashToBank(cashTransactionMin);
                }),
-               new DialogButtonData("-100", delegate
+               new DialogButtonData($"-{cashTransactionMin}", delegate
                {
                   GPWHelper.PlayAudioClipSecondaryClick();
-                  GPWController.Instance.TransferCashToBank(-100);
+                  GPWController.Instance.TransferCashToBank(-cashTransactionMin);
                }),
-               new DialogButtonData("Ok", async delegate
+               new DialogButtonData(GPWHelper.Ok, async delegate
                {
                   GPWHelper.PlayAudioClipSecondaryClick();
                   await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
@@ -176,8 +178,9 @@ namespace Beamable.Samples.GPW
 
       private void DebtButton_OnClicked()
       {
-         
          GPWHelper.PlayAudioClipSecondaryClick();
+         
+         int cashTransactionMin = GPWController.Instance.RuntimeDataStorage.RuntimeData.CashTransactionMin;
          
          _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
             _scene02GameUIView.DialogSystem.DialogUIPrefab,
@@ -186,17 +189,17 @@ namespace Beamable.Samples.GPW
             $"{GPWController.Instance.RuntimeDataStorage.RuntimeData.DebtInterestCurrent}% every TURN.",
             new List<DialogButtonData>
             {
-               new DialogButtonData("+100", delegate
+               new DialogButtonData($"+{cashTransactionMin}", delegate
                {
                   GPWHelper.PlayAudioClipSecondaryClick();
-                  GPWController.Instance.TransferCashToDebt(-100);
+                  GPWController.Instance.TransferCashToDebt(-cashTransactionMin);
                }),
-               new DialogButtonData("-100", delegate
+               new DialogButtonData($"-{cashTransactionMin}", delegate
                {
                   GPWHelper.PlayAudioClipSecondaryClick();
-                  GPWController.Instance.TransferCashToDebt(100);
+                  GPWController.Instance.TransferCashToDebt(cashTransactionMin);
                }),
-               new DialogButtonData("Ok", async delegate
+               new DialogButtonData(GPWHelper.Ok, async delegate
                {
                   GPWHelper.PlayAudioClipSecondaryClick();
                   await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
@@ -278,14 +281,14 @@ namespace Beamable.Samples.GPW
                stringBuilder.ToString(),
                new List<DialogButtonData>
                {
-                  new DialogButtonData($"Submit Score", async delegate
+                  new DialogButtonData(GPWHelper.SubmitScore, async delegate
                   {
                      GPWHelper.PlayAudioClipSecondaryClick();
                      await GPWController.Instance.GameServices.GetOrCreateAliasAndSetLeaderboardScore(score);
                      await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
                      QuitGameSafe(false);
                   }),
-                  new DialogButtonData("Quit", async delegate
+                  new DialogButtonData(GPWHelper.Quit, async delegate
                   {
                      GPWHelper.PlayAudioClipSecondaryClick();
                      await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();

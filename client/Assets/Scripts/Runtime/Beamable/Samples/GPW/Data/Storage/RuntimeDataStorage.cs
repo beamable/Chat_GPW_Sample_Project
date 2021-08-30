@@ -45,9 +45,6 @@ namespace Beamable.Samples.GPW.Data.Storage
             }
         }
 
-        
-
-
         //  Fields  --------------------------------------
         public InventoryView InventoryView = null;
         public List<LocationContentView> LocationContentViews = new List<LocationContentView>();
@@ -55,6 +52,7 @@ namespace Beamable.Samples.GPW.Data.Storage
         public ChatMode ChatMode = ChatMode.None;
         public float BankInterestCurrent;
         public float DebtInterestCurrent;
+        public int CashTransactionMin;
         public string PreviousSceneName = "";
     }
         
@@ -133,6 +131,7 @@ namespace Beamable.Samples.GPW.Data.Storage
 
                 _runtimeData.BankInterestCurrent = (float)Math.Round(BankInterestCurrent, 2);
                 _runtimeData.DebtInterestCurrent = (float)Math.Round(DebtInterestCurrent, 2);
+                _runtimeData.CashTransactionMin = _runtimeData.RemoteConfiguration.CashTransactionMin;
                 
                 ForceRefresh();
                 IsInitialized = true;

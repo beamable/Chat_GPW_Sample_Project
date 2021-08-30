@@ -27,7 +27,8 @@ namespace Beamable.Samples.GPW.Content
         public int BankAmountInitial = 0;
         public float BankInterestMin = 0.01f;
         public float BankInterestMax = 0.1f;
-      
+        public int CashTransactionMin = 100;
+        
         [Header("Other")]
         public int RandomSeed = 1;
         public int TurnsTotal = 30;
@@ -36,6 +37,5 @@ namespace Beamable.Samples.GPW.Content
         [Header("Lists")]
         public List<ProductContentRef> ProductContentRefs = new List<ProductContentRef>();
         public List<LocationContentRef> LocationContentRefs = new List<LocationContentRef>();
-
     }
 }

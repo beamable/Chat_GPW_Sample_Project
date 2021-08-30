@@ -21,7 +21,7 @@ namespace Beamable.Samples.GPW
    /// </summary>
    public static class GPWHelper
    {
-// Chat
+      // Chat
       public static string ChatRoomNameGlobal = "Global";
       private static string ChatRoomNameLocation = "Location";
       private static string ChatRoomNameDirect = "Direct";
@@ -31,7 +31,11 @@ namespace Beamable.Samples.GPW
       public static string Intro = "Intro";
       public static string Reset = "Reset";
       public static string Game = "Game";
-
+      public static string Ok = "Ok";
+      public static string Cancel = "Cancel";
+      public static string SubmitScore = "Submit Score";
+      public static string Quit = "Cancel";
+      
       public static string GetChatRoomNameGlobal()
       {
          return ChatRoomNameGlobal;
@@ -247,6 +251,9 @@ namespace Beamable.Samples.GPW
             return text;
          }
       }
+
+
+
 
       private static string GetBulletList(string title, List<string> items)
       {
