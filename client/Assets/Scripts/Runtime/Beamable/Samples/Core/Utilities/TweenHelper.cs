@@ -24,14 +24,19 @@ namespace Beamable.Samples.Core.Utilities
 
          foreach (CanvasGroup canvasGroup in canvasGroups)
          {
-            // Fade out immediately
-            canvasGroup.DOFade(fromAlpha, 0);
-
-            // Fade in slowly
-            canvasGroup.DOFade(toAlpha, duration).SetDelay(delay);
-
+            CanvasGroupDoFade(canvasGroup, fromAlpha, toAlpha, duration, delay);
             delay += delayDelta;
          }
+      }
+      
+      public static Tween CanvasGroupDoFade(CanvasGroup canvasGroup,
+         float fromAlpha, float toAlpha, float duration, float delayStart)
+      {
+         // Fade out immediately
+         canvasGroup.DOFade(fromAlpha, 0);
+
+         // Fade in slowly
+         return canvasGroup.DOFade(toAlpha, duration).SetDelay(delayStart);
       }
 
       /// <summary>

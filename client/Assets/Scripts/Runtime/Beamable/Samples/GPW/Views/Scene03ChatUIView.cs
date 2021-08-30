@@ -22,7 +22,7 @@ namespace Beamable.Samples.GPW.Views
 
       public Button GlobalChatButton { get { return _globalChatButton; } }
       public Button LocationChatButton { get { return _locationChatButton; } }
-      public Button DirectChatButton { get { return _directChatButton; } }
+      public Button DirectChatButton { get { return _directChatButton; } } 
       
       public Button BackButton { get { return _backButton; } }
       

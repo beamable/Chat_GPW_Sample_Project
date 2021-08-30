@@ -31,18 +31,25 @@ namespace Beamable.Samples.GPW
       //  Unity Methods   ------------------------------
       protected void Start()
       {
-         _scene02GameUIView.ProductContentList.CanvasGroup.alpha = 0;
          
+         // Clear UI
+         _scene02GameUIView.ProductContentList.CanvasGroup.alpha = 0;
+
+         
+         // Top Navigation
          _scene02GameUIView.TravelButton.onClick.AddListener(TravelButton_OnClicked);
          _scene02GameUIView.BankButton.onClick.AddListener(BankButton_OnClicked);
          _scene02GameUIView.DebtButton.onClick.AddListener(DebtButton_OnClicked);
-         //
+         
+         // Bottom Navigation
          _scene02GameUIView.ChatButton.onClick.AddListener(ChatButton_OnClicked);
          _scene02GameUIView.LeaderboardButton.onClick.AddListener(LeaderboardButton_OnClicked);
          _scene02GameUIView.QuitButton.onClick.AddListener(QuitButton_OnClicked);
          
-         // Wait
-         _scene02GameUIView.DialogSystem.ShowDialogBoxLoading();
+         // Load
+         _scene02GameUIView.DialogSystem.DelayBeforeHideDialogBox =
+            (int)_scene02GameUIView.Configuration.DelayAfterDataLoading * 1000;
+         _scene02GameUIView.DialogSystem.ShowDialogBoxLoading(GPWConstants.Game);
          SetupBeamable();
          
       }
@@ -77,7 +84,7 @@ namespace Beamable.Samples.GPW
       {
          if (_isReadyRuntimeDataStorage && _isReadyProductContentList && _isReadyInventoryView)
          {
-            await Task.Delay((int)_scene02GameUIView.Configuration.DelayAfterDataLoading*1000);
+            
             _scene02GameUIView.DialogSystem.HideDialogBox();
          }
       }
@@ -275,7 +282,7 @@ namespace Beamable.Samples.GPW
                   new DialogButtonData($"Submit Score", async delegate
                   {
                      GPWHelper.PlayAudioClipSecondaryClick();
-                     await GPWController.Instance.GameServices.SetLeaderboardScoreAndWriteAlias(score);
+                     await GPWController.Instance.GameServices.GetOrCreateAliasAndSetLeaderboardScore(score);
                      _scene02GameUIView.DialogSystem.HideDialogBox();
                      QuitGameSafe(false);
                   }),

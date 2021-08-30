@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using Beamable.Experimental.Api.Chat;
 using Beamable.Samples.GPW.Data.Storage;
 using Beamable.Samples.GPW.Views;
@@ -23,20 +24,29 @@ namespace Beamable.Samples.GPW
       //  Unity Methods   ------------------------------
       protected void Start()
       {
+         
+         // Clear UI
+         
          _scene03ChatUIView.ScrollingText.SetText("");
-         _scene03ChatUIView.ChatInputUI.OnValueSubmitted.AddListener(ChatInputUI_OnValueSubmitted);
-         _scene03ChatUIView.ChatInputUI.OnValueCleared.AddListener(ChatInputUI_OnValueCleared);
-         //
+         
+         // Top Navigation
          _scene03ChatUIView.GlobalChatButton.onClick.AddListener(GlobalChatButton_OnClicked);
          _scene03ChatUIView.LocationChatButton.onClick.AddListener(LocationChatButton_OnClicked);
          _scene03ChatUIView.DirectChatButton.onClick.AddListener(DirectChatButton_OnClicked);
-         //
+         
+         // Input
+         _scene03ChatUIView.ChatInputUI.OnValueSubmitted.AddListener(ChatInputUI_OnValueSubmitted);
+         _scene03ChatUIView.ChatInputUI.OnValueCleared.AddListener(ChatInputUI_OnValueCleared);
+
+         // Bottom Navigation
          _scene03ChatUIView.BackButton.onClick.AddListener(BackButton_OnClicked);
-         //
+         
+         // Load
+         _scene03ChatUIView.DialogSystem.DelayBeforeHideDialogBox =
+            (int)_scene03ChatUIView.Configuration.DelayAfterDataLoading * 1000;
+         ShowDialogBoxLoadingSafe();
          SetupBeamable();
       }
-
-
 
 
       //  Other Methods  -----------------------------
@@ -60,7 +70,27 @@ namespace Beamable.Samples.GPW
          }
       }
 
-
+      private void ShowDialogBoxLoadingSafe()
+      {
+         if (!_scene03ChatUIView.DialogSystem.HasCurrentDialogUI)
+         {
+            RoomHandle roomHandle = GPWController.Instance.GetCurrentRoomHandle();
+            _scene03ChatUIView.DialogSystem.ShowDialogBoxLoading(roomHandle.Name);
+         }
+      }
+      
+      private void SetChatMode(ChatMode chatMode)
+      {
+         // Change mode
+         GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode = chatMode;
+         
+         // Show mode specific prompt
+         ShowDialogBoxLoadingSafe();
+         
+         // Update
+         GPWHelper.PlayAudioClipSecondaryClick();
+         GPWController.Instance.RuntimeDataStorage.ForceRefresh();
+      }
 
       //  Event Handlers -------------------------------
       
@@ -83,23 +113,20 @@ namespace Beamable.Samples.GPW
          
       private void GlobalChatButton_OnClicked()
       {
-         GPWHelper.PlayAudioClipSecondaryClick();
-         GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode = ChatMode.Global;
-         GPWController.Instance.RuntimeDataStorage.ForceRefresh();
+         SetChatMode(ChatMode.Global);
+
       }
       
       private void LocationChatButton_OnClicked()
       {
-         GPWHelper.PlayAudioClipSecondaryClick();
-         GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode = ChatMode.Location;
-         GPWController.Instance.RuntimeDataStorage.ForceRefresh();
+         SetChatMode(ChatMode.Location);
+;
       }
       
       private void DirectChatButton_OnClicked()
       {
-         GPWHelper.PlayAudioClipSecondaryClick();
-         GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode = ChatMode.Direct;
-         GPWController.Instance.RuntimeDataStorage.ForceRefresh();
+         SetChatMode(ChatMode.Direct);
+
       }
       
       
@@ -133,7 +160,7 @@ namespace Beamable.Samples.GPW
       }
 
       
-      private void Chat()
+      private async void Chat()
       {
          if (!GPWController.Instance.GameServices.HasChatView)
          {
@@ -145,15 +172,39 @@ namespace Beamable.Samples.GPW
             return;
          }
          
+  
          RoomHandle roomHandle = GPWController.Instance.GetCurrentRoomHandle();
 
          StringBuilder stringBuilder = new StringBuilder();
          stringBuilder.AppendLine($"Room: {roomHandle.Name}     |     Messages: ({roomHandle.Messages.Count})").AppendLine();
+         
          foreach (Message message in roomHandle.Messages)
          {
-            stringBuilder.AppendLine($"[{message.gamerTag}]: " + message.content);
+            try
+            {
+               long playerDbid = message.gamerTag;
+               string alias = await GPWController.Instance.GameServices.GetOrCreateAlias(playerDbid);
+               
+               if (GPWController.Instance.GameServices.IsLocalPlayerDbid(playerDbid))
+               {
+                  stringBuilder.AppendLine($"[{alias}]: " + message.content);
+               }
+               else
+               {
+                  stringBuilder.AppendLine($"[CLICKABLE {alias}]: " + message.content);
+               }
+               
+            }
+            catch (Exception e)
+            {
+               Debug.Log("E: " + e.Message);
+            }
+          
          }
+         
          _scene03ChatUIView.ScrollingText.SetText(stringBuilder.ToString());
+         
+         await _scene03ChatUIView.DialogSystem.HideDialogBox();
       }
       
    }

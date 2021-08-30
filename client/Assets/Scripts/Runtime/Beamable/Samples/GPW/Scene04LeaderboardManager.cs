@@ -15,9 +15,10 @@ namespace Beamable.Samples.GPW
       //  Unity Methods   ------------------------------
       protected void Start()
       {
+         // Bottom Navigation
          _scene04LeaderboardUIView.BackButton.onClick.AddListener(BackButton_OnClicked);
          
-         //
+         // Load
          SetupBeamable();
       }
       

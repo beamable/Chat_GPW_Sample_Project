@@ -1,4 +1,5 @@
-﻿using Beamable.Common.Leaderboards;
+﻿using System;
+using Beamable.Common.Leaderboards;
 using Beamable.Samples.GPW.Content;
 using UnityEngine;
 
@@ -40,8 +41,9 @@ namespace Beamable.Samples.GPW.Data
       public int LeaderboardRowCountMin { get { return _leaderboardRowCountMin; } }
       public int LeaderboardScoreMin { get { return _leaderboardScoreMin; } }
       public int LeaderboardScoreMax { get { return _leaderboardScoreMax; } }
+      public string DialogBoxLoadingText { get { return _dialogBoxLoadingText; } }
 
-      
+
       //  Fields ---------------------------------------
       
       /// <summary>
@@ -65,7 +67,8 @@ namespace Beamable.Samples.GPW.Data
       
       [SerializeField]
       private string _scene04LeaderboardName = "";
-      
+
+
       [Header("Content")] 
       [SerializeField]
       private RemoteConfigurationRef _remoteConfigurationRef = null;
@@ -82,9 +85,12 @@ namespace Beamable.Samples.GPW.Data
          
       [SerializeField]
       private float _delayFadeInUI = 0.25f;
-
-      [Header("Leaderboard (Mock Data)")] 
       
+      [SerializeField]
+      private string _dialogBoxLoadingText = "Loading {0}...";
+
+      
+      [Header("Leaderboard (Mock Data)")] 
       [SerializeField]
       private int _leaderboardRowCountMin = 10;
       

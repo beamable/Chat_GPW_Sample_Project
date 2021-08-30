@@ -1,7 +1,5 @@
 ﻿using System;
-using Beamable.Samples.Core.UI.DialogSystem;
 using Beamable.Samples.Core.Utilities;
-using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Views;
 using UnityEngine;
 
@@ -25,14 +23,17 @@ namespace Beamable.Samples.GPW
       //  Unity Methods   ------------------------------
       protected void Start()
       {
+         // Clear UI
          _scene01IntroUIView.TitleText = "Beamable\nGlobal Price Wars";
          _scene01IntroUIView.BodyText = "";
+         
+         // Bottom Navigation
          _scene01IntroUIView.StartGameButton.onClick.AddListener(StartGameButton_OnClicked);
          _scene01IntroUIView.LeaderboardButton.onClick.AddListener(LeaderboardButton_OnClicked);
          _scene01IntroUIView.ResetButton.onClick.AddListener(ResetButton_OnClicked);
          _scene01IntroUIView.QuitButton.onClick.AddListener(QuitButton_OnClicked);
          
-         //
+         // Load
          SetupBeamable();
       }
 
@@ -114,11 +115,11 @@ namespace Beamable.Samples.GPW
          _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
 
          // Wait
-         _scene01IntroUIView.DialogSystem.ShowDialogBoxLoading();
+         _scene01IntroUIView.DialogSystem.ShowDialogBoxLoading(GPWConstants.Intro);
          await GPWController.Instance.ResetGame();
          
          // Load Scene
-         _scene01IntroUIView.DialogSystem.HideDialogBox();
+         await _scene01IntroUIView.DialogSystem.HideDialogBox();
         
          StartCoroutine(GPWHelper.LoadScene_Coroutine(
             _scene01IntroUIView.Configuration.Scene02GameName,

@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &4809232121136751019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3837206746811008130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 1
 --- !u!114 &7399108368551447135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15,7 +28,9 @@ MonoBehaviour:
   _configuration: {fileID: 11400000, guid: 28e7b012a002a51458322ba2fc05964d, type: 2}
   _dialogSystem:
     _dialogParent: {fileID: 1070185263649176429}
+    _dialogParentCanvasGroup: {fileID: 4259144358240127575}
     _dialogUIPrefab: {fileID: 1507302197928125495, guid: 4484762e95aa3ff4782218d9ecbb2564, type: 3}
+    _configuration: {fileID: 11400000, guid: 28e7b012a002a51458322ba2fc05964d, type: 2}
   _canvasGroups:
   - {fileID: 5995049139731752018}
   - {fileID: 5853969765396939229}
@@ -30,19 +45,6 @@ MonoBehaviour:
   _chatButton: {fileID: 5962425888247668946}
   _leaderboardButton: {fileID: 841931212496915902}
   _quitButton: {fileID: 5660534802331165211}
---- !u!114 &4809232121136751019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3837206746811008130}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ShowMaskGraphic: 1
 --- !u!1001 &7618393990518093940
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -668,7 +670,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 361388984452256304, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_Name
-      value: GameUIView
+      value: Scene02GameUIView
       objectReference: {fileID: 0}
     - target: {fileID: 361388984452256308, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_Pivot.x
@@ -1995,5 +1997,10 @@ MonoBehaviour:
 --- !u!1 &1070185263649176429 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8285078528691555954, guid: d349b26339919d940b7c37f7992492db, type: 3}
+  m_PrefabInstance: {fileID: 8944303707710485791}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &4259144358240127575 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 5132707122777816904, guid: d349b26339919d940b7c37f7992492db, type: 3}
   m_PrefabInstance: {fileID: 8944303707710485791}
   m_PrefabAsset: {fileID: 0}

@@ -18,20 +18,27 @@ namespace Beamable.Samples.GPW.Data
 {
 	public class InventoryViewEvent : UnityEvent<InventoryView>{}
 	public class ChatViewEvent : UnityEvent<ChatView>{}
-	
+
 	/// <summary>
 	/// Game-specific wrapper for calling Beamable online services
 	/// </summary>
-	public class GameServices 
+	public class GameServices
 	{
 		//  Events  --------------------------------------
 		public InventoryViewEvent OnInventoryViewChanged = new InventoryViewEvent();
 		public ChatViewEvent OnChatViewChanged = new ChatViewEvent();
-		
+
 		//  Properties  ----------------------------------
-		public bool HasChatView { get { return ChatView != null; }}
-		public ChatView ChatView { get { return _chatView; }}
-		
+		public bool HasChatView
+		{
+			get { return ChatView != null; }
+		}
+
+		public ChatView ChatView
+		{
+			get { return _chatView; }
+		}
+
 		//  Fields  --------------------------------------
 		private ChatService _chatService = null;
 		private ChatView _chatView = null;
@@ -40,6 +47,7 @@ namespace Beamable.Samples.GPW.Data
 		private LeaderboardService _leaderboardService = null;
 		private LeaderboardContent _leaderboardContent = null;
 		private InventoryView _inventoryView = null;
+		private Dictionary<long, string> _aliasCacheDictionary = new Dictionary<long, string>();
 		private bool _isInitialized = false;
 		private const string ContentType = "items.product";
 		private long _localPlayerDbid;
@@ -53,41 +61,44 @@ namespace Beamable.Samples.GPW.Data
 			{
 				_beamableAPI = await Beamable.API.Instance;
 				_localPlayerDbid = _beamableAPI.User.id;
-				
+
 				/////////////////////////////
 				// ChatService
 				/////////////////////////////
 				_chatService = _beamableAPI.Experimental.ChatService;
 				_chatService.Subscribe(ChatService_OnChanged);
-				
+
 				/////////////////////////////
 				// InventoryService
 				/////////////////////////////
 				_inventoryService = _beamableAPI.InventoryService;
 				_inventoryService.Subscribe(ContentType, InventoryService_OnChanged);
-				
+
 				/////////////////////////////
 				// Leaderboard
 				/////////////////////////////
 				_leaderboardService = _beamableAPI.LeaderboardService;
-				
+
 				_leaderboardContent = await configuration.LeaderboardRef.Resolve();
 				await PopulateLeaderboardWithMockData(configuration);
 
-				
+
 				_isInitialized = true;
 			}
 		}
 
-
+		public bool IsLocalPlayerDbid(long playerDbid)
+		{
+			return playerDbid == _localPlayerDbid;
+		}
 
 		#region ChatService
-		
+
 		public bool HasRoom(string roomName)
 		{
-			return GetRoom (roomName) != null;
+			return GetRoom(roomName) != null;
 		}
-		
+
 
 		public RoomHandle GetRoom(string roomName)
 		{
@@ -101,7 +112,7 @@ namespace Beamable.Samples.GPW.Data
 
 			return null;
 		}
-		
+
 		private bool IsLocalPlayerInRoom(string roomName)
 		{
 			if (!HasRoom(roomName))
@@ -119,7 +130,7 @@ namespace Beamable.Samples.GPW.Data
 		public async Task<bool> CreateRoomSafe(string roomName)
 		{
 			bool wasJustCreated = false;
-			
+
 			if (_chatView == null)
 			{
 				throw new Exception("CreateRoomSafe() failed. _chatView must be not null.");
@@ -130,19 +141,24 @@ namespace Beamable.Samples.GPW.Data
 			{
 				const bool keepSubscribed = true;
 				List<long> players = new List<long> { _localPlayerDbid };
-				
-				RoomInfo roomInfo = await _chatService.CreateRoom(roomName, 
-					keepSubscribed, 
+
+				RoomInfo roomInfo = await _chatService.CreateRoom(roomName,
+					keepSubscribed,
 					players
-					);
+				);
 
 				wasJustCreated = roomInfo.name == roomName;
 			}
-			
-			bool isSuccess = wasAlreadyExisting || wasJustCreated;
-			Debug.Log($"CreateRoomSafe() room={roomName}, " +
-			          $"wasAlreadyExisting={wasAlreadyExisting}, wasJustCreated={wasJustCreated}");
 
+			bool isSuccess = wasAlreadyExisting || wasJustCreated;
+
+			if (GPWConstants.IsDebugLogging)
+			{
+				Debug.Log($"CreateRoomSafe() room={roomName}, " +
+				          $"wasAlreadyExisting={wasAlreadyExisting}, wasJustCreated={wasJustCreated}");
+
+			}
+	
 			return isSuccess;
 		}
 
@@ -154,7 +170,7 @@ namespace Beamable.Samples.GPW.Data
 				Debug.LogError("Room does not exist");
 				return false;
 			}
-			
+
 			if (IsLocalPlayerInRoom(roomName))
 			{
 				Debug.LogError("Local player is not in this room");
@@ -171,7 +187,7 @@ namespace Beamable.Samples.GPW.Data
 
 			return true;
 		}
-		
+
 		public async Task<bool> LeaveRoom(string roomName)
 		{
 			if (!HasRoom(roomName))
@@ -179,7 +195,7 @@ namespace Beamable.Samples.GPW.Data
 				Debug.LogError("Room does not exist");
 				return false;
 			}
-			
+
 			if (!IsLocalPlayerInRoom(roomName))
 			{
 				Debug.LogError("Local player is not in this room");
@@ -198,25 +214,25 @@ namespace Beamable.Samples.GPW.Data
 				Debug.LogError("Room does not exist");
 				return false;
 			}
-			
+
 			if (!IsLocalPlayerInRoom(roomName))
 			{
 				Debug.LogError("Local player is not in this room");
 				return false;
 			}
-			
-			bool isProfanity  = await IsProfaneMessage(messageToSend);
+
+			bool isProfanity = await IsProfaneMessage(messageToSend);
 
 			if (isProfanity)
 			{
 				// Disallow (or prompt Player to resubmit)
 				messageToSend = "[Message Not Allowed]";
 			}
-            
+
 			await GetRoom(roomName).SendMessage(messageToSend);
 			return true;
 		}
-		
+
 		/// <summary>
 		/// Optional: Filter out words which are not appropriate for the
 		/// audience.
@@ -228,7 +244,10 @@ namespace Beamable.Samples.GPW.Data
 			{
 				var result = await _beamableAPI.Experimental.ChatService.ProfanityAssert(text);
 				isProfanityText = false;
-			} catch{}
+			}
+			catch
+			{
+			}
 
 			return isProfanityText;
 		}
@@ -236,7 +255,7 @@ namespace Beamable.Samples.GPW.Data
 		#endregion
 
 		#region InventoryService
-		
+
 		/// <summary>
 		/// Called manually when a scene loads and all data is already fresh
 		/// and we want to manually re-invoke the events
@@ -251,67 +270,69 @@ namespace Beamable.Samples.GPW.Data
 			InventoryService_OnChanged(_inventoryView);
 		}
 
-        public async Task<bool> CanBuyItem(string contentId, int amount)
-        {
-	        return true;
-        }
+		public async Task<bool> CanBuyItem(string contentId, int amount)
+		{
+			return true;
+		}
 
-        public async Task<bool> BuyItem(string contentId, int  amount)
-        {
-            InventoryUpdateBuilder inventoryUpdateBuilder = new InventoryUpdateBuilder();
-            for (int i = 0; i < amount; i++)
-            {
-                inventoryUpdateBuilder.AddItem(contentId);
-            }
-            _inventoryService.Update(inventoryUpdateBuilder);
+		public async Task<bool> BuyItem(string contentId, int amount)
+		{
+			InventoryUpdateBuilder inventoryUpdateBuilder = new InventoryUpdateBuilder();
+			for (int i = 0; i < amount; i++)
+			{
+				inventoryUpdateBuilder.AddItem(contentId);
+			}
 
-            return true;
-        }
+			_inventoryService.Update(inventoryUpdateBuilder);
 
-        public async Task<bool> CanSellItem(string contentId, int amount)
-        {
-	        List<ItemView> itemViews = await GetItemViews(contentId);
-	        return itemViews.Count >= amount;
-        }
+			return true;
+		}
 
-        public async Task<bool> SellItem(string contentId, int amount)
-        {
-            List<ItemView> itemViews = await GetItemViews(contentId);
+		public async Task<bool> CanSellItem(string contentId, int amount)
+		{
+			List<ItemView> itemViews = await GetItemViews(contentId);
+			return itemViews.Count >= amount;
+		}
 
-            if (itemViews.Count < amount)
-            {
-                return false;
-            }
+		public async Task<bool> SellItem(string contentId, int amount)
+		{
+			List<ItemView> itemViews = await GetItemViews(contentId);
 
-            InventoryUpdateBuilder inventoryUpdateBuilder = new InventoryUpdateBuilder();
-            inventoryUpdateBuilder.deleteItems.Clear();
+			if (itemViews.Count < amount)
+			{
+				return false;
+			}
 
-            int deletedAlready = 0;
-            foreach (ItemView itemView in itemViews)
-            {
-	            if (deletedAlready++ > amount)
-	            {
-		            break;
-	            }
-	            Debug.Log($"DeleteItem() contentId={contentId}, itemView.id={itemView.id}");
-	           inventoryUpdateBuilder.DeleteItem(contentId, itemView.id);
-            }
-            
-            await _inventoryService.Update(inventoryUpdateBuilder);
-            return true;
-        }
-        
-        private async Task<List<ItemView>> GetItemViews(string contentId)
-        {
-            foreach (KeyValuePair<string, List<ItemView>> kvp in _inventoryView.items)
-            {
-                string inventoryItemName = $"{kvp.Key} x {kvp.Value.Count}";
-                return kvp.Value;
-            }
+			InventoryUpdateBuilder inventoryUpdateBuilder = new InventoryUpdateBuilder();
+			inventoryUpdateBuilder.deleteItems.Clear();
 
-            return new List<ItemView>();
-        }
-        
+			int deletedAlready = 0;
+			foreach (ItemView itemView in itemViews)
+			{
+				if (deletedAlready++ > amount)
+				{
+					break;
+				}
+
+				Debug.Log($"DeleteItem() contentId={contentId}, itemView.id={itemView.id}");
+				inventoryUpdateBuilder.DeleteItem(contentId, itemView.id);
+			}
+
+			await _inventoryService.Update(inventoryUpdateBuilder);
+			return true;
+		}
+
+		private async Task<List<ItemView>> GetItemViews(string contentId)
+		{
+			foreach (KeyValuePair<string, List<ItemView>> kvp in _inventoryView.items)
+			{
+				string inventoryItemName = $"{kvp.Key} x {kvp.Value.Count}";
+				return kvp.Value;
+			}
+
+			return new List<ItemView>();
+		}
+
 		#endregion
 
 		#region Leaderboards
@@ -328,62 +349,92 @@ namespace Beamable.Samples.GPW.Data
 				configuration.LeaderboardScoreMin,
 				configuration.LeaderboardScoreMax);
 		}
-		
+
+		public async Task<string> GetOrCreateAlias(long dbid)
+		{
+			// Try in cache
+			string alias = "";
+			_aliasCacheDictionary.TryGetValue(dbid, out alias);
+
+			// Try in stats
+			if (string.IsNullOrEmpty(alias))
+			{
+				alias = await MockDataCreator.GetCurrentUserAlias(
+					_beamableAPI.StatsService, dbid);
+			}
+			else
+			{
+				Debug.Log("Found in cache: " + alias);
+			}
+				
+			// Missing? Create new, and write to stats
+			if (string.IsNullOrEmpty(alias))
+			{
+				if (dbid == _localPlayerDbid)
+				{
+					alias = GPWConstants.DefaultLocalAlias;
+				}
+				else
+				{
+					alias = MockDataCreator.CreateNewRandomAlias(GPWConstants.DefaultRemoteAliasPrefix);
+					_aliasCacheDictionary.Add(dbid, alias);
+				}
+
+				await MockDataCreator.SetCurrentUserAlias(_beamableAPI.StatsService, alias);
+			}
+
+			return alias;
+		}
+
 		/// <summary>
 		/// Send the users real score at the end of play
 		/// </summary>
 		/// <param name="score"></param>
 		/// <returns></returns>
-		public async Task<EmptyResponse> SetLeaderboardScoreAndWriteAlias(double score)
+		public async Task<EmptyResponse> GetOrCreateAliasAndSetLeaderboardScore(double score)
 		{
-			// Get alias
-			string alias = await MockDataCreator.GetCurrentUserAlias(
-				_beamableAPI.StatsService, _localPlayerDbid);
+			string alias = await GetOrCreateAlias(_localPlayerDbid);
 
-			// Missing Write a new name
-			if (string.IsNullOrEmpty(alias))
-			{
-				alias = GPWConstants.DefaultAlias;
-				await MockDataCreator.SetCurrentUserAlias( _beamableAPI.StatsService, alias);
-			}
-			
 			// Write the score
-			 await _leaderboardService.SetScore(_leaderboardContent.Id, score);
+			await _leaderboardService.SetScore(_leaderboardContent.Id, score);
 
-			 return new EmptyResponse();
+			return new EmptyResponse();
 		}
 
 		#endregion
-        //  Event Handlers  -------------------------------
-        private void InventoryService_OnChanged(InventoryView inventoryView)
-        {
-	        Debug.Log("Game.InventoryService_OnChanged()");
-            _inventoryView = inventoryView;
-            
-            OnInventoryViewChanged.Invoke(inventoryView);
-        }
-        
-        private void ChatService_OnChanged(ChatView chatView)
-        {
-	        Debug.Log("Game.ChatService_OnChanged()");
-	        _chatView = chatView;
 
-	        foreach (RoomHandle roomHandle in _chatView.roomHandles)
-	        {
-		        if (IsLocalPlayerInRoom(roomHandle.Name))
-		        {
-			        roomHandle.OnMessageReceived -= RoomHandle_MessageReceived;
-			        roomHandle.OnMessageReceived += RoomHandle_MessageReceived;
-		        }
-	        }
-	        OnChatViewChanged.Invoke(_chatView);
-        }
+		//  Event Handlers  -------------------------------
+		private void InventoryService_OnChanged(InventoryView inventoryView)
+		{
+			Debug.Log("Game.InventoryService_OnChanged()");
+			_inventoryView = inventoryView;
 
-        private void RoomHandle_MessageReceived(Message message)
-        {
-	        OnChatViewChanged.Invoke(_chatView);
-        }
+			OnInventoryViewChanged.Invoke(inventoryView);
+		}
+
+		private void ChatService_OnChanged(ChatView chatView)
+		{
+			Debug.Log("Game.ChatService_OnChanged()");
+			_chatView = chatView;
+
+			foreach (RoomHandle roomHandle in _chatView.roomHandles)
+			{
+				if (IsLocalPlayerInRoom(roomHandle.Name))
+				{
+					roomHandle.OnMessageReceived -= RoomHandle_MessageReceived;
+					roomHandle.OnMessageReceived += RoomHandle_MessageReceived;
+				}
+			}
+
+			OnChatViewChanged.Invoke(_chatView);
+		}
+
+		private void RoomHandle_MessageReceived(Message message)
+		{
+			OnChatViewChanged.Invoke(_chatView);
+		}
 
 
 	}
+
 }
