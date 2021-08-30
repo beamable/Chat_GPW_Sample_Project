@@ -24,7 +24,6 @@ namespace Beamable.Samples.GPW.Views
       public Button LocationChatButton { get { return _locationChatButton; } }
       public Button DirectChatButton { get { return _directChatButton; } }
       
-      public Button TransactionButton { get { return _transactionButton; } }
       public Button BackButton { get { return _backButton; } }
       
       public PersistentData PersistentData { get { return _persistentData; } set { _persistentData = value; Refresh(); } }
@@ -59,10 +58,6 @@ namespace Beamable.Samples.GPW.Views
       [SerializeField]
       private Button _directChatButton = null;
       
-
-      [SerializeField]
-      private Button _transactionButton = null;
-      
       [SerializeField]
       private Button _backButton = null;
       
@@ -80,7 +75,6 @@ namespace Beamable.Samples.GPW.Views
       {
          GPWHelper.SetButtonText(_globalChatButton, "Global", "Chat");
          GPWHelper.SetButtonText(_directChatButton, "Direct", $"Chat");
-         GPWHelper.SetButtonText(_transactionButton, "Direct", $"Buy/Sell");
          GPWHelper.SetButtonText(_backButton, "Back");
          
          if (_persistentData != null)
@@ -115,7 +109,6 @@ namespace Beamable.Samples.GPW.Views
                   break;
             }
 
-            _transactionButton.interactable = _runtimeData.ChatMode == ChatMode.Direct;
          }
       }
    }
