@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Beamable.Api.Inventory;
 using Beamable.Api.Leaderboard;
@@ -41,6 +42,9 @@ namespace Beamable.Samples.GPW.Data
 		}
 
 		//  Fields  --------------------------------------
+		private const string Price = "price";
+		private const string ContentType = "items.product";
+		//
 		private ChatService _chatService = null;
 		private ChatView _chatView = null;
 		private IBeamableAPI _beamableAPI = null;
@@ -50,7 +54,7 @@ namespace Beamable.Samples.GPW.Data
 		private InventoryView _inventoryView = null;
 		private Dictionary<long, string> _aliasCacheDictionary = new Dictionary<long, string>();
 		private bool _isInitialized = false;
-		private const string ContentType = "items.product";
+		
 		private long _localPlayerDbid;
 
 		//  Unity Methods  --------------------------------
@@ -267,34 +271,34 @@ namespace Beamable.Samples.GPW.Data
 
 			InventoryService_OnChanged(_inventoryView);
 		}
-
-		public async Task<bool> CanBuyItem(string contentId, int amount)
+		
+		public async Task<bool> BuyItemInternal(ProductContentView productContentView, int amount)
 		{
-			return true;
-		}
-
-		public async Task<bool> BuyItem(string contentId, int amount)
-		{
+			string contentId = productContentView.ProductContent.Id;
+			int price = productContentView.MarketGoods.Price;
 			InventoryUpdateBuilder inventoryUpdateBuilder = new InventoryUpdateBuilder();
 			for (int i = 0; i < amount; i++)
 			{
-				inventoryUpdateBuilder.AddItem(contentId);
+				Dictionary<string, string> properties = new Dictionary<string, string>();
+				properties = SetPriceInPropertiesDictionary(properties, price);
+				
+				Debug.Log("just added: " + properties[Price]);
+				inventoryUpdateBuilder.AddItem(contentId, properties);
 			}
 
 			await _inventoryService.Update(inventoryUpdateBuilder);
+			
+			
+			//Update Mkt
+			productContentView.MarketGoods.Quantity -= amount;
 
 			return true;
 		}
 
-		public async Task<bool> CanSellItem(string contentId, int amount)
+		public async Task<bool> SellItemInternal(ProductContentView productContentView, int amount)
 		{
-			List<ItemView> itemViews = await GetItemViews(contentId);
-			return itemViews.Count >= amount;
-		}
-
-		public async Task<bool> SellItem(string contentId, int amount)
-		{
-			List<ItemView> itemViews = await GetItemViews(contentId);
+			string contentId = productContentView.ProductContent.Id;
+			List<ItemView> itemViews = await GetOwnedItemViews(contentId);
 
 			if (itemViews.Count < amount)
 			{
@@ -317,10 +321,66 @@ namespace Beamable.Samples.GPW.Data
 			}
 
 			await _inventoryService.Update(inventoryUpdateBuilder);
+			
+			//Update Mkt
+			productContentView.MarketGoods.Quantity += amount;
+			
 			return true;
 		}
 
-		private async Task<List<ItemView>> GetItemViews(string contentId)
+		public async Task<int> GetOwnedItemQuantity(string contentId)
+		{
+			Debug.Log("GetOwnedItemQuantity()");
+			
+			foreach (KeyValuePair<string, List<ItemView>> kvp in _inventoryView.items)
+			{
+				Debug.Log("  kvp.Key: " + kvp.Key);
+				if (kvp.Key == contentId)
+				{
+					string inventoryItemName = $"{kvp.Key} x {kvp.Value.Count}";
+					return kvp.Value.Count;
+				}
+			}
+
+			return 0;
+		}
+		
+		public async Task<int> GetOwnedItemAveragePrice(string contentId)
+		{
+			Debug.Log("GetOwnedItemAveragePrice()");
+			
+			foreach (KeyValuePair<string, List<ItemView>> kvp in _inventoryView.items)
+			{
+				Debug.Log("  kvp.Key: " + kvp.Key);
+				if (kvp.Key == contentId)
+				{
+					int quantity = kvp.Value.Count;
+					int priceTotal = 0;
+					foreach (ItemView itemView in kvp.Value)
+					{
+						int price = GetPriceInPropertiesDictionary(itemView.properties);
+						Debug.Log("!!!!! price: " + price);
+						priceTotal += price;
+					}
+
+					return priceTotal / quantity;
+				}
+			}
+
+			return 0;
+		}
+
+		private static int GetPriceInPropertiesDictionary(Dictionary<string, string> propertiesDictionary)
+		{
+			return int.Parse(MockDataCreator.GetValueInPropertiesDictionary(propertiesDictionary, Price));
+		}
+		
+		private static Dictionary<string, string> SetPriceInPropertiesDictionary(Dictionary<string, string> propertiesDictionary, int value)
+		{
+			return MockDataCreator.SetValueInPropertiesDictionary(propertiesDictionary, Price, value);
+		}
+		
+		private async Task<List<ItemView>> GetOwnedItemViews(string contentId)
 		{
 			foreach (KeyValuePair<string, List<ItemView>> kvp in _inventoryView.items)
 			{
@@ -376,8 +436,15 @@ namespace Beamable.Samples.GPW.Data
 				{
 					alias = MockDataCreator.CreateNewRandomAlias(GPWHelper.DefaultRemoteAliasPrefix);
 				}
-				
-				// Store in cache
+			}
+			
+			// Store in cache
+			if (_aliasCacheDictionary.ContainsKey(dbid))
+			{
+				_aliasCacheDictionary[dbid] = alias;
+			}
+			else
+			{
 				_aliasCacheDictionary.Add(dbid, alias);
 			}
 

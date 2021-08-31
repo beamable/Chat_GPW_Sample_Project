@@ -185,26 +185,25 @@ namespace Beamable.Samples.GPW
          
          foreach (Message message in roomHandle.Messages)
          {
+            long playerDbid = message.gamerTag;
+            string alias = "";
             try
             {
-               long playerDbid = message.gamerTag;
-               string alias = await GPWController.Instance.GameServices.GetOrCreateAlias(playerDbid);
-               
-               if (GPWController.Instance.GameServices.IsLocalPlayerDbid(playerDbid))
-               {
-                  stringBuilder.AppendLine($"[{alias}]: " + message.content);
-               }
-               else
-               {
-                  stringBuilder.AppendLine($"[CLICKABLE {alias}]: " + message.content);
-               }
-               
+               alias = await GPWController.Instance.GameServices.GetOrCreateAlias(playerDbid);
             }
             catch (Exception e)
             {
                Debug.Log("E: " + e.Message);
             }
-          
+                         
+            if (GPWController.Instance.GameServices.IsLocalPlayerDbid(playerDbid))
+            {
+               stringBuilder.AppendLine($"[{alias}]: " + message.content);
+            }
+            else
+            {
+               stringBuilder.AppendLine($"[CLICKABLE {alias}]: " + message.content);
+            }
          }
          
          _scene03ChatUIView.ScrollingText.SetText(stringBuilder.ToString());

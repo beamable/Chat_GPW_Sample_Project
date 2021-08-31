@@ -112,6 +112,55 @@ namespace Beamable.Samples.GPW
  
       }
       
+       private void CheckIsGameOver()
+      {
+         if (GPWController.Instance.PersistentDataStorage.PersistentData.IsGameOver)
+         {
+            //
+            int turnCurrent = GPWController.Instance.PersistentDataStorage.PersistentData.TurnCurrent;
+            int turnsTotal = GPWController.Instance.PersistentDataStorage.PersistentData.TurnsTotal;
+            //
+            int cashAmount = GPWController.Instance.PersistentDataStorage.PersistentData.CashAmount;
+            int bankAmount = GPWController.Instance.PersistentDataStorage.PersistentData.BankAmount;
+            int debtAmount = GPWController.Instance.PersistentDataStorage.PersistentData.DebitAmount;
+            double score = GPWController.Instance.CalculatedCurrentScore();
+            
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"CASH + BANK - DEBT = FINAL SCORE");
+            stringBuilder.AppendLine($"{cashAmount} + {bankAmount} - {debtAmount} = {score}");
+            stringBuilder.AppendLine();
+            
+            int itemsCurrent = GPWController.Instance.RuntimeDataStorage.RuntimeData.ItemsCurrent;
+            if (itemsCurrent > 0)
+            {
+               stringBuilder.AppendLine($"TIP: Sell all items before turn {turnsTotal}.");
+            }
+            
+            GPWHelper.PlayAudioClipSecondaryClick();
+            
+            _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
+               _scene02GameUIView.DialogSystem.DialogUIPrefab,
+               $"Turn {turnCurrent}/{turnsTotal} - Game Over! ",
+               stringBuilder.ToString(),
+               new List<DialogButtonData>
+               {
+                  new DialogButtonData(GPWHelper.SubmitScore, async delegate
+                  {
+                     GPWHelper.PlayAudioClipSecondaryClick();
+                     await GPWController.Instance.GameServices.GetOrCreateAliasAndSetLeaderboardScore(score);
+                     await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
+                     QuitGameSafe(false);
+                  }),
+                  new DialogButtonData(GPWHelper.Quit, async delegate
+                  {
+                     GPWHelper.PlayAudioClipSecondaryClick();
+                     await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
+                     QuitGameSafe(false);
+                  })
+               });
+         }
+      }
+      
       //  Event Handlers -------------------------------
       
       private void TravelButton_OnClicked()
@@ -211,37 +260,37 @@ namespace Beamable.Samples.GPW
 
       private async void ProductContentListItem_OnBuy(ProductContentView productContentView)
       {
-         var canBuyItem = await GPWController.Instance.GameServices.
-            CanBuyItem(productContentView.ProductContent.Id, 1);
+         var canBuyItem = await GPWController.Instance.
+            CanBuyItem(productContentView, 1);
          
          bool isSuccessful = false;
          if (canBuyItem)
          {
-            isSuccessful = await GPWController.Instance.GameServices.
-               BuyItem(productContentView.ProductContent.Id, 1);
+            isSuccessful = await GPWController.Instance.
+               BuyItem(productContentView, 1);
          }
          
+         RefreshProductContentList();
          Debug.Log($"ProductContentListItem_OnBuy() canBuyItem = {canBuyItem}, " +
-                   $"isSuccessful = {isSuccessful}");
+                   $"isSuccessful = {isSuccessful} for {productContentView}");
       }
-      
       
       private async void ProductContentListItem_OnSell(ProductContentView productContentView)
       {
-         bool canSellItem = await GPWController.Instance.GameServices.
-            CanSellItem(productContentView.ProductContent.Id, 1);
+         bool canSellItem = await GPWController.Instance.
+            CanSellItem(productContentView, 1);
 
          bool isSuccessful = false;
          if (canSellItem)
          {
-            isSuccessful = await GPWController.Instance.GameServices.
-               SellItem(productContentView.ProductContent.Id, 1);
+            isSuccessful = await GPWController.Instance.
+               SellItem(productContentView, 1);
          }
 
+         RefreshProductContentList();
          Debug.Log($"ProductContentListItem_OnSell() canSellItem = {canSellItem}, " +
                    $"isSuccessful = {isSuccessful}");
       }
-      
       
       
       private void PersistentDataStorage_OnChanged(SubStorage subStorage)
@@ -249,62 +298,23 @@ namespace Beamable.Samples.GPW
          PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
          _scene02GameUIView.PersistentData = persistentDataStorage.PersistentData;
 
-         ProductContentListRefresh();
-         
-         if (persistentDataStorage.PersistentData.IsGameOver)
-         {
-            //
-            int turnCurrent = GPWController.Instance.PersistentDataStorage.PersistentData.TurnCurrent;
-            int turnsTotal = GPWController.Instance.PersistentDataStorage.PersistentData.TurnsTotal;
-            //
-            int cashAmount = GPWController.Instance.PersistentDataStorage.PersistentData.CashAmount;
-            int bankAmount = GPWController.Instance.PersistentDataStorage.PersistentData.BankAmount;
-            int debtAmount = GPWController.Instance.PersistentDataStorage.PersistentData.DebitAmount;
-            double score = GPWController.Instance.CalculatedCurrentScore();
-            
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"CASH + BANK - DEBT = FINAL SCORE");
-            stringBuilder.AppendLine($"{cashAmount} + {bankAmount} - {debtAmount} = {score}");
-            stringBuilder.AppendLine();
-            
-            int itemsCurrent = GPWController.Instance.RuntimeDataStorage.RuntimeData.ItemsCurrent;
-            if (itemsCurrent > 0)
-            {
-               stringBuilder.AppendLine($"TIP: Sell all items before turn {turnsTotal}.");
-            }
-            
-            GPWHelper.PlayAudioClipSecondaryClick();
-            
-            _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
-               _scene02GameUIView.DialogSystem.DialogUIPrefab,
-               $"Turn {turnCurrent}/{turnsTotal} - Game Over! ",
-               stringBuilder.ToString(),
-               new List<DialogButtonData>
-               {
-                  new DialogButtonData(GPWHelper.SubmitScore, async delegate
-                  {
-                     GPWHelper.PlayAudioClipSecondaryClick();
-                     await GPWController.Instance.GameServices.GetOrCreateAliasAndSetLeaderboardScore(score);
-                     await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
-                     QuitGameSafe(false);
-                  }),
-                  new DialogButtonData(GPWHelper.Quit, async delegate
-                  {
-                     GPWHelper.PlayAudioClipSecondaryClick();
-                     await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
-                     QuitGameSafe(false);
-                  })
-               });
-         }
-   
-      }
+         RefreshProductContentList();
+         CheckIsGameOver();
 
-      private async void ProductContentListRefresh()
+      }
+     
+
+      private async void RefreshProductContentList()
       {
+         Debug.Log("RefreshProductContentList()");
+         await GPWController.Instance.RefreshCurrentProductContentViews();
+            
          List<ProductContentView> list = GPWController.Instance.PersistentDataStorage.
             PersistentData.LocationContentViewCurrent.ProductContentViews;
          
-         // Render list
+         // This rebuilds the list...
+         // 1. Keeps vertical list scroll. Good!
+         // 2. but refreshes the contents based on the ProductContentViews. Good!
          await _scene02GameUIView.ProductContentList.InitializeOnDelay(list, 100);
          _scene02GameUIView.ProductContentList.Refresh();
          
@@ -346,9 +356,6 @@ namespace Beamable.Samples.GPW
       {
          _isReadyInventoryView = true;
          CheckIsSceneReady();
-         
       }
-      
-
    }
 }

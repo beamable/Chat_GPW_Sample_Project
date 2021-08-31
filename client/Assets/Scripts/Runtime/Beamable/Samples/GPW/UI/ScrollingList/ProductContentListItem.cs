@@ -40,22 +40,36 @@ namespace Beamable.Samples.GPW.UI.ScrollingList
         private ProductContentView _productContentView = null;
         
         //  Other Methods  --------------------------------
+        
+        
+        /// <summary>
+        /// This 
+        /// </summary>
+        /// <param name="content"></param>
         protected override void UpdateDisplayContent(object content)
         {
             _productContentView = (ProductContentView)content;
+            
             GPWHelper.AddressablesLoadAssetAsync(_productContentView.ProductContent.icon, _iconImage);
             _titleText.text = _productContentView.ProductContent.Title;
 
             StringBuilder stringBuilder = new StringBuilder();
-            int countThem = _productContentView.Quantity;
-            int countMe = 01;
-            int priceThem = _productContentView.Price;
-            int priceMe = 02;
+            int countThem = _productContentView.MarketGoods.Quantity;
+            int countMe = _productContentView.OwnedGoods.Quantity;
+            int priceThem = _productContentView.MarketGoods.Price;
+            int priceMe = _productContentView.OwnedGoods.Price;
             
-            stringBuilder.AppendLine($"Available #{countThem:000}   ${priceThem:000}");
-            stringBuilder.AppendLine($"Owned    #{countMe:000}   ${priceMe:000}");
+            //TODO: Remove
+            if (true && _titleText.text.ToLower().Contains("chocolate"))
+            {
+               Debug.Log($"Update() {_productContentView}");
+            }
+            
+            stringBuilder.AppendLine($"MKT: #{countThem:000}   ${priceThem:000}");
+            stringBuilder.AppendLine($"ME : #{countMe:000}   ${priceMe:000}");
             
             _detailsText.text = stringBuilder.ToString();
+            _buyButton.interactable = _productContentView.CanBuy;
             _buyButton.onClick.RemoveAllListeners();
             _buyButton.onClick.AddListener(() =>
             {
@@ -63,6 +77,7 @@ namespace Beamable.Samples.GPW.UI.ScrollingList
             });
             
             _sellButton.onClick.RemoveAllListeners();
+            _sellButton.interactable = _productContentView.CanSell;
             _sellButton.onClick.AddListener(() =>
             {
                 OnSell.Invoke(_productContentView);   

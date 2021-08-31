@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Beamable.Common.Api;
 using Beamable.Common.Api.Inventory;
 using Beamable.Experimental.Api.Chat;
@@ -8,6 +9,7 @@ using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Data.Storage;
+using UnityEngine;
 
 namespace Beamable.Samples.GPW
 {
@@ -21,8 +23,8 @@ namespace Beamable.Samples.GPW
         public RuntimeDataStorage RuntimeDataStorage { get { return _runtimeDataStorage; } }
         public PersistentDataStorage PersistentDataStorage { get { return _persistentDataStorage; } }
         public GameServices GameServices { get { return _gameServices; } }
+        public bool HasCurrentRoomHandle {  get  {  return GetCurrentRoomHandle() != null;  } }
 
-        
         //  Fields  --------------------------------------
         private RuntimeDataStorage _runtimeDataStorage = new RuntimeDataStorage();
         private PersistentDataStorage _persistentDataStorage = new PersistentDataStorage();
@@ -45,9 +47,6 @@ namespace Beamable.Samples.GPW
                 _persistentDataStorage.OnChanged.AddListener(PersistentDataStorage_OnChanged);
                 await ResetGame();
                 IsInitialized = true;
-                
-                
-
             }
         }
         
@@ -58,12 +57,12 @@ namespace Beamable.Samples.GPW
                 return;
             }
             
-            var current = PersistentDataStorage.PersistentData.LocationContentViewCurrent;
-            var list = RuntimeDataStorage.RuntimeData.LocationContentViews;
+            var locationContentViewCurrent = PersistentDataStorage.PersistentData.LocationContentViewCurrent;
+            var locationContentViews = RuntimeDataStorage.RuntimeData.LocationContentViews;
             int currentIndex = 0;
-            foreach (var x in list)
+            foreach (LocationContentView locationContentView in locationContentViews)
             {
-                if (x.LocationContent.Id == current.LocationContent.Id)
+                if (locationContentView.LocationContent.Id == locationContentViewCurrent.LocationContent.Id)
                 {
                     break;
                 }
@@ -71,7 +70,7 @@ namespace Beamable.Samples.GPW
             }
 
             int nextIndex = currentIndex + 1;
-            if (nextIndex > list.Count -1)
+            if (nextIndex > locationContentViews.Count -1)
             {
                 nextIndex = 0;
             }
@@ -81,10 +80,21 @@ namespace Beamable.Samples.GPW
             
             // Change Location
             PersistentDataStorage.PersistentData.LocationContentViewCurrent =
-                list[nextIndex];
+                locationContentViews[nextIndex];
             PersistentDataStorage.ForceRefresh();
         }
 
+        
+        public double CalculatedCurrentScore()
+        {
+            int cashAmount = GPWController.Instance.PersistentDataStorage.PersistentData.CashAmount;
+            int bankAmount = GPWController.Instance.PersistentDataStorage.PersistentData.BankAmount;
+            int debtAmount = GPWController.Instance.PersistentDataStorage.PersistentData.DebitAmount;
+
+            return cashAmount + bankAmount - debtAmount;
+        }
+
+        
         private void GoToNextTurn()
         {
             if (_persistentDataStorage.PersistentData.IsGameOver)
@@ -106,6 +116,7 @@ namespace Beamable.Samples.GPW
             PersistentDataStorage.PersistentData.TurnCurrent++;
 
         }
+        
         
         public void TransferCashToBank(int amountToAddToBank)
         {
@@ -133,22 +144,63 @@ namespace Beamable.Samples.GPW
             }
         }
         
-        public double CalculatedCurrentScore()
+        public void TransferCashToBuyItem(int itemPurchasePrice)
         {
-            int cashAmount = GPWController.Instance.PersistentDataStorage.PersistentData.CashAmount;
-            int bankAmount = GPWController.Instance.PersistentDataStorage.PersistentData.BankAmount;
-            int debtAmount = GPWController.Instance.PersistentDataStorage.PersistentData.DebitAmount;
-
-            return cashAmount + bankAmount - debtAmount;
+            if (_persistentDataStorage.PersistentData.CashAmount - itemPurchasePrice >= 0)
+            {
+                _persistentDataStorage.PersistentData.CashAmount -= itemPurchasePrice;
+                _persistentDataStorage.ForceRefresh();
+            }
         }
         
-        public bool HasCurrentRoomHandle
+        public void TransferCashToSellItem(int ItemSalePrice)
         {
-            get
+            if (_persistentDataStorage.PersistentData.CashAmount + ItemSalePrice >= 0)
             {
-                return GetCurrentRoomHandle() != null;
+                _persistentDataStorage.PersistentData.CashAmount += ItemSalePrice;
+                _persistentDataStorage.ForceRefresh();
             }
+        }
+        
+        public async Task<bool> CanBuyItem(ProductContentView productContentView, int amount)
+        {
+            int totalQuantity = productContentView.MarketGoods.Quantity;
+            bool isQuanity = totalQuantity >= amount;
             
+            int totalPrice = productContentView.MarketGoods.Price * amount;
+            bool isPrice = _persistentDataStorage.PersistentData.CashAmount >= totalPrice;
+
+            return isPrice && isQuanity;
+        }
+
+        public async Task<bool> BuyItem(ProductContentView productContentView, int amount)
+        {
+            if (await CanBuyItem(productContentView, amount))
+            {
+                TransferCashToBuyItem(productContentView.MarketGoods.Price * amount);
+                return await _gameServices.BuyItemInternal(productContentView, amount);
+            }
+
+            return false;
+        }
+
+        public async Task<bool> CanSellItem(ProductContentView productContentView, int amount)
+        {
+            int totalQuantity = productContentView.OwnedGoods.Quantity;
+            bool isQuanity = totalQuantity >= amount;
+            
+            return isQuanity;
+        }
+
+        public async Task<bool> SellItem(ProductContentView productContentView, int amount)
+        {
+            if (await CanSellItem(productContentView, amount))
+            {
+                TransferCashToSellItem(productContentView.OwnedGoods.Price * amount);
+                return await _gameServices.SellItemInternal(productContentView, amount);
+            }
+
+            return false;
         }
         
         public RoomHandle GetCurrentRoomHandle()
@@ -244,6 +296,42 @@ namespace Beamable.Samples.GPW
         }
         
         
+        public async Task<EmptyResponse> RefreshCurrentProductContentViews()
+        {
+            List<ProductContentView> list = _persistentDataStorage.PersistentData.
+                LocationContentViewCurrent.ProductContentViews;
+
+            Debug.Log("RefreshCurrentProductContentViews()");
+            
+            // Refresh the UI buttons for buy/sell
+            // Can we buy/sell at least one quantity?
+            foreach (ProductContentView productContentView in list)
+            {
+                productContentView.CanBuy = await CanBuyItem(productContentView, 1);
+                productContentView.CanSell = await CanSellItem(productContentView, 1);
+                
+                //TODO
+                string contentId = productContentView.ProductContent.Id;
+                productContentView.OwnedGoods.Quantity = await _gameServices.GetOwnedItemQuantity(contentId);
+                productContentView.OwnedGoods.Price = await _gameServices.GetOwnedItemAveragePrice(contentId);
+                
+                //TODO: Remove
+                if (true && productContentView.ProductContent.Title.ToLower().Contains("chocolate"))
+                {
+                    Debug.Log("CHOC");
+                    Debug.Log($"Quantity() {productContentView.OwnedGoods.Quantity}");
+                    Debug.Log($"Price() {productContentView.OwnedGoods.Price}");
+                }
+                
+                Debug.Log(productContentView.ProductContent.Title);
+                Debug.Log("\t CanBuy " + productContentView.CanBuy);
+                Debug.Log("\t CanSell " + productContentView.CanSell);
+            }
+
+            return new EmptyResponse();
+        }
+        
+        
         //  Event Handlers  -------------------------------
         private void InventoryService_OnChanged(InventoryView inventoryView)
         {
@@ -280,5 +368,7 @@ namespace Beamable.Samples.GPW
                     runtimeDataStorage.RuntimeData.LocationContentViews[0];
             }
         }
+
+
     }
 }

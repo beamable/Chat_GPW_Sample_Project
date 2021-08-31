@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Beamable.Api.Auth;
 using Beamable.Api.Leaderboard;
+using Beamable.Api.Payments;
 using Beamable.Api.Stats;
 using Beamable.Common.Api;
 using Beamable.Common.Api.Leaderboards;
@@ -20,6 +22,9 @@ namespace Beamable.Samples.Core.Data
    /// </summary>
    public static class MockDataCreator
    {
+      //  Fields ---------------------------------------
+      private const string Alias = "alias";
+      
       //  Other Methods --------------------------------
 
       /// <summary>
@@ -98,11 +103,12 @@ namespace Beamable.Samples.Core.Data
       /// <param name="alias"></param>
       public static async Task<EmptyResponse> SetCurrentUserAlias(StatsService statsService, string alias)
       {
+         Debug.Log("before");
          await statsService.SetStats("public", new Dictionary<string, string>()
             {
-               { "alias", alias },
+               { Alias, alias },
             });
-
+         Debug.Log("after");
          return new EmptyResponse();
       }
       
@@ -111,11 +117,35 @@ namespace Beamable.Samples.Core.Data
          var stats = await statsService.GetStats("client", "public", "player", dbid );
          
          string alias = CreateNewRandomAlias("User");
-         stats.TryGetValue("alias", out alias);
+         stats.TryGetValue(Alias, out alias);
          return alias;
       }
 
+      public static string GetValueInPropertiesDictionary(Dictionary<string, string> propertiesDictionary, 
+         string key)
+      {
+         if (!propertiesDictionary.ContainsKey(key))
+         {
+            throw new Exception("GetValueFromPropertiesDictionary() failed.");
+         }
 
+         return propertiesDictionary[key];
+      }
+		
+      public static Dictionary<string, string> SetValueInPropertiesDictionary(Dictionary<string, string> 
+         propertiesDictionary, string key, int value)
+      {
+         if (propertiesDictionary.ContainsKey(key))
+         {
+            propertiesDictionary[key] = value.ToString();
+         }
+         else
+         {
+            propertiesDictionary.Add(key, value.ToString());
+         }
+
+         return propertiesDictionary;
+      }
       /// <summary>
       /// Inspired by http://developer.qbapi.com/Generate-a-Random-Username.aspx
       /// </summary>
