@@ -107,14 +107,16 @@ namespace Beamable.Samples.GPW.Data
 
 		public RoomHandle GetRoom(string roomName)
 		{
-			foreach (RoomHandle roomHandle in _chatView.roomHandles)
+			if (_chatView != null)
 			{
-				if (roomHandle.Name == roomName)
+				foreach (RoomHandle roomHandle in _chatView.roomHandles)
 				{
-					return roomHandle;
+					if (roomHandle.Name == roomName)
+					{
+						return roomHandle;
+					}
 				}
 			}
-
 			return null;
 		}
 

@@ -23,21 +23,11 @@ namespace Beamable.Samples.Core.UI
             Assert.IsNotNull(_textMesh);
         }
 
-        //  Event Handlers -------------------------------
-        public void OnPointerClick(PointerEventData eventData)
+        //  Other Methods -------------------------------
+        public static string WrapTextWithLink(string text, string href)
         {
-            // For certain situations (Unity Version?, Canvas Mode?), toggle this per project
-            bool isConvertToWorld = false;
-          
-            int linkIndex = FindIntersectingLink(_textMesh, Input.mousePosition, Camera.main, isConvertToWorld);
-         
-            if (linkIndex != -1)
-            {
-                TMP_LinkInfo linkInfo = _textMesh.textInfo.linkInfo[linkIndex];
-                Application.OpenURL(linkInfo.GetLinkID());
-            }
+            return $"<u><link={href}>{text}</link></u>";
         }
-      
       
         /// <summary>
         /// Function returning the index of the Link at the given position (if any).
@@ -47,7 +37,7 @@ namespace Beamable.Samples.Core.UI
         /// <param name="camera">The scene camera which may be assigned to a Canvas using ScreenSpace Camera or WorldSpace render mode. Set to null is using ScreenSpace Overlay.</param>
         /// <param name="isConvertToWorld"></param>
         /// <returns></returns>
-        public static int FindIntersectingLink(TMP_Text text, Vector3 position, Camera camera, bool isConvertToWorld)
+        private static int FindIntersectingLink(TMP_Text text, Vector3 position, Camera camera, bool isConvertToWorld)
         { 
             Transform rectTransform = text.transform;
 
@@ -152,7 +142,7 @@ namespace Beamable.Samples.Core.UI
         /// <param name="c"></param>
         /// <param name="d"></param>
         /// <returns></returns>
-        public static bool PointIntersectRectangle(Vector3 m, Vector3 a, Vector3 b, Vector3 c, Vector3 d)
+        private static bool PointIntersectRectangle(Vector3 m, Vector3 a, Vector3 b, Vector3 c, Vector3 d)
         {
             Vector3 ab = b - a;
             Vector3 am = m - a;
@@ -163,6 +153,21 @@ namespace Beamable.Samples.Core.UI
             float bcbmDot = Vector3.Dot(bc, bm);
 
             return 0 <= abamDot && abamDot <= Vector3.Dot(ab, ab) && 0 <= bcbmDot && bcbmDot <= Vector3.Dot(bc, bc);
+        }
+        
+        //  Event Handlers -------------------------------
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            // For certain situations (Unity Version?, Canvas Mode?), toggle this per project
+            bool isConvertToWorld = false;
+          
+            int linkIndex = FindIntersectingLink(_textMesh, Input.mousePosition, Camera.main, isConvertToWorld);
+         
+            if (linkIndex != -1)
+            {
+                TMP_LinkInfo linkInfo = _textMesh.textInfo.linkInfo[linkIndex];
+                Application.OpenURL(linkInfo.GetLinkID());
+            }
         }
     }
 }

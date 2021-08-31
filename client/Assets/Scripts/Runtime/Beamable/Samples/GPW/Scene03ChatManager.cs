@@ -70,11 +70,13 @@ namespace Beamable.Samples.GPW
 
       private void ShowDialogBoxLoadingSafe()
       {
-         if (!_scene03ChatUIView.DialogSystem.HasCurrentDialogUI)
+         string roomName = "";
+         if (!_scene03ChatUIView.DialogSystem.HasCurrentDialogUI && GPWController.Instance.HasCurrentRoomHandle)
          {
             RoomHandle roomHandle = GPWController.Instance.GetCurrentRoomHandle();
-            _scene03ChatUIView.DialogSystem.ShowDialogBoxLoading(roomHandle.Name);
+            roomName = roomHandle.Name;
          }
+         _scene03ChatUIView.DialogSystem.ShowDialogBoxLoading(roomName);
       }
       
       private void SetChatMode(ChatMode chatMode)

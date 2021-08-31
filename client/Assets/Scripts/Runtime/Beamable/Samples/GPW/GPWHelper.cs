@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using Beamable.Samples.Core.Audio;
 using Beamable.Samples.Core.Exceptions;
+using Beamable.Samples.Core.UI;
 using Beamable.Samples.Core.Utilities;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
@@ -227,10 +228,9 @@ namespace Beamable.Samples.GPW
             
             text += GPWHelper.GetBulletList("Resources", new List<string>
             {
-               "Overview: <u><link=https://docs.beamable.com/docs/chat-gpw-sample-project>Chat (GPW) Sample</link></u>",
-               "Feature: <u><link=https://docs.beamable.com/docs/chat-feature>Chat</link></u>",
+               "Overview: " + TMPHyperlinkHandler.WrapTextWithLink("Chat (GPW) Sample", "https://docs.beamable.com/docs/chat-gpw-sample-project"),
+               "Feature: " + TMPHyperlinkHandler.WrapTextWithLink("Chat", "https://docs.beamable.com/docs/chat-feature")
             });
-
 
             return text;
          }
@@ -243,7 +243,7 @@ namespace Beamable.Samples.GPW
             string text = "";
             text += "<color=#ff0000>";
             text += GPWHelper.GetBulletList("Todo", new List<string> {
-               "Download & Install <u><link=http://docs.beamable.com>Beamable SDK</link></u>",
+               "Download & Install " + TMPHyperlinkHandler.WrapTextWithLink("Beamable SDK", "http://docs.beamable.com"),
                "Open the Beamable Toolbox Window in Unity",
                "Register or Sign In"
             });

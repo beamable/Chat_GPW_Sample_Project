@@ -221,10 +221,15 @@ namespace Beamable.Samples.GPW
                     currentRoomName = GPWHelper.GetChatRoomNameDirect();
                     break;
                 default:
-                    SwitchDefaultException.Throw(_runtimeDataStorage.RuntimeData.ChatMode);
+                    //Throw no exception, returning null is ok
                     break;
             }
 
+            if (_gameServices == null)
+            {
+                return null;
+            }
+            
             if (!_gameServices.HasRoom(currentRoomName))
             {
                 return null;
