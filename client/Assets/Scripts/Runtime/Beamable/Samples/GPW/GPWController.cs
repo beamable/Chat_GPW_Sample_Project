@@ -205,9 +205,14 @@ namespace Beamable.Samples.GPW
         
         public RoomHandle GetCurrentRoomHandle()
         {
+            return GetRoomHandleForChatMode(_runtimeDataStorage.RuntimeData.ChatMode);
+        }
+
+        public RoomHandle GetRoomHandleForChatMode(ChatMode chatMode)
+        {
             string currentRoomName = "";
 			
-            switch (_runtimeDataStorage.RuntimeData.ChatMode)
+            switch (chatMode )
             {
                 case ChatMode.Global:
                     currentRoomName = GPWHelper.ChatRoomNameGlobal;
@@ -237,7 +242,6 @@ namespace Beamable.Samples.GPW
             
             return _gameServices.GetRoom(currentRoomName);
         }
-
         
         public async Task<EmptyResponse> ResetGame()
         {

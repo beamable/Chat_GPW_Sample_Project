@@ -1,22 +1,33 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace Beamable.Samples.Core.UI
 {
+    public class TMPHyperlinkHandlerEvent : UnityEvent<string>{}
+    
     /// <summary>
     /// User may click any <link=blah>text</link> in the source text to
     /// open a url in the default system web browser.
     /// 
     /// <see cref="https://deltadreamgames.com/unity-tmp-hyperlinks/"/>
     /// </summary>
-    public class TMPHyperlinkHandler : MonoBehaviour, IPointerClickHandler
+    public class TMP_HyperlinkHandler : MonoBehaviour, IPointerClickHandler
     {
+        //  Events ---------------------------------------
+        [NonSerialized] 
+        public TMPHyperlinkHandlerEvent OnLinkClicked = new TMPHyperlinkHandlerEvent();
+            
         //  Fields ---------------------------------------
         [SerializeField]
         private TextMeshProUGUI _textMesh = null;
 
+        [SerializeField] 
+        private bool willAutoOpenLinks = true;
+        
         //  Unity Methods -------------------------------
         protected void Start()
         {
@@ -166,7 +177,15 @@ namespace Beamable.Samples.Core.UI
             if (linkIndex != -1)
             {
                 TMP_LinkInfo linkInfo = _textMesh.textInfo.linkInfo[linkIndex];
-                Application.OpenURL(linkInfo.GetLinkID());
+
+                // Most often this is true and the link is processed automatically
+                if (willAutoOpenLinks)
+                {
+                    Application.OpenURL(linkInfo.GetLinkID());
+                }
+                
+                // However, sometimes, its useful to get the link via this event and process it manually
+                OnLinkClicked.Invoke(linkInfo.GetLinkID());
             }
         }
     }

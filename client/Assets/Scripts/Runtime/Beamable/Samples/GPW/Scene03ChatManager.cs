@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Beamable.Experimental.Api.Chat;
+using Beamable.Samples.Core.UI;
 using Beamable.Samples.GPW.Data.Storage;
 using Beamable.Samples.GPW.Views;
 using UnityEngine;
@@ -24,8 +25,8 @@ namespace Beamable.Samples.GPW
       {
          
          // Clear UI
-         
          _scene03ChatUIView.ScrollingText.SetText("");
+         _scene03ChatUIView.ScrollingText.HyperlinkHandler.OnLinkClicked.AddListener(HyperlinkHandler_OnLinkClicked);
          
          // Top Navigation
          _scene03ChatUIView.GlobalChatButton.onClick.AddListener(GlobalChatButton_OnClicked);
@@ -45,6 +46,8 @@ namespace Beamable.Samples.GPW
          ShowDialogBoxLoadingSafe();
          SetupBeamable();
       }
+
+
 
 
       //  Other Methods  -----------------------------
@@ -93,6 +96,21 @@ namespace Beamable.Samples.GPW
       }
 
       //  Event Handlers -------------------------------
+      private async void HyperlinkHandler_OnLinkClicked(string href)
+      {
+         Debug.Log("href: " + href);
+
+         if (GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode == ChatMode.Direct)
+         {
+            throw new Exception("HyperlinkHandler_OnLinkClicked() ChatMode cannot be ChatMode.Direct. ");
+         }
+
+         SetChatMode(ChatMode.Direct);
+         RoomHandle roomHandle = GPWController.Instance.GetCurrentRoomHandle();
+         long dbid1 = GPWController.Instance.GameServices.LocalPlayerDbid;
+         long dbid2 = long.Parse(href);
+         await GPWController.Instance.GameServices.JoinDirectRoomWithOnly2Players(dbid1, dbid2);
+      }
       
       private async void ChatInputUI_OnValueSubmitted(string message)
       {
@@ -198,13 +216,16 @@ namespace Beamable.Samples.GPW
                Debug.Log("E: " + e.Message);
             }
                          
-            if (GPWController.Instance.GameServices.IsLocalPlayerDbid(playerDbid))
+            if (GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode == ChatMode.Direct ||
+                GPWController.Instance.GameServices.IsLocalPlayerDbid(playerDbid))
             {
                stringBuilder.AppendLine($"[{alias}]: " + message.content);
             }
             else
             {
-               stringBuilder.AppendLine($"[CLICKABLE {alias}]: " + message.content);
+               // When NOT in direct chat, and NOT the local player, renders clickable text
+               // Clicks are handled above by "HyperlinkHandler_OnLinkClicked"
+               stringBuilder.AppendLine($"[{TMP_HyperlinkHandler.WrapTextWithLink(alias, playerDbid.ToString())}]: " + message.content);
             }
          }
          

@@ -51,13 +51,15 @@ namespace Beamable.Samples.GPW
       
       public static string GetChatRoomNameDirect()
       {
-         //TODO: pass in the 2 playerids that are chatting?
+         // TODO: Optional, create a CUSTOM room for each two dbid's of the players
+         // in the room. This is only needed if multiple direct rooms are offered in the future.
+         // For now its not needed.
          long dbid01 = 01;
          long dbid02 = 01;
          return ChatRoomNameDirect +
                 ChatRoomNameSeparator +
                 dbid01 +
-                ChatRoomNameSeparator +
+                ChatRoomNameSeparator + "On" + ChatRoomNameSeparator +
                 dbid02;
       }
       
@@ -228,8 +230,8 @@ namespace Beamable.Samples.GPW
             
             text += GPWHelper.GetBulletList("Resources", new List<string>
             {
-               "Overview: " + TMPHyperlinkHandler.WrapTextWithLink("Chat (GPW) Sample", "https://docs.beamable.com/docs/chat-gpw-sample-project"),
-               "Feature: " + TMPHyperlinkHandler.WrapTextWithLink("Chat", "https://docs.beamable.com/docs/chat-feature")
+               "Overview: " + TMP_HyperlinkHandler.WrapTextWithLink("Chat (GPW) Sample", "https://docs.beamable.com/docs/chat-gpw-sample-project"),
+               "Feature: " + TMP_HyperlinkHandler.WrapTextWithLink("Chat", "https://docs.beamable.com/docs/chat-feature")
             });
 
             return text;
@@ -243,7 +245,7 @@ namespace Beamable.Samples.GPW
             string text = "";
             text += "<color=#ff0000>";
             text += GPWHelper.GetBulletList("Todo", new List<string> {
-               "Download & Install " + TMPHyperlinkHandler.WrapTextWithLink("Beamable SDK", "http://docs.beamable.com"),
+               "Download & Install " + TMP_HyperlinkHandler.WrapTextWithLink("Beamable SDK", "http://docs.beamable.com"),
                "Open the Beamable Toolbox Window in Unity",
                "Register or Sign In"
             });

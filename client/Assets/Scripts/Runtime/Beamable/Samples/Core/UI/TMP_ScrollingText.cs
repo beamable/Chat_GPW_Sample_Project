@@ -12,14 +12,17 @@ namespace Beamable.Samples.Core.UI
    public class TMP_ScrollingText : MonoBehaviour
    {
       //  Properties --------------------------------------
+      public TMP_HyperlinkHandler HyperlinkHandler { get { return _hyperlinkHandler;}}
 
       //  Fields ---------------------------------------
       [SerializeField] 
       private TMP_Text _mainText = null;
       
       [SerializeField] 
+      private TMP_HyperlinkHandler _hyperlinkHandler = null;
+      
+      [SerializeField] 
       private ScrollRect _scrollRect = null;
-
 
       //  Unity Methods   ------------------------------
 

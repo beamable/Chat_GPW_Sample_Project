@@ -31,15 +31,12 @@ namespace Beamable.Samples.GPW.Data
 		public ChatViewEvent OnChatViewChanged = new ChatViewEvent();
 
 		//  Properties  ----------------------------------
-		public bool HasChatView
-		{
-			get { return ChatView != null; }
-		}
+		public long LocalPlayerDbid { get { return _localPlayerDbid; } }
+		public bool IsLocalPlayerDbid(long playerDbid) { return playerDbid == _localPlayerDbid; }
+		
+		public bool HasChatView { get { return ChatView != null; } }
 
-		public ChatView ChatView
-		{
-			get { return _chatView; }
-		}
+		public ChatView ChatView { get { return _chatView; } }
 
 		//  Fields  --------------------------------------
 		private const string Price = "price";
@@ -92,10 +89,9 @@ namespace Beamable.Samples.GPW.Data
 			}
 		}
 
-		public bool IsLocalPlayerDbid(long playerDbid)
-		{
-			return playerDbid == _localPlayerDbid;
-		}
+
+		
+
 
 		#region ChatService
 
@@ -122,18 +118,18 @@ namespace Beamable.Samples.GPW.Data
 
 		private bool IsLocalPlayerInRoom(string roomName)
 		{
+			return IsPlayerInRoom(_localPlayerDbid, roomName);
+		}
+
+		private bool IsPlayerInRoom(long dbid, string roomName)
+		{
 			if (!HasRoom(roomName))
 			{
 				return false;
 			}
-
-			// foreach (var x in GetRoom(roomName).Players)
-			// {
-			// 	Debug.Log(x + " and " + _localPlayerDbid);
-			// }
-			return GetRoom(roomName).Players.Contains(_localPlayerDbid);
+			return GetRoom(roomName).Players.Contains(dbid);
 		}
-
+		
 		public async Task<bool> CreateRoomSafe(string roomName)
 		{
 			bool wasJustCreated = false;
@@ -166,8 +162,14 @@ namespace Beamable.Samples.GPW.Data
 			return isSuccess;
 		}
 
-
-		public async Task<bool> JoinRoom(string roomName)
+		public async Task<bool> JoinDirectRoomWithOnly2Players(long dbid1, long dbid2)
+		{
+			List<long> players = new List<long>();
+			players.Add(dbid1);
+			players.Add(dbid2);
+			return await JoinRoom(players, GPWController.Instance.GetRoomHandleForChatMode(ChatMode.Direct).Name, true);
+		}
+		public async Task<bool> JoinRoom(List<long> newPlayers, string roomName, bool willRemoveOtherPlayers)
 		{
 			if (!HasRoom(roomName))
 			{
@@ -175,19 +177,24 @@ namespace Beamable.Samples.GPW.Data
 				return false;
 			}
 
-			if (IsLocalPlayerInRoom(roomName))
+			//TODO: how do I join an existing room? Like this? -srivello
+			RoomHandle roomHandle = GetRoom(roomName);
+			List<long> players = roomHandle.Players;
+			
+			//Remove some?
+			if (willRemoveOtherPlayers)
 			{
-				Debug.LogError("Local player is not in this room");
-				return true;
+				players.Clear();
 			}
-			else
+			
+			// Add some
+			foreach (long newPlayer in newPlayers)
 			{
-				//TODO: how do I join an existing room? Like this? -srivello
-				RoomHandle roomHandle = GetRoom(roomName);
-				List<long> players = roomHandle.Players;
-				players.Add(_localPlayerDbid);
-				await _chatService.CreateRoom(roomHandle.Id, true, players);
+				players.Add(newPlayer);
 			}
+			
+			// Automatically will Create & Join (new room) or Join (existing room)
+			await _chatService.CreateRoom(roomHandle.Id, true, players);
 
 			return true;
 		}
