@@ -82,6 +82,7 @@ namespace Beamable.Samples.GPW
             PersistentDataStorage.PersistentData.LocationContentViewCurrent =
                 locationContentViews[nextIndex];
             PersistentDataStorage.ForceRefresh();
+            GameServices.ForceRefresh();
         }
 
         

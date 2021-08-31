@@ -383,6 +383,45 @@ namespace Beamable.Samples.GPW
                })
             });
       }
+      
+      public static void ShowDialogBoxSell(DialogSystem dialogSystem, ProductContentView productContentView, Action<int> onComplete)
+      {
+         int amount = 1;
+         int deltaAmount = 1;
+         string getBodyText(int amountCurrent)
+         {
+            return $"Sell {amountCurrent:000} {GetPluralized("item","items", amountCurrent)} for ${(amountCurrent * productContentView.MarketGoods.Price):000}?";
+         }
+
+         dialogSystem.ShowDialogBox<DialogUI>(
+            dialogSystem.DialogUIPrefab,
+            $"{productContentView.ProductContent.Title}: You own {productContentView.OwnedGoods.Quantity:000} at ${productContentView.OwnedGoods.Price:000}.",
+            getBodyText(amount),
+            new List<DialogButtonData>
+            {
+               new DialogButtonData($"+{deltaAmount}", delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  int nextAmount = amount + deltaAmount;
+                  if (GPWController.Instance.CanSellItem(productContentView, nextAmount))
+                  {
+                     amount = nextAmount;
+                  }
+                  dialogSystem.CurrentDialogUI.BodyText.text = getBodyText(amount);
+               }),
+               new DialogButtonData($"-{deltaAmount}", delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  amount -= deltaAmount;
+                  amount = Mathf.Max(amount, 0);
+                  dialogSystem.CurrentDialogUI.BodyText.text = getBodyText(amount);
+               }),
+               new DialogButtonData(GPWHelper.Ok, async delegate
+               {
+                  onComplete.Invoke(amount);
+               })
+            });
+      }
 
 
    }

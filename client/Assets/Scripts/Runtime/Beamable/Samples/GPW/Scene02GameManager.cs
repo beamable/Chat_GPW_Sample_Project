@@ -162,30 +162,7 @@ namespace Beamable.Samples.GPW
          }
       }
        
-       
-       private async Task<bool> ConfirmedBuy(ProductContentView productContentView, int amount)
-       {
 
-          var canBuyItem = GPWController.Instance.CanBuyItem(productContentView, amount);
-         
-          bool isSuccessful = false;
-          if (canBuyItem)
-          {
-             isSuccessful = await GPWController.Instance.
-                BuyItem(productContentView, amount);
-          }
-
-          if (!isSuccessful)
-          {
-             throw new Exception("ConfirmedBuy() failed. ");
-          }
-         
-          RefreshProductContentList();
-          Debug.Log($"ProductContentListItem_OnBuy() canBuyItem = {canBuyItem}, " +
-                    $"isSuccessful = {isSuccessful} for {productContentView}");
-
-          return isSuccessful;
-       }
       
       //  Event Handlers -------------------------------
       
@@ -296,7 +273,8 @@ namespace Beamable.Samples.GPW
             if (updatedAmount > 0)
             {
                _scene02GameUIView.DialogSystem.CurrentDialogUI.IsInteractable = false;
-               bool isSuccessful = await ConfirmedBuy(productContentView, updatedAmount);
+               bool isSuccessful = await GPWController.Instance.BuyItem(productContentView, updatedAmount);
+               RefreshProductContentList();
             }
        
             await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
@@ -307,18 +285,22 @@ namespace Beamable.Samples.GPW
       
       private async void ProductContentListItem_OnSell(ProductContentView productContentView)
       {
-         bool canSellItem = GPWController.Instance.CanSellItem(productContentView, 1);
+         GPWHelper.ShowDialogBoxSell(
+            _scene02GameUIView.DialogSystem, 
+            productContentView, 
+            async delegate (int updatedAmount)
+            {
+               GPWHelper.PlayAudioClipSecondaryClick();
 
-         bool isSuccessful = false;
-         if (canSellItem)
-         {
-            isSuccessful = await GPWController.Instance.
-               SellItem(productContentView, 1);
-         }
-
-         RefreshProductContentList();
-         Debug.Log($"ProductContentListItem_OnSell() canSellItem = {canSellItem}, " +
-                   $"isSuccessful = {isSuccessful}");
+               if (updatedAmount > 0)
+               {
+                  _scene02GameUIView.DialogSystem.CurrentDialogUI.IsInteractable = false;
+                  bool isSuccessful = await GPWController.Instance.SellItem(productContentView, updatedAmount);
+                  RefreshProductContentList();
+               }
+               
+               await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
+            });
       }
       
       

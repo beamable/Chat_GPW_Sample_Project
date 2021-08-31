@@ -290,13 +290,10 @@ namespace Beamable.Samples.GPW.Data
 			{
 				Dictionary<string, string> properties = new Dictionary<string, string>();
 				properties = SetPriceInPropertiesDictionary(properties, price);
-				
-				Debug.Log("just added: " + properties[Price]);
 				inventoryUpdateBuilder.AddItem(contentId, properties);
 			}
 
 			await _inventoryService.Update(inventoryUpdateBuilder);
-			
 			
 			//Update Mkt
 			productContentView.MarketGoods.Quantity -= amount;
@@ -324,8 +321,6 @@ namespace Beamable.Samples.GPW.Data
 				{
 					break;
 				}
-
-				Debug.Log($"DeleteItem() contentId={contentId}, itemView.id={itemView.id}");
 				inventoryUpdateBuilder.DeleteItem(contentId, itemView.id);
 			}
 
