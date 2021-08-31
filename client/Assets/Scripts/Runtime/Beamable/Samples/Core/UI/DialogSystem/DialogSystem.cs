@@ -20,7 +20,9 @@ namespace Beamable.Samples.Core.UI.DialogSystem
         //  Properties ---------------------------------------
         public DialogUI DialogUIPrefab { get { return _dialogUIPrefab; }}
         
-        public bool HasCurrentDialogUI { get { return _currentDialogUI != null; }}
+        public bool HasCurrentDialogUI { get { return CurrentDialogUI != null; }}
+        
+        public DialogUI CurrentDialogUI { get { return _currentDialogUI; }}
         
         public int DelayBeforeHideDialogBox { get { return _delayBeforeHideDialogBox; } set { _delayBeforeHideDialogBox = value; }}
     

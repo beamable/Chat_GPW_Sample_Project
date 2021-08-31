@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using AirFishLab.ScrollingList;
+using Beamable.Common.Api;
 using Beamable.Common.Api.Inventory;
 using Beamable.Samples.Core.UI.DialogSystem;
 using Beamable.Samples.Core.UI.ScrollingList;
@@ -33,9 +35,8 @@ namespace Beamable.Samples.GPW
       {
          
          // Clear UI
-         _scene02GameUIView.ProductContentList.CanvasGroup.alpha = 0;
+         _scene02GameUIView.ProductContentList.IsVisible = false;
 
-         
          // Top Navigation
          _scene02GameUIView.TravelButton.onClick.AddListener(TravelButton_OnClicked);
          _scene02GameUIView.BankButton.onClick.AddListener(BankButton_OnClicked);
@@ -160,6 +161,31 @@ namespace Beamable.Samples.GPW
                });
          }
       }
+       
+       
+       private async Task<bool> ConfirmedBuy(ProductContentView productContentView, int amount)
+       {
+
+          var canBuyItem = GPWController.Instance.CanBuyItem(productContentView, amount);
+         
+          bool isSuccessful = false;
+          if (canBuyItem)
+          {
+             isSuccessful = await GPWController.Instance.
+                BuyItem(productContentView, amount);
+          }
+
+          if (!isSuccessful)
+          {
+             throw new Exception("ConfirmedBuy() failed. ");
+          }
+         
+          RefreshProductContentList();
+          Debug.Log($"ProductContentListItem_OnBuy() canBuyItem = {canBuyItem}, " +
+                    $"isSuccessful = {isSuccessful} for {productContentView}");
+
+          return isSuccessful;
+       }
       
       //  Event Handlers -------------------------------
       
@@ -258,27 +284,30 @@ namespace Beamable.Samples.GPW
       }
 
 
-      private async void ProductContentListItem_OnBuy(ProductContentView productContentView)
+      private void ProductContentListItem_OnBuy(ProductContentView productContentView)
       {
-         var canBuyItem = await GPWController.Instance.
-            CanBuyItem(productContentView, 1);
-         
-         bool isSuccessful = false;
-         if (canBuyItem)
+         GPWHelper.ShowDialogBoxBuy(
+            _scene02GameUIView.DialogSystem, 
+            productContentView, 
+            async delegate (int updatedAmount)
          {
-            isSuccessful = await GPWController.Instance.
-               BuyItem(productContentView, 1);
-         }
+            GPWHelper.PlayAudioClipSecondaryClick();
+
+            if (updatedAmount > 0)
+            {
+               _scene02GameUIView.DialogSystem.CurrentDialogUI.IsInteractable = false;
+               bool isSuccessful = await ConfirmedBuy(productContentView, updatedAmount);
+            }
+       
+            await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
+         });
          
-         RefreshProductContentList();
-         Debug.Log($"ProductContentListItem_OnBuy() canBuyItem = {canBuyItem}, " +
-                   $"isSuccessful = {isSuccessful} for {productContentView}");
       }
+      
       
       private async void ProductContentListItem_OnSell(ProductContentView productContentView)
       {
-         bool canSellItem = await GPWController.Instance.
-            CanSellItem(productContentView, 1);
+         bool canSellItem = GPWController.Instance.CanSellItem(productContentView, 1);
 
          bool isSuccessful = false;
          if (canSellItem)
@@ -318,10 +347,9 @@ namespace Beamable.Samples.GPW
          await _scene02GameUIView.ProductContentList.InitializeOnDelay(list, 100);
          _scene02GameUIView.ProductContentList.Refresh();
          
-
-         if (_scene02GameUIView.ProductContentList.CanvasGroup.alpha == 0)
+         if (!_scene02GameUIView.ProductContentList.IsVisible)
          {
-            _scene02GameUIView.ProductContentList.CanvasGroup.alpha = 1;
+            _scene02GameUIView.ProductContentList.IsVisible = true;
          }
       }
 

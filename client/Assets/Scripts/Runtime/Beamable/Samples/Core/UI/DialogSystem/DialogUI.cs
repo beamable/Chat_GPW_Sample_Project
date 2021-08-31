@@ -14,6 +14,7 @@ namespace Beamable.Samples.Core.UI.DialogSystem
         //  Properties -----------------------------------
         public List<DialogButtonData> DialogButtonDatas { get { return _dialogButtonDatas; } set { _dialogButtonDatas = value; Render(); }}
         public RectTransform RectTransform { get { return _resizableRectTransform; } set { _resizableRectTransform = value; Render(); }}
+        public bool IsInteractable { get { return _canvasGroup.interactable; } set { _canvasGroup.interactable = value; }}
         
         public TMP_Text TitleText { get { return _titleText; } }
         public TMP_Text BodyText { get { return _bodyText; } }
@@ -41,6 +42,9 @@ namespace Beamable.Samples.Core.UI.DialogSystem
         [SerializeField]
         private RectTransform _resizableRectTransform = null;
         
+        [SerializeField]
+        private CanvasGroup _canvasGroup = null;
+
         [Header("Cosmetics")]
         [SerializeField]
         private Color _backgroundColor = new Color(0, 0, 0, 20);

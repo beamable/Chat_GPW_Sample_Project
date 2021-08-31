@@ -162,7 +162,7 @@ namespace Beamable.Samples.GPW
             }
         }
         
-        public async Task<bool> CanBuyItem(ProductContentView productContentView, int amount)
+        public bool CanBuyItem(ProductContentView productContentView, int amount)
         {
             int totalQuantity = productContentView.MarketGoods.Quantity;
             bool isQuanity = totalQuantity >= amount;
@@ -175,7 +175,7 @@ namespace Beamable.Samples.GPW
 
         public async Task<bool> BuyItem(ProductContentView productContentView, int amount)
         {
-            if (await CanBuyItem(productContentView, amount))
+            if (CanBuyItem(productContentView, amount))
             {
                 TransferCashToBuyItem(productContentView.MarketGoods.Price * amount);
                 return await _gameServices.BuyItemInternal(productContentView, amount);
@@ -184,7 +184,7 @@ namespace Beamable.Samples.GPW
             return false;
         }
 
-        public async Task<bool> CanSellItem(ProductContentView productContentView, int amount)
+        public bool CanSellItem(ProductContentView productContentView, int amount)
         {
             int totalQuantity = productContentView.OwnedGoods.Quantity;
             bool isQuanity = totalQuantity >= amount;
@@ -194,7 +194,7 @@ namespace Beamable.Samples.GPW
 
         public async Task<bool> SellItem(ProductContentView productContentView, int amount)
         {
-            if (await CanSellItem(productContentView, amount))
+            if (CanSellItem(productContentView, amount))
             {
                 TransferCashToSellItem(productContentView.OwnedGoods.Price * amount);
                 return await _gameServices.SellItemInternal(productContentView, amount);
@@ -316,25 +316,12 @@ namespace Beamable.Samples.GPW
             // Can we buy/sell at least one quantity?
             foreach (ProductContentView productContentView in list)
             {
-                productContentView.CanBuy = await CanBuyItem(productContentView, 1);
-                productContentView.CanSell = await CanSellItem(productContentView, 1);
+                productContentView.CanBuy = CanBuyItem(productContentView, 1);
+                productContentView.CanSell = CanSellItem(productContentView, 1);
                 
-                //TODO
                 string contentId = productContentView.ProductContent.Id;
                 productContentView.OwnedGoods.Quantity = await _gameServices.GetOwnedItemQuantity(contentId);
                 productContentView.OwnedGoods.Price = await _gameServices.GetOwnedItemAveragePrice(contentId);
-                
-                //TODO: Remove
-                if (true && productContentView.ProductContent.Title.ToLower().Contains("chocolate"))
-                {
-                    Debug.Log("CHOC");
-                    Debug.Log($"Quantity() {productContentView.OwnedGoods.Quantity}");
-                    Debug.Log($"Price() {productContentView.OwnedGoods.Price}");
-                }
-                
-                Debug.Log(productContentView.ProductContent.Title);
-                Debug.Log("\t CanBuy " + productContentView.CanBuy);
-                Debug.Log("\t CanSell " + productContentView.CanSell);
             }
 
             return new EmptyResponse();

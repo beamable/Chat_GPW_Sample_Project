@@ -339,28 +339,20 @@ namespace Beamable.Samples.GPW.Data
 
 		public async Task<int> GetOwnedItemQuantity(string contentId)
 		{
-			Debug.Log("GetOwnedItemQuantity()");
-			
 			foreach (KeyValuePair<string, List<ItemView>> kvp in _inventoryView.items)
 			{
-				Debug.Log("  kvp.Key: " + kvp.Key);
 				if (kvp.Key == contentId)
 				{
-					string inventoryItemName = $"{kvp.Key} x {kvp.Value.Count}";
 					return kvp.Value.Count;
 				}
 			}
-
 			return 0;
 		}
 		
 		public async Task<int> GetOwnedItemAveragePrice(string contentId)
 		{
-			Debug.Log("GetOwnedItemAveragePrice()");
-			
 			foreach (KeyValuePair<string, List<ItemView>> kvp in _inventoryView.items)
 			{
-				Debug.Log("  kvp.Key: " + kvp.Key);
 				if (kvp.Key == contentId)
 				{
 					int quantity = kvp.Value.Count;
@@ -368,7 +360,6 @@ namespace Beamable.Samples.GPW.Data
 					foreach (ItemView itemView in kvp.Value)
 					{
 						int price = GetPriceInPropertiesDictionary(itemView.properties);
-						Debug.Log("!!!!! price: " + price);
 						priceTotal += price;
 					}
 

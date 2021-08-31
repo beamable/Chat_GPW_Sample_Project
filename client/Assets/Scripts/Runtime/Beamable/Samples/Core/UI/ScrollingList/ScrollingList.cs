@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AirFishLab.ScrollingList;
 using Beamable.Common.Api;
+using Beamable.Extensions;
 using Beamable.Samples.GPW.Content;
 using UnityEngine;
 using UnityEngine.Events;
@@ -20,7 +21,24 @@ namespace Beamable.Samples.Core.UI.ScrollingList
       public ScrollingListEvent OnInitialized = new ScrollingListEvent();
       
       //  Properties -----------------------------------
-      public CanvasGroup CanvasGroup { get { return _canvasGroup; } }
+      public bool IsVisible 
+      {
+         get
+         {
+            return _canvasGroup.alpha == 1;
+         }  
+         set 
+         {
+            if (value)
+            {
+               _canvasGroup.alpha = 1;
+            }
+            else
+            {
+               _canvasGroup.alpha = 0;
+            }
+         } 
+      }
 
       //  Fields ---------------------------------------
       [Header("Child Properties")]
