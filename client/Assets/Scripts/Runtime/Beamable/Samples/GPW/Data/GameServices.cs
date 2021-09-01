@@ -271,13 +271,9 @@ namespace Beamable.Samples.GPW.Data
 		/// Called manually when a scene loads and all data is already fresh
 		/// and we want to manually re-invoke the events
 		/// </summary>
-		public void ForceRefresh()
+		public async void ForceRefresh()
 		{
-			if (_inventoryView == null)
-			{
-				throw new Exception("ForceRefresh() failed. _inventoryView cannot be null");
-			}
-
+			_inventoryView = await _inventoryService.GetCurrent();
 			InventoryService_OnChanged(_inventoryView);
 		}
 		
@@ -334,11 +330,14 @@ namespace Beamable.Samples.GPW.Data
 
 		public async Task<int> GetOwnedItemQuantity(string contentId)
 		{
-			foreach (KeyValuePair<string, List<ItemView>> kvp in _inventoryView.items)
+			if (_inventoryView != null)
 			{
-				if (kvp.Key == contentId)
+				foreach (KeyValuePair<string, List<ItemView>> kvp in _inventoryView.items)
 				{
-					return kvp.Value.Count;
+					if (kvp.Key == contentId)
+					{
+						return kvp.Value.Count;
+					}
 				}
 			}
 			return 0;
@@ -467,7 +466,6 @@ namespace Beamable.Samples.GPW.Data
 		private void InventoryService_OnChanged(InventoryView inventoryView)
 		{
 			_inventoryView = inventoryView;
-
 			OnInventoryViewChanged.Invoke(inventoryView);
 		}
 

@@ -1,5 +1,6 @@
 ﻿using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.Core.UI;
+using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data.Storage;
 using TMPro;
 using UnityEngine;
@@ -28,7 +29,8 @@ namespace Beamable.Samples.GPW.Views
       
       public PersistentData PersistentData { get { return _persistentData; } set { _persistentData = value; Refresh(); } }
       public RuntimeData RuntimeData { get { return _runtimeData; } set { _runtimeData = value; Refresh(); } }
-
+      public LocationContentView LocationContentView { get { return _locationContentView; } set { _locationContentView = value; Refresh(); } }
+      
 
       //  Fields ---------------------------------------
       [Header("Child Properties")]
@@ -47,7 +49,6 @@ namespace Beamable.Samples.GPW.Views
       
       [SerializeField]
       private TMP_ChatInputUI _chatInputUI = null;
-
       
       [SerializeField]
       private Button _globalChatButton = null;
@@ -63,7 +64,8 @@ namespace Beamable.Samples.GPW.Views
       
       private PersistentData _persistentData = null;
       private RuntimeData _runtimeData = null;
-
+      private LocationContentView _locationContentView;
+      
       //  Unity Methods   ------------------------------
       protected override void Start()
       {
@@ -77,17 +79,23 @@ namespace Beamable.Samples.GPW.Views
          GPWHelper.SetButtonText(_directChatButton, "Direct", $"Chat");
          GPWHelper.SetButtonText(_backButton, "Back");
          
+         
+         string title = "Location";
+         if (_locationContentView != null)
+         {
+            title = _locationContentView.LocationContent.Title;
+         }
+         
+         //Adjust spacing due to long names
+         GPWHelper.SetButtonText(_locationChatButton, 
+            $"<size=20>{title}</size>",
+            "Chat", 12);
+         
+         
          if (_persistentData != null)
          {
             _cashText.text = $"Cash: ${_persistentData.CashAmount}";
             _turnText.text = $"Turn: {_persistentData.TurnCurrent}/{_persistentData.TurnsTotal}";
-
-
-            string title = _persistentData?.LocationContentViewCurrent?.LocationContent?.Title;
-            //Adjust spacing due to long names
-            GPWHelper.SetButtonText(_locationChatButton, 
-               $"<size=20>{title}</size>",
-               "Chat", 12);
          }
 
          if (_runtimeData != null)

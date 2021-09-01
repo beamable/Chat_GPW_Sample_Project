@@ -64,9 +64,8 @@ namespace Beamable.Samples.GPW.UI.ScrollingList
             {
                Debug.Log($"Update() {_productContentView}");
             }
-            
-            stringBuilder.AppendLine($"MKT: #{countThem:000}   ${priceThem:000}");
-            stringBuilder.AppendLine($"ME : #{countMe:000}   ${priceMe:000}");
+            stringBuilder.AppendLine($"Market   #{countThem:000}   ${priceThem:000}");
+            stringBuilder.AppendLine($"Owned   #{countMe:000}   ${priceMe:000}");
             
             _detailsText.text = stringBuilder.ToString();
             _buyButton.interactable = _productContentView.CanBuy;

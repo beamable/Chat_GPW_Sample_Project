@@ -13,7 +13,7 @@ namespace Beamable.Samples.GPW.Data.Storage
 		public int DebitAmount;
 		public int TurnCurrent;
 		public int TurnsTotal;
-		public LocationContentView LocationContentViewCurrent = null;
+		public int CurrentLocationIndex = -1;
 		
 		public bool IsGameOver
 		{

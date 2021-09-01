@@ -161,6 +161,7 @@ namespace Beamable.Samples.GPW
       {
          PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
          _scene03ChatUIView.PersistentData = persistentDataStorage.PersistentData;
+         _scene03ChatUIView.LocationContentView = GPWController.Instance.LocationContentViewCurrent;
          Chat();
       }
       

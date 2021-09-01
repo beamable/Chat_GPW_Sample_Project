@@ -22,4 +22,4 @@ MonoBehaviour:
     writeSelf: 1
   Title: Vegetables
   PriceMin: 1
-  PriceMax: 10
+  PriceMax: 20

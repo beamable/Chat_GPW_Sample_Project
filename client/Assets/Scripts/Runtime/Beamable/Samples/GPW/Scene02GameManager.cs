@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using AirFishLab.ScrollingList;
-using Beamable.Common.Api;
 using Beamable.Common.Api.Inventory;
 using Beamable.Samples.Core.UI.DialogSystem;
 using Beamable.Samples.Core.UI.ScrollingList;
@@ -60,7 +57,7 @@ namespace Beamable.Samples.GPW
       private async void SetupBeamable()
       {
          // Setup List
-         _scene02GameUIView.ProductContentList.OnInitialized.AddListener(ProductContentList_OnInitialized);
+         _scene02GameUIView.ProductContentList.OnInitialized.AddListener(ProductContentList_OnChanged);
          
          // Setup Storage
          GPWController.Instance.PersistentDataStorage.OnChanged.AddListener(PersistentDataStorage_OnChanged);
@@ -83,11 +80,20 @@ namespace Beamable.Samples.GPW
       
       private async void CheckIsSceneReady()
       {
-         if (_isReadyRuntimeDataStorage && 
-             _isReadyProductContentList && 
+         Debug.Log($"CheckIsSceneReady rds{_isReadyRuntimeDataStorage} pcl{_isReadyProductContentList} iv{_isReadyInventoryView}");
+         
+         if (_isReadyRuntimeDataStorage &&
              _isReadyInventoryView)
          {
-            await _scene02GameUIView.DialogSystem.HideDialogBox();
+            // Likely often. That's ok
+            RefreshProductContentList();
+            
+            if (_isReadyProductContentList)
+            {
+               // Likely once when scene starts
+               await _scene02GameUIView.DialogSystem.HideDialogBox();
+            }
+            
          }
       }
 
@@ -169,7 +175,9 @@ namespace Beamable.Samples.GPW
       private void TravelButton_OnClicked()
       {
          GPWHelper.PlayAudioClipSecondaryClick();
-         GPWController.Instance.GoToLocation();
+
+         int currentLocationIndex = GPWController.Instance.PersistentDataStorage.PersistentData.CurrentLocationIndex;
+         GPWController.Instance.SetLocationIndexSafe(++currentLocationIndex);
       }
       
       private void ChatButton_OnClicked()
@@ -274,9 +282,7 @@ namespace Beamable.Samples.GPW
             {
                _scene02GameUIView.DialogSystem.CurrentDialogUI.IsInteractable = false;
                bool isSuccessful = await GPWController.Instance.BuyItem(productContentView, updatedAmount);
-               RefreshProductContentList();
             }
-       
             await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
          });
          
@@ -296,7 +302,6 @@ namespace Beamable.Samples.GPW
                {
                   _scene02GameUIView.DialogSystem.CurrentDialogUI.IsInteractable = false;
                   bool isSuccessful = await GPWController.Instance.SellItem(productContentView, updatedAmount);
-                  RefreshProductContentList();
                }
                
                await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
@@ -308,8 +313,7 @@ namespace Beamable.Samples.GPW
       {
          PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
          _scene02GameUIView.PersistentData = persistentDataStorage.PersistentData;
-
-         RefreshProductContentList();
+         _scene02GameUIView.LocationContentView = GPWController.Instance.LocationContentViewCurrent;
          CheckIsGameOver();
 
       }
@@ -317,21 +321,24 @@ namespace Beamable.Samples.GPW
 
       private async void RefreshProductContentList()
       {
-         Debug.Log("RefreshProductContentList()");
-         await GPWController.Instance.RefreshCurrentProductContentViews();
-            
-         List<ProductContentView> list = GPWController.Instance.PersistentDataStorage.
-            PersistentData.LocationContentViewCurrent.ProductContentViews;
-         
-         // This rebuilds the list...
-         // 1. Keeps vertical list scroll. Good!
-         // 2. but refreshes the contents based on the ProductContentViews. Good!
-         await _scene02GameUIView.ProductContentList.InitializeOnDelay(list, 100);
-         _scene02GameUIView.ProductContentList.Refresh();
-         
-         if (!_scene02GameUIView.ProductContentList.IsVisible)
+         Debug.Log("RefreshProductContentList() !!!!!");
+
+         if (GPWController.Instance.HasLocationContentViewCurrent)
          {
-            _scene02GameUIView.ProductContentList.IsVisible = true;
+            await GPWController.Instance.RefreshCurrentProductContentViews();
+            
+            List<ProductContentView> list = GPWController.Instance.LocationContentViewCurrent.ProductContentViews;
+         
+            // This rebuilds the list...
+            // 1. Keeps vertical list scroll. Good!
+            // 2. but refreshes the contents based on the ProductContentViews. Good!
+            await _scene02GameUIView.ProductContentList.InitializeOnDelay(list, 100);
+            _scene02GameUIView.ProductContentList.Refresh();
+         
+            if (!_scene02GameUIView.ProductContentList.IsVisible)
+            {
+               _scene02GameUIView.ProductContentList.IsVisible = true;
+            }
          }
       }
 
@@ -345,7 +352,7 @@ namespace Beamable.Samples.GPW
          CheckIsSceneReady();
       }
 
-      private void ProductContentList_OnInitialized(ScrollingList scrollingList)
+      private void ProductContentList_OnChanged(ScrollingList scrollingList)
       {
          foreach (ListBox listBox in scrollingList.ListBoxes)
          {

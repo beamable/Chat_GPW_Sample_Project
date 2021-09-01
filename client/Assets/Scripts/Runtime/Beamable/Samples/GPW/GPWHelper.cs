@@ -23,6 +23,9 @@ namespace Beamable.Samples.GPW
    /// </summary>
    public static class GPWHelper
    {
+      
+      public const int UnsetValue = -1;
+      
       // Chat
       public static string ChatRoomNameGlobal = "Global";
       private static string ChatRoomNameLocation = "Location";

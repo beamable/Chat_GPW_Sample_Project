@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Beamable.Common.Content;
+using UnityEngine;
+using Random = System.Random;
 
 namespace Beamable.Samples.GPW.Content
 {
@@ -31,6 +32,14 @@ namespace Beamable.Samples.GPW.Content
             ProductContentViews.Add(
                new ProductContentView(productContent, random));
          }
+
+         Debug.Log(this + " POPULATED ProductContentViews: " + ProductContentViews.Count);
+      }
+      
+      //  Other Methods -----------------------------------
+      public override string ToString()
+      {
+         return $"[LocationContentView ({LocationContent.Title})]";
       }
    }
 }

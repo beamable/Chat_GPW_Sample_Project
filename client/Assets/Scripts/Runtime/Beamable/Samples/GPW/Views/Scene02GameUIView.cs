@@ -1,5 +1,6 @@
 ﻿using AirFishLab.ScrollingList;
 using Beamable.Samples.Core.UI.ScrollingList;
+using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data.Storage;
 using TMPro;
 using UnityEngine;
@@ -27,13 +28,15 @@ namespace Beamable.Samples.GPW.Views
 
       public ScrollingList ProductContentList { get { return _productContentList; } }
 
-      public PersistentData PersistentData { get { return _persistentData; } set { _persistentData = value; OnRefresh(); } }
-      public RuntimeData RuntimeData { get { return _runtimeData; } set { _runtimeData = value; OnRefresh(); } }
+      public PersistentData PersistentData { get { return _persistentData; } set { _persistentData = value; Refresh(); } }
+      public RuntimeData RuntimeData { get { return _runtimeData; } set { _runtimeData = value; Refresh(); } }
+      public LocationContentView LocationContentView { get { return _locationContentView; } set { _locationContentView = value; Refresh(); } }
 
 
       //  Fields ---------------------------------------
       private PersistentData _persistentData = null;
       private RuntimeData _runtimeData = null;
+      private LocationContentView _locationContentView;
 
       [Header("Child Properties")]
       [SerializeField]
@@ -77,18 +80,26 @@ namespace Beamable.Samples.GPW.Views
          base.Start(); 
       }
       
-      private void OnRefresh()
+      private void Refresh()
       {
          _bankButton.interactable = _persistentData != null && !_persistentData.IsGameOver;
          _travelButton.interactable = _persistentData != null && !_persistentData.IsGameOver;
          _debtButton.interactable = _persistentData != null && !_persistentData.IsGameOver;
+
+         if (_locationContentView != null)
+         {
+            GPWHelper.SetButtonText(_travelButton, "Travel", _locationContentView.LocationContent.Title);
+         }
+         else
+         {
+            GPWHelper.SetButtonText(_travelButton, "Travel");
+         }
          
          if (_persistentData != null)
          {
             _cashText.text = $"Cash: ${_persistentData.CashAmount}";
             _turnText.text = $"Turn: {_persistentData.TurnCurrent}/{_persistentData.TurnsTotal}";
-            GPWHelper.SetButtonText(_travelButton, "Travel", 
-               _persistentData.LocationContentViewCurrent.LocationContent.Title);
+           
             GPWHelper.SetButtonText(_bankButton, "Bank", $"${_persistentData.BankAmount}");
             GPWHelper.SetButtonText(_debtButton, "Debt", $"${_persistentData.DebitAmount}");
          }

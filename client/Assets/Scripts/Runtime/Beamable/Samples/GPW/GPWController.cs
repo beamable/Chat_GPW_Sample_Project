@@ -5,7 +5,6 @@ using Beamable.Common.Api.Inventory;
 using Beamable.Experimental.Api.Chat;
 using Beamable.Samples.Core.Components;
 using Beamable.Samples.Core.Debugging;
-using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Data.Storage;
@@ -24,6 +23,34 @@ namespace Beamable.Samples.GPW
         public PersistentDataStorage PersistentDataStorage { get { return _persistentDataStorage; } }
         public GameServices GameServices { get { return _gameServices; } }
         public bool HasCurrentRoomHandle {  get  {  return GetCurrentRoomHandle() != null;  } }
+
+        public LocationContentView LocationContentViewCurrent
+        {
+            get
+            {
+                if (_persistentDataStorage.PersistentData.CurrentLocationIndex == GPWHelper.UnsetValue)
+                {
+                    return null;
+                }
+                return _runtimeDataStorage.RuntimeData.LocationContentViews[_persistentDataStorage.PersistentData.CurrentLocationIndex];
+            }
+        }
+        
+        public bool HasLocationContentViewCurrent
+        {
+            get
+            {
+                try
+                {
+                    // May fail during startup. That's ok.
+                    return LocationContentViewCurrent != null;
+                }
+                catch 
+                {
+                    return false;
+                }
+            }
+        }
 
         //  Fields  --------------------------------------
         private RuntimeDataStorage _runtimeDataStorage = new RuntimeDataStorage();
@@ -50,47 +77,43 @@ namespace Beamable.Samples.GPW
             }
         }
         
-        public void GoToLocation()
+        public void SetLocationIndexSafe(int nextIndex, bool incrementTurn = true)
         {
             if (_persistentDataStorage.PersistentData.IsGameOver)
             {
                 return;
             }
             
-            var locationContentViewCurrent = PersistentDataStorage.PersistentData.LocationContentViewCurrent;
-            var locationContentViews = RuntimeDataStorage.RuntimeData.LocationContentViews;
-            int currentIndex = 0;
-            foreach (LocationContentView locationContentView in locationContentViews)
-            {
-                if (locationContentView.LocationContent.Id == locationContentViewCurrent.LocationContent.Id)
-                {
-                    break;
-                }
-                currentIndex++;
-            }
-
-            int nextIndex = currentIndex + 1;
-            if (nextIndex > locationContentViews.Count -1)
+            // Too high? Wrap low
+            if (nextIndex > RuntimeDataStorage.RuntimeData.LocationContentViews.Count - 1)
             {
                 nextIndex = 0;
             }
+            
+            // Too low? Wrap high
+            if (nextIndex < 0)
+            {
+                nextIndex = RuntimeDataStorage.RuntimeData.LocationContentViews.Count - 1;
+            }
 
             // Progress Turn / Bank / Debt
-            GoToNextTurn();
+            if (incrementTurn)
+            {
+                GoToNextTurn();
+            }
             
             // Change Location
-            PersistentDataStorage.PersistentData.LocationContentViewCurrent =
-                locationContentViews[nextIndex];
+            PersistentDataStorage.PersistentData.CurrentLocationIndex = nextIndex;
             PersistentDataStorage.ForceRefresh();
             GameServices.ForceRefresh();
         }
 
-        
+
         public double CalculatedCurrentScore()
         {
-            int cashAmount = GPWController.Instance.PersistentDataStorage.PersistentData.CashAmount;
-            int bankAmount = GPWController.Instance.PersistentDataStorage.PersistentData.BankAmount;
-            int debtAmount = GPWController.Instance.PersistentDataStorage.PersistentData.DebitAmount;
+            int cashAmount = _persistentDataStorage.PersistentData.CashAmount;
+            int bankAmount = _persistentDataStorage.PersistentData.BankAmount;
+            int debtAmount = _persistentDataStorage.PersistentData.DebitAmount;
 
             return cashAmount + bankAmount - debtAmount;
         }
@@ -219,9 +242,8 @@ namespace Beamable.Samples.GPW
                     currentRoomName = GPWHelper.ChatRoomNameGlobal;
                     break;
                 case ChatMode.Location:
-                    LocationContent locationContent = _persistentDataStorage.
-                        PersistentData.LocationContentViewCurrent.LocationContent;
-                    currentRoomName = GPWHelper.GetChatRoomNameLocation(locationContent);
+                    currentRoomName = GPWHelper.GetChatRoomNameLocation(
+                        LocationContentViewCurrent.LocationContent);
                     break;
                 case ChatMode.Direct:
                     currentRoomName = GPWHelper.GetChatRoomNameDirect();
@@ -308,21 +330,23 @@ namespace Beamable.Samples.GPW
         
         public async Task<EmptyResponse> RefreshCurrentProductContentViews()
         {
-            List<ProductContentView> list = _persistentDataStorage.PersistentData.
-                LocationContentViewCurrent.ProductContentViews;
-
-            Debug.Log("RefreshCurrentProductContentViews()");
-            
-            // Refresh the UI buttons for buy/sell
-            // Can we buy/sell at least one quantity?
-            foreach (ProductContentView productContentView in list)
+            if (HasLocationContentViewCurrent)
             {
-                productContentView.CanBuy = CanBuyItem(productContentView, 1);
-                productContentView.CanSell = CanSellItem(productContentView, 1);
+                List<ProductContentView> list = LocationContentViewCurrent.ProductContentViews;
+
+                Debug.Log("RefreshCurrentProductContentViews()");
+            
+                // Refresh the UI buttons for buy/sell
+                // Can we buy/sell at least one quantity?
+                foreach (ProductContentView productContentView in list)
+                {
+                    productContentView.CanBuy = CanBuyItem(productContentView, 1);
+                    productContentView.CanSell = CanSellItem(productContentView, 1);
                 
-                string contentId = productContentView.ProductContent.Id;
-                productContentView.OwnedGoods.Quantity = await _gameServices.GetOwnedItemQuantity(contentId);
-                productContentView.OwnedGoods.Price = await _gameServices.GetOwnedItemAveragePrice(contentId);
+                    string contentId = productContentView.ProductContent.Id;
+                    productContentView.OwnedGoods.Quantity = await _gameServices.GetOwnedItemQuantity(contentId);
+                    productContentView.OwnedGoods.Price = await _gameServices.GetOwnedItemAveragePrice(contentId);
+                }
             }
 
             return new EmptyResponse();
@@ -346,6 +370,13 @@ namespace Beamable.Samples.GPW
                 DebugLogLevel.Verbose);
             
             PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
+            
+            Debug.Log("setting....... 1");
+            if (!HasLocationContentViewCurrent)
+            {
+                SetLocationIndexSafe(0, false);
+            }
+            
         }
       
       
@@ -355,17 +386,6 @@ namespace Beamable.Samples.GPW
                 DebugLogLevel.Verbose);
             
             RuntimeDataStorage runtimeDataStorage = subStorage as RuntimeDataStorage;
-            InventoryView inventoryView = runtimeDataStorage.RuntimeData.InventoryView;
-
-            if (_persistentDataStorage?.PersistentData?.LocationContentViewCurrent == null &&
-                runtimeDataStorage?.RuntimeData?.LocationContentViews != null && 
-                runtimeDataStorage?.RuntimeData?.LocationContentViews.Count > 0)
-            {
-                _persistentDataStorage.PersistentData.LocationContentViewCurrent = 
-                    runtimeDataStorage.RuntimeData.LocationContentViews[0];
-            }
         }
-
-
     }
 }
