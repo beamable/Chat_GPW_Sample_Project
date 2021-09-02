@@ -328,7 +328,7 @@ namespace Beamable.Samples.GPW.Data
 			return true;
 		}
 
-		public async Task<int> GetOwnedItemQuantity(string contentId)
+		public int GetOwnedItemQuantity(string contentId)
 		{
 			if (_inventoryView != null)
 			{
@@ -343,7 +343,7 @@ namespace Beamable.Samples.GPW.Data
 			return 0;
 		}
 		
-		public async Task<int> GetOwnedItemAveragePrice(string contentId)
+		public int GetOwnedItemAveragePrice(string contentId)
 		{
 			foreach (KeyValuePair<string, List<ItemView>> kvp in _inventoryView.items)
 			{

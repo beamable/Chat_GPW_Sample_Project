@@ -10,7 +10,7 @@ namespace Beamable.Samples.GPW.Data.Storage
 	{
 		public int BankAmount;
 		public int CashAmount;
-		public int DebitAmount;
+		public int DebtAmount;
 		public int TurnCurrent;
 		public int TurnsTotal;
 		public int CurrentLocationIndex = -1;

@@ -101,7 +101,7 @@ namespace Beamable.Samples.GPW.Views
             _turnText.text = $"Turn: {_persistentData.TurnCurrent}/{_persistentData.TurnsTotal}";
            
             GPWHelper.SetButtonText(_bankButton, "Bank", $"${_persistentData.BankAmount}");
-            GPWHelper.SetButtonText(_debtButton, "Debt", $"${_persistentData.DebitAmount}");
+            GPWHelper.SetButtonText(_debtButton, "Debt", $"${_persistentData.DebtAmount}");
          }
 
          if (_runtimeData != null)

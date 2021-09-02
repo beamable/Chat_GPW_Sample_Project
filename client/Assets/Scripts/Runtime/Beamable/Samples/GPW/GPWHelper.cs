@@ -348,6 +348,9 @@ namespace Beamable.Samples.GPW
          }
       }
 
+      /// <summary>
+      /// Buy items?
+      /// </summary>
       public static void ShowDialogBoxBuy(DialogSystem dialogSystem, ProductContentView productContentView, Action<int> onComplete)
       {
          int amount = 1;
@@ -380,13 +383,16 @@ namespace Beamable.Samples.GPW
                   amount = Mathf.Max(amount, 0);
                   dialogSystem.CurrentDialogUI.BodyText.text = getBodyText(amount);
                }),
-               new DialogButtonData(GPWHelper.Ok, async delegate
+               new DialogButtonData(GPWHelper.Ok, delegate
                {
                   onComplete.Invoke(amount);
                })
             });
       }
       
+      /// <summary>
+      /// Sell items?
+      /// </summary>
       public static void ShowDialogBoxSell(DialogSystem dialogSystem, ProductContentView productContentView, Action<int> onComplete)
       {
          int amount = 1;
@@ -419,7 +425,7 @@ namespace Beamable.Samples.GPW
                   amount = Mathf.Max(amount, 0);
                   dialogSystem.CurrentDialogUI.BodyText.text = getBodyText(amount);
                }),
-               new DialogButtonData(GPWHelper.Ok, async delegate
+               new DialogButtonData(GPWHelper.Ok, delegate
                {
                   onComplete.Invoke(amount);
                })
@@ -427,5 +433,65 @@ namespace Beamable.Samples.GPW
       }
 
 
+      /// <summary>
+      /// Transfer from CASH → BANK?
+      /// </summary>
+      public static void ShowDialogBank(DialogSystem dialogSystem, int cashTransactionMin, Action<int> onTransferCashToBank)
+      {
+         dialogSystem.ShowDialogBox<DialogUI>(
+            dialogSystem.DialogUIPrefab,
+            $"Transfer from CASH → BANK?",
+            "Positive BANK will help your final score.\n\n\nBANK increases by " +
+            $"{GPWController.Instance.RuntimeDataStorage.RuntimeData.BankInterestCurrent}% every TURN.",
+            new List<DialogButtonData>
+            {
+               new DialogButtonData($"+{cashTransactionMin}", delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  onTransferCashToBank.Invoke(cashTransactionMin);
+               }),
+               new DialogButtonData($"-{cashTransactionMin}", delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  onTransferCashToBank.Invoke(-cashTransactionMin);
+               }),
+               new DialogButtonData(GPWHelper.Ok, async delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  await dialogSystem.HideDialogBoxImmediate();
+               })
+            });
+      }
+
+      /// <summary>
+      /// Transfer from CASH → DEBT?
+      /// </summary>
+      public static void ShowDialogDebt(DialogSystem dialogSystem, int cashTransactionMin, Action<int> onTransferCashToDebt)
+      {
+         dialogSystem.ShowDialogBox<DialogUI>(
+            dialogSystem.DialogUIPrefab,
+            "Transfer from CASH → DEBT?",
+            $"Positive DEBT will hurt your final score.\n\n\nDEBT increases by " +
+            $"{GPWController.Instance.RuntimeDataStorage.RuntimeData.DebtInterestCurrent}% every TURN.",
+            new List<DialogButtonData>
+            {
+               new DialogButtonData($"+{cashTransactionMin}", delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  onTransferCashToDebt.Invoke(-cashTransactionMin);
+               }),
+               new DialogButtonData($"-{cashTransactionMin}", delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  onTransferCashToDebt.Invoke(cashTransactionMin);
+                  
+               }),
+               new DialogButtonData(GPWHelper.Ok, async delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  await dialogSystem.HideDialogBoxImmediate();
+               })
+            });
+      }
    }
 }

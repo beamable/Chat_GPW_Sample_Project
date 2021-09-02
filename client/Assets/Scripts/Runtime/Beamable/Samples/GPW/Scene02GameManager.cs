@@ -120,17 +120,18 @@ namespace Beamable.Samples.GPW
       }
       
        private void CheckIsGameOver()
-      {
-         if (GPWController.Instance.PersistentDataStorage.PersistentData.IsGameOver)
+       {
+          PersistentData persistentData = GPWController.Instance.PersistentDataStorage.PersistentData;
+         if (persistentData.IsGameOver)
          {
             //
-            int turnCurrent = GPWController.Instance.PersistentDataStorage.PersistentData.TurnCurrent;
-            int turnsTotal = GPWController.Instance.PersistentDataStorage.PersistentData.TurnsTotal;
+            int turnCurrent = persistentData.TurnCurrent;
+            int turnsTotal = persistentData.TurnsTotal;
             //
-            int cashAmount = GPWController.Instance.PersistentDataStorage.PersistentData.CashAmount;
-            int bankAmount = GPWController.Instance.PersistentDataStorage.PersistentData.BankAmount;
-            int debtAmount = GPWController.Instance.PersistentDataStorage.PersistentData.DebitAmount;
-            double score = GPWController.Instance.CalculatedCurrentScore();
+            int cashAmount = persistentData.CashAmount;
+            int bankAmount = persistentData.BankAmount;
+            int debtAmount = persistentData.DebtAmount;
+            double score = GPWController.Instance.GetCalculatedCurrentScore();
             
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"CASH + BANK - DEBT = FINAL SCORE");
@@ -205,34 +206,15 @@ namespace Beamable.Samples.GPW
 
       private void BankButton_OnClicked()
       {
-         
          GPWHelper.PlayAudioClipSecondaryClick();
 
          int cashTransactionMin = GPWController.Instance.RuntimeDataStorage.RuntimeData.CashTransactionMin;
          
-         _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
-            _scene02GameUIView.DialogSystem.DialogUIPrefab,
-            $"Transfer from CASH → BANK",
-            "Positive BANK will help your final score.\n\n\nBANK increases by " +
-            $"{GPWController.Instance.RuntimeDataStorage.RuntimeData.BankInterestCurrent}% every TURN.",
-            new List<DialogButtonData>
-            {
-               new DialogButtonData($"+{cashTransactionMin}", delegate
-               {
-                  GPWHelper.PlayAudioClipSecondaryClick();
-                  GPWController.Instance.TransferCashToBank(cashTransactionMin);
-               }),
-               new DialogButtonData($"-{cashTransactionMin}", delegate
-               {
-                  GPWHelper.PlayAudioClipSecondaryClick();
-                  GPWController.Instance.TransferCashToBank(-cashTransactionMin);
-               }),
-               new DialogButtonData(GPWHelper.Ok, async delegate
-               {
-                  GPWHelper.PlayAudioClipSecondaryClick();
-                  await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
-               })
-            });
+         GPWHelper.ShowDialogBank(_scene02GameUIView.DialogSystem, cashTransactionMin, 
+            delegate(int amountToAddToBank)
+         {
+            GPWController.Instance.TransferCashToBank(amountToAddToBank);
+         });
       }
 
 
@@ -242,30 +224,11 @@ namespace Beamable.Samples.GPW
          
          int cashTransactionMin = GPWController.Instance.RuntimeDataStorage.RuntimeData.CashTransactionMin;
          
-         _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
-            _scene02GameUIView.DialogSystem.DialogUIPrefab,
-            "Transfer from CASH → DEBT?",
-            $"Positive DEBT will hurt your final score.\n\n\nDEBT increases by " +
-            $"{GPWController.Instance.RuntimeDataStorage.RuntimeData.DebtInterestCurrent}% every TURN.",
-            new List<DialogButtonData>
+         GPWHelper.ShowDialogDebt(_scene02GameUIView.DialogSystem, cashTransactionMin, 
+            delegate(int amountToPayoffDeb)
             {
-               new DialogButtonData($"+{cashTransactionMin}", delegate
-               {
-                  GPWHelper.PlayAudioClipSecondaryClick();
-                  GPWController.Instance.TransferCashToDebt(-cashTransactionMin);
-               }),
-               new DialogButtonData($"-{cashTransactionMin}", delegate
-               {
-                  GPWHelper.PlayAudioClipSecondaryClick();
-                  GPWController.Instance.TransferCashToDebt(cashTransactionMin);
-               }),
-               new DialogButtonData(GPWHelper.Ok, async delegate
-               {
-                  GPWHelper.PlayAudioClipSecondaryClick();
-                  await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
-               })
+               GPWController.Instance.TransferCashToDebt(amountToPayoffDeb);
             });
-         
       }
 
 
@@ -285,11 +248,10 @@ namespace Beamable.Samples.GPW
             }
             await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
          });
-         
       }
       
       
-      private async void ProductContentListItem_OnSell(ProductContentView productContentView)
+      private void ProductContentListItem_OnSell(ProductContentView productContentView)
       {
          GPWHelper.ShowDialogBoxSell(
             _scene02GameUIView.DialogSystem, 
@@ -315,7 +277,6 @@ namespace Beamable.Samples.GPW
          _scene02GameUIView.PersistentData = persistentDataStorage.PersistentData;
          _scene02GameUIView.LocationContentView = GPWController.Instance.LocationContentViewCurrent;
          CheckIsGameOver();
-
       }
      
 
@@ -352,6 +313,7 @@ namespace Beamable.Samples.GPW
          CheckIsSceneReady();
       }
 
+      
       private void ProductContentList_OnChanged(ScrollingList scrollingList)
       {
          foreach (ListBox listBox in scrollingList.ListBoxes)
@@ -368,6 +330,7 @@ namespace Beamable.Samples.GPW
          _isReadyProductContentList = true;
          CheckIsSceneReady();
       }
+      
       
       private void GameServices_OnInventoryViewChanged(InventoryView inventoryView)
       {

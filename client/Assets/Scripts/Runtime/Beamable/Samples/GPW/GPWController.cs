@@ -109,11 +109,11 @@ namespace Beamable.Samples.GPW
         }
 
 
-        public double CalculatedCurrentScore()
+        public double GetCalculatedCurrentScore()
         {
             int cashAmount = _persistentDataStorage.PersistentData.CashAmount;
             int bankAmount = _persistentDataStorage.PersistentData.BankAmount;
-            int debtAmount = _persistentDataStorage.PersistentData.DebitAmount;
+            int debtAmount = _persistentDataStorage.PersistentData.DebtAmount;
 
             return cashAmount + bankAmount - debtAmount;
         }
@@ -132,9 +132,9 @@ namespace Beamable.Samples.GPW
             PersistentDataStorage.PersistentData.BankAmount = (int)bankAmount;
             
             // Calculate interest - BankAmount 
-            float debtAmount = PersistentDataStorage.PersistentData.DebitAmount +
-                               (PersistentDataStorage.PersistentData.DebitAmount * RuntimeDataStorage.RuntimeData.DebtInterestCurrent);
-            PersistentDataStorage.PersistentData.DebitAmount = (int)debtAmount;
+            float debtAmount = PersistentDataStorage.PersistentData.DebtAmount +
+                               (PersistentDataStorage.PersistentData.DebtAmount * RuntimeDataStorage.RuntimeData.DebtInterestCurrent);
+            PersistentDataStorage.PersistentData.DebtAmount = (int)debtAmount;
             
             // Advance the turn counter
             PersistentDataStorage.PersistentData.TurnCurrent++;
@@ -159,13 +159,37 @@ namespace Beamable.Samples.GPW
         {
             // The amount may be positive or negative
             // Check that both balances will be above zeros
-            if (_persistentDataStorage.PersistentData.CashAmount - amountToPayoffDebt >= 0 && 
-                _persistentDataStorage.PersistentData.DebitAmount + amountToPayoffDebt >= 0)
+            Debug.Log("2: p " + (amountToPayoffDebt));
+            
+            // NEGATIVE amountToPayoffDebt = INCREASE DEBT
+            int nextCashAmount = _persistentDataStorage.PersistentData.CashAmount + amountToPayoffDebt;
+            int nextDebtAmount = _persistentDataStorage.PersistentData.DebtAmount + amountToPayoffDebt;
+            
+            if (nextCashAmount >= 0)
             {
-                _persistentDataStorage.PersistentData.CashAmount += amountToPayoffDebt;
-                _persistentDataStorage.PersistentData.DebitAmount += amountToPayoffDebt;
-                _persistentDataStorage.ForceRefresh();
+                Debug.Log("CashAmount ");
+                if (nextDebtAmount >= 0 && 
+                    nextDebtAmount <= _runtimeDataStorage.RuntimeData.RemoteConfiguration.DebtAmountInitial)
+                {
+                    Debug.Log("DebtAmount");
+                    _persistentDataStorage.PersistentData.CashAmount = nextCashAmount;
+                    _persistentDataStorage.PersistentData.DebtAmount = nextDebtAmount;
+                    _persistentDataStorage.ForceRefresh();
+                }
             }
+            
+            // // POSITIVE amountToPayoffDebt = INCREASE BANK
+            // if (amountToPayoffDebt > 0) 
+            // {
+            //     if (_persistentDataStorage.PersistentData.CashAmount - amountToPayoffDebt >= 0 && 
+            //         _persistentDataStorage.PersistentData.DebtAmount - amountToPayoffDebt >= 0)
+            //     {
+            //         Debug.Log("yes2");
+            //         _persistentDataStorage.PersistentData.CashAmount -= amountToPayoffDebt;
+            //         _persistentDataStorage.PersistentData.DebtAmount -= amountToPayoffDebt;
+            //         _persistentDataStorage.ForceRefresh();
+            //     }
+            // }
         }
         
         public void TransferCashToBuyItem(int itemPurchasePrice)
@@ -284,7 +308,7 @@ namespace Beamable.Samples.GPW
             _persistentDataStorage.PersistentData.CashAmount = 
                 _runtimeDataStorage.RuntimeData.RemoteConfiguration.CashAmountInitial;
             
-            _persistentDataStorage.PersistentData.DebitAmount = 
+            _persistentDataStorage.PersistentData.DebtAmount = 
                 _runtimeDataStorage.RuntimeData.RemoteConfiguration.DebtAmountInitial;
             
             /////////////////////////////
@@ -344,8 +368,8 @@ namespace Beamable.Samples.GPW
                     productContentView.CanSell = CanSellItem(productContentView, 1);
                 
                     string contentId = productContentView.ProductContent.Id;
-                    productContentView.OwnedGoods.Quantity = await _gameServices.GetOwnedItemQuantity(contentId);
-                    productContentView.OwnedGoods.Price = await _gameServices.GetOwnedItemAveragePrice(contentId);
+                    productContentView.OwnedGoods.Quantity = _gameServices.GetOwnedItemQuantity(contentId);
+                    productContentView.OwnedGoods.Price = _gameServices.GetOwnedItemAveragePrice(contentId);
                 }
             }
 
@@ -371,12 +395,10 @@ namespace Beamable.Samples.GPW
             
             PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
             
-            Debug.Log("setting....... 1");
             if (!HasLocationContentViewCurrent)
             {
                 SetLocationIndexSafe(0, false);
             }
-            
         }
       
       
