@@ -80,8 +80,6 @@ namespace Beamable.Samples.GPW
       
       private async void CheckIsSceneReady()
       {
-         Debug.Log($"CheckIsSceneReady rds{_isReadyRuntimeDataStorage} pcl{_isReadyProductContentList} iv{_isReadyInventoryView}");
-         
          if (_isReadyRuntimeDataStorage &&
              _isReadyInventoryView)
          {
@@ -178,7 +176,18 @@ namespace Beamable.Samples.GPW
          GPWHelper.PlayAudioClipSecondaryClick();
 
          int currentLocationIndex = GPWController.Instance.PersistentDataStorage.PersistentData.CurrentLocationIndex;
-         GPWController.Instance.SetLocationIndexSafe(++currentLocationIndex);
+         List<LocationContentView> locationContentViews = GPWController.Instance.RuntimeDataStorage.RuntimeData.LocationContentViews;
+         
+         GPWHelper.ShowDialogLocation(_scene02GameUIView.DialogSystem, 
+            locationContentViews,
+            currentLocationIndex, 
+            delegate(int nextLocationIndex)
+            {
+               if (currentLocationIndex != nextLocationIndex)
+               {
+                  GPWController.Instance.SetLocationIndexSafe(nextLocationIndex);
+               }
+            });
       }
       
       private void ChatButton_OnClicked()
@@ -282,8 +291,6 @@ namespace Beamable.Samples.GPW
 
       private async void RefreshProductContentList()
       {
-         Debug.Log("RefreshProductContentList() !!!!!");
-
          if (GPWController.Instance.HasLocationContentViewCurrent)
          {
             await GPWController.Instance.RefreshCurrentProductContentViews();

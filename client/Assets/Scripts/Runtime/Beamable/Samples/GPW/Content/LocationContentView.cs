@@ -33,7 +33,6 @@ namespace Beamable.Samples.GPW.Content
                new ProductContentView(productContent, random));
          }
 
-         Debug.Log(this + " POPULATED ProductContentViews: " + ProductContentViews.Count);
       }
       
       //  Other Methods -----------------------------------

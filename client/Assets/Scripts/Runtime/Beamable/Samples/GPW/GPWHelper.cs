@@ -2,6 +2,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using System.Text;
 using Beamable.Samples.Core.Audio;
 using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.Core.UI;
@@ -492,6 +493,67 @@ namespace Beamable.Samples.GPW
                   await dialogSystem.HideDialogBoxImmediate();
                })
             });
+      }
+
+      public static void ShowDialogLocation(DialogSystem dialogSystem, 
+         List<LocationContentView> locationContentViews, int currentLocationIndex, Action<int> onChangeLocationIndex)
+      {
+         int deltaIndex = 1;
+         int nextLocationIndex = currentLocationIndex;
+         int maxLocationIndex = locationContentViews.Count - 1;
+         
+         string getBodyText(int bodyIndex)
+         {
+            StringBuilder stringBuilder = new StringBuilder();
+            int index = -1;
+            foreach (LocationContentView locationContentView in locationContentViews)
+            {
+               index++;
+               if (index == bodyIndex)
+               {
+                  stringBuilder.AppendLine(" → <b>" + locationContentView.LocationContent.Title + "</b> ← ");
+               }
+               else
+               {
+                  stringBuilder.AppendLine(locationContentView.LocationContent.Title);
+               }
+               
+            }
+
+            return stringBuilder.ToString();
+         }
+         
+         dialogSystem.ShowDialogBox<DialogUI>(
+            dialogSystem.DialogUIPrefab,
+            "Change Location?",
+            getBodyText(nextLocationIndex),
+            new List<DialogButtonData>
+            {
+               new DialogButtonData($"▼", delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+
+                  nextLocationIndex += deltaIndex;
+                  nextLocationIndex = Mathf.Min(nextLocationIndex, maxLocationIndex);
+                  dialogSystem.CurrentDialogUI.BodyText.text = getBodyText(nextLocationIndex);
+               }),
+               new DialogButtonData($"▲", delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  nextLocationIndex -= deltaIndex;
+                  nextLocationIndex = Mathf.Max(nextLocationIndex, 0);
+                  dialogSystem.CurrentDialogUI.BodyText.text = getBodyText(nextLocationIndex);
+
+               }),
+               new DialogButtonData(GPWHelper.Ok, async delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  onChangeLocationIndex.Invoke(deltaIndex);
+                  await dialogSystem.HideDialogBoxImmediate();
+               })
+            });
+         
+         dialogSystem.CurrentDialogUI.SetHeight(650);
       }
    }
 }

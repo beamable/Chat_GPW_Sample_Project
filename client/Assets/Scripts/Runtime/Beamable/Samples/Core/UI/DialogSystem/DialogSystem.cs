@@ -135,7 +135,7 @@ namespace Beamable.Samples.Core.UI.DialogSystem
                 "",
                 new List<DialogButtonData>());
             
-            dialogUI.RectTransform.sizeDelta = new Vector2(dialogUI.RectTransform.sizeDelta.x, 150);
+            dialogUI.SetHeight(150);
             
             return dialogUI;
         }

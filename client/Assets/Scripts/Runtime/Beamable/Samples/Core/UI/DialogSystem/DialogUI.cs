@@ -13,7 +13,6 @@ namespace Beamable.Samples.Core.UI.DialogSystem
     {
         //  Properties -----------------------------------
         public List<DialogButtonData> DialogButtonDatas { get { return _dialogButtonDatas; } set { _dialogButtonDatas = value; Render(); }}
-        public RectTransform RectTransform { get { return _resizableRectTransform; } set { _resizableRectTransform = value; Render(); }}
         public bool IsInteractable { get { return _canvasGroup.interactable; } set { _canvasGroup.interactable = value; }}
         
         public TMP_Text TitleText { get { return _titleText; } }
@@ -62,6 +61,11 @@ namespace Beamable.Samples.Core.UI.DialogSystem
         }
 
         //  Other Methods --------------------------------
+        public void SetHeight(float h)
+        {
+            _resizableRectTransform.sizeDelta = new Vector2(_resizableRectTransform.sizeDelta.x, h);
+        }
+        
         private void Render()
         {
             if ((_dialogButtonDatas == null || _dialogButtonDatas.Count == 0) &&

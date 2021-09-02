@@ -119,8 +119,7 @@ namespace Beamable.Samples.GPW
          _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
 
          // Wait
-         _scene01IntroUIView.DialogSystem.ShowDialogBoxLoading(GPWHelper.Reset);
-         await GPWController.Instance.ResetGame();
+         _scene01IntroUIView.DialogSystem.ShowDialogBoxLoading(GPWHelper.Game);
          
          // Load Scene
          await _scene01IntroUIView.DialogSystem.HideDialogBox();

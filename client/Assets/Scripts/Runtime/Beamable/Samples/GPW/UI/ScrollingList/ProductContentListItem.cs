@@ -59,11 +59,6 @@ namespace Beamable.Samples.GPW.UI.ScrollingList
             int priceThem = _productContentView.MarketGoods.Price;
             int priceMe = _productContentView.OwnedGoods.Price;
             
-            //TODO: Remove
-            if (true && _titleText.text.ToLower().Contains("chocolate"))
-            {
-               Debug.Log($"Update() {_productContentView}");
-            }
             stringBuilder.AppendLine($"Market   #{countThem:000}   ${priceThem:000}");
             stringBuilder.AppendLine($"Owned   #{countMe:000}   ${priceMe:000}");
             
