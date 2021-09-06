@@ -109,8 +109,6 @@ namespace Beamable.Samples.GPW
          GPWController.Instance.RuntimeDataStorage.RuntimeData.PreviousSceneName = 
             SceneManager.GetActiveScene().name;
          
-         Configuration.Debugger.Log($"LoadScene() to {sceneName}");
-
          yield return new WaitForSeconds(delayBeforeLoading/1000);
          SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
       }

@@ -122,7 +122,7 @@ namespace Beamable.Samples.GPW
         }
       
       
-        private void CheckIsGameOver()
+        private async void CheckIsGameOver()
         {
             PersistentData persistentData = GPWController.Instance.PersistentDataStorage.PersistentData;
             if (persistentData.IsGameOver)
@@ -148,6 +148,11 @@ namespace Beamable.Samples.GPW
                 }
             
                 GPWHelper.PlayAudioClipSecondaryClick();
+
+                if (_scene02GameUIView.DialogSystem.HasCurrentDialogUI)
+                {
+                    await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
+                }
             
                 _scene02GameUIView.DialogSystem.ShowDialogBox<DialogUI>(
                     _scene02GameUIView.DialogSystem.DialogUIPrefab,
