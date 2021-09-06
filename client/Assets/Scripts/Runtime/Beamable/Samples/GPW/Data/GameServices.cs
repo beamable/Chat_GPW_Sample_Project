@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Beamable.Api.Inventory;
 using Beamable.Api.Leaderboard;
@@ -10,7 +10,6 @@ using Beamable.Common.Leaderboards;
 using Beamable.Experimental.Api.Chat;
 using Beamable.Samples.Core.Data;
 using Beamable.Samples.Core.Debugging;
-using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data.Storage;
 using UnityEngine;
@@ -88,9 +87,6 @@ namespace Beamable.Samples.GPW.Data
 				_isInitialized = true;
 			}
 		}
-
-
-		
 
 
 		#region ChatService
@@ -275,6 +271,9 @@ namespace Beamable.Samples.GPW.Data
 		{
 			_inventoryView = await _inventoryService.GetCurrent();
 			InventoryService_OnChanged(_inventoryView);
+			
+			_chatView = await _chatService.Subscribable.GetCurrent();
+			ChatService_OnChanged(_chatView);
 		}
 		
 		public async Task<bool> BuyItemInternal(ProductContentView productContentView, int amount)
@@ -473,7 +472,8 @@ namespace Beamable.Samples.GPW.Data
 		{
 			_chatView = chatView;
 
-			Debug.Log($"ChatService_OnChanged ()...");
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.AppendLine("ChatService_OnChanged()...\n\n");
 			
 			foreach (RoomHandle roomHandle in _chatView.roomHandles)
 			{
@@ -481,19 +481,29 @@ namespace Beamable.Samples.GPW.Data
 				{
 					roomHandle.OnMessageReceived -= RoomHandle_MessageReceived;
 					roomHandle.OnMessageReceived += RoomHandle_MessageReceived;
-					Debug.Log($"ChatService_OnChanged () YES in room {roomHandle.Name}");
-				}
-				else
-				{
-					Debug.Log($"ChatService_OnChanged () NOT in room {roomHandle.Name}");
+					
+					stringBuilder.AppendLine($"OnMessageReceived observed for room = {roomHandle.Name}");
 				}
 			}
+			
+			Configuration.Debugger.Log(stringBuilder.ToString());
 
 			OnChatViewChanged.Invoke(_chatView);
 		}
 
 		private void RoomHandle_MessageReceived(Message message)
 		{
+			string roomName = "";
+			foreach (RoomHandle i in _chatView.roomHandles)
+			{
+				if (i.Id == message.roomId)
+				{
+					roomName = i.Name;
+				}
+			}
+
+			Configuration.Debugger.Log($"RoomHandle_MessageReceived()" +
+			                            $" room = {roomName}, message = {message.roomId}");
 			OnChatViewChanged.Invoke(_chatView);
 		}
 

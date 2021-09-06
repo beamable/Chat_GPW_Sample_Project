@@ -160,7 +160,6 @@ namespace Beamable.Samples.GPW
         {
             // The amount may be positive or negative
             // Check that both balances will be above zeros
-            Debug.Log("2: p " + (amountToPayoffDebt));
             
             // NEGATIVE amountToPayoffDebt = INCREASE DEBT
             int nextCashAmount = _persistentDataStorage.PersistentData.CashAmount + amountToPayoffDebt;
@@ -168,15 +167,12 @@ namespace Beamable.Samples.GPW
             
             if (nextCashAmount >= 0)
             {
-                Debug.Log("CashAmount ");
-                
                 // You can add debt but only up to the original debt amount. You can't add extra.
                 // You can remove debt but only up to 0 debt. You can't remove extra.
                 if (nextDebtAmount >= 0 && 
                     (nextDebtAmount <= _runtimeDataStorage.RuntimeData.RemoteConfiguration.DebtAmountInitial ||
                      nextDebtAmount <= _persistentDataStorage.PersistentData.DebtAmount))
                 {
-                    Debug.Log("DebtAmount");
                     _persistentDataStorage.PersistentData.CashAmount = nextCashAmount;
                     _persistentDataStorage.PersistentData.DebtAmount = nextDebtAmount;
                     _persistentDataStorage.ForceRefresh();
@@ -236,7 +232,7 @@ namespace Beamable.Samples.GPW
         {
             if (CanSellItem(productContentView, amount))
             {
-                TransferCashToSellItem(productContentView.OwnedGoods.Price * amount);
+                TransferCashToSellItem(productContentView.MarketGoods.Price * amount);
                 return await _gameServices.SellItemInternal(productContentView, amount);
             }
 
@@ -350,7 +346,7 @@ namespace Beamable.Samples.GPW
             {
                 List<ProductContentView> list = LocationContentViewCurrent.ProductContentViews;
 
-                Debug.Log("RefreshCurrentProductContentViews()");
+                Configuration.Debugger.Log("RefreshCurrentProductContentViews()", DebugLogLevel.Verbose);
             
                 // Refresh the UI buttons for buy/sell
                 // Can we buy/sell at least one quantity?

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Beamable.Common.Api.Inventory;
 using Beamable.Samples.Core.Utilities;
 using Beamable.Samples.GPW.Views;
@@ -123,7 +125,14 @@ namespace Beamable.Samples.GPW
             _scene01IntroUIView.Configuration.Scene02GameName,
             _scene01IntroUIView.Configuration.DelayBeforeLoadScene));
       }
-
+      
+      private void ResetGame()
+      {
+         GPWHelper.PlayAudioClipSecondaryClick();
+         GameObject.Destroy(GPWController.Instance.gameObject);
+         ExampleProjectHacks.ClearDeviceUsersAndReloadScene();
+      }
+      
       //  Event Handlers -------------------------------
       private async void ConnectivityService_OnConnectivityChanged(bool isConnected)
       {
@@ -152,8 +161,8 @@ namespace Beamable.Samples.GPW
             _scene01IntroUIView.DialogSystem.ShowDialogBoxConfirmation(
                delegate
                {
-                  GPWHelper.PlayAudioClipSecondaryClick();
-                  ExampleProjectHacks.ClearDeviceUsersAndReloadScene();
+                  ResetGame();
+          
                });
 
             _scene01IntroUIView.DialogSystem.CurrentDialogUI.BodyText.text = 
@@ -167,6 +176,8 @@ namespace Beamable.Samples.GPW
             StartGame();
          }
       }
+
+
 
 
       private void LeaderboardButton_OnClicked()
@@ -185,9 +196,7 @@ namespace Beamable.Samples.GPW
          _scene01IntroUIView.DialogSystem.ShowDialogBoxConfirmation(
             delegate
             {
-               GPWHelper.PlayAudioClipSecondaryClick();
-               GPWController.Destroy();
-               ExampleProjectHacks.ClearDeviceUsersAndReloadScene();
+               ResetGame();
             });
       }
       

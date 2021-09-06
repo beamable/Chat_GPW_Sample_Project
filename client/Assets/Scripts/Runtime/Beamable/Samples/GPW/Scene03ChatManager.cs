@@ -84,6 +84,11 @@ namespace Beamable.Samples.GPW
             RoomHandle roomHandle = GPWController.Instance.GetCurrentRoomHandle();
             roomName = roomHandle.Name;
          }
+
+         if (_scene03ChatUIView.DialogSystem.HasCurrentDialogUI)
+         {
+            await _scene03ChatUIView.DialogSystem.HideDialogBoxImmediate();
+         }
          
          _scene03ChatUIView.DialogSystem.ShowDialogBoxLoading(roomName);
          return new EmptyResponse();
@@ -94,6 +99,13 @@ namespace Beamable.Samples.GPW
       {
          // Change mode
          GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode = chatMode;
+
+         // THis mode can be reached by clicking chat text too
+         // so update the button to look selected
+         if (chatMode == ChatMode.Direct)
+         {
+            _scene03ChatUIView.DirectChatToggle.isOn = true;
+         }
          
          // Show mode specific prompt
          await ShowDialogBoxLoadingSafe();
