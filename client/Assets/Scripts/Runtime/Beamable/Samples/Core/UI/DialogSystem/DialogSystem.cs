@@ -129,6 +129,11 @@ namespace Beamable.Samples.Core.UI.DialogSystem
         /// <returns></returns>
         public DialogUI ShowDialogBoxLoading(string areaToLoadTitle)
         {
+            if (HasCurrentDialogUI)
+            {
+                throw new Exception("Must call HideDialogBox() or equivalent, before ShowDialogBoxLoading().");
+            }
+            
             DialogUI dialogUI = ShowDialogBox<DialogUI>(
                 DialogUIPrefab,
                 string.Format(_configuration.DialogBoxLoadingText, areaToLoadTitle),

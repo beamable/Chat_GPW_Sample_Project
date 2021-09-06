@@ -77,7 +77,7 @@ namespace Beamable.Samples.GPW
             }
         }
         
-        public void SetLocationIndexSafe(int nextIndex, bool incrementTurn = true)
+        public void SetLocationIndexSafe(int nextIndex, bool willIncrementTurn)
         {
             if (_persistentDataStorage.PersistentData.IsGameOver)
             {
@@ -97,10 +97,11 @@ namespace Beamable.Samples.GPW
             }
 
             // Progress Turn / Bank / Debt
-            if (incrementTurn)
+            if (willIncrementTurn)
             {
                 GoToNextTurn();
             }
+            
             
             // Change Location
             PersistentDataStorage.PersistentData.CurrentLocationIndex = nextIndex;
@@ -168,8 +169,12 @@ namespace Beamable.Samples.GPW
             if (nextCashAmount >= 0)
             {
                 Debug.Log("CashAmount ");
+                
+                // You can add debt but only up to the original debt amount. You can't add extra.
+                // You can remove debt but only up to 0 debt. You can't remove extra.
                 if (nextDebtAmount >= 0 && 
-                    nextDebtAmount <= _runtimeDataStorage.RuntimeData.RemoteConfiguration.DebtAmountInitial)
+                    (nextDebtAmount <= _runtimeDataStorage.RuntimeData.RemoteConfiguration.DebtAmountInitial ||
+                     nextDebtAmount <= _persistentDataStorage.PersistentData.DebtAmount))
                 {
                     Debug.Log("DebtAmount");
                     _persistentDataStorage.PersistentData.CashAmount = nextCashAmount;
@@ -177,19 +182,6 @@ namespace Beamable.Samples.GPW
                     _persistentDataStorage.ForceRefresh();
                 }
             }
-            
-            // // POSITIVE amountToPayoffDebt = INCREASE BANK
-            // if (amountToPayoffDebt > 0) 
-            // {
-            //     if (_persistentDataStorage.PersistentData.CashAmount - amountToPayoffDebt >= 0 && 
-            //         _persistentDataStorage.PersistentData.DebtAmount - amountToPayoffDebt >= 0)
-            //     {
-            //         Debug.Log("yes2");
-            //         _persistentDataStorage.PersistentData.CashAmount -= amountToPayoffDebt;
-            //         _persistentDataStorage.PersistentData.DebtAmount -= amountToPayoffDebt;
-            //         _persistentDataStorage.ForceRefresh();
-            //     }
-            // }
         }
         
         public void TransferCashToBuyItem(int itemPurchasePrice)

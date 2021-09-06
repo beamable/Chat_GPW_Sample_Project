@@ -1,4 +1,4 @@
-﻿using AirFishLab.ScrollingList;
+﻿using System.ComponentModel;
 using Beamable.Samples.Core.UI.ScrollingList;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data.Storage;
@@ -77,7 +77,8 @@ namespace Beamable.Samples.GPW.Views
       //  Unity Methods   ------------------------------
       protected override void Start()
       {
-         base.Start(); 
+         base.Start();
+         Refresh();
       }
       
       private void Refresh()
@@ -88,11 +89,11 @@ namespace Beamable.Samples.GPW.Views
 
          if (_locationContentView != null)
          {
-            GPWHelper.SetButtonText(_travelButton, "Travel", _locationContentView.LocationContent.Title);
+            GPWHelper.SetChildTMPText(_travelButton, "Travel", _locationContentView.LocationContent.Title);
          }
          else
          {
-            GPWHelper.SetButtonText(_travelButton, "Travel");
+            GPWHelper.SetChildTMPText(_travelButton, "Travel");
          }
          
          if (_persistentData != null)
@@ -100,8 +101,8 @@ namespace Beamable.Samples.GPW.Views
             _cashText.text = $"Cash: ${_persistentData.CashAmount}";
             _turnText.text = $"Turn: {_persistentData.TurnCurrent}/{_persistentData.TurnsTotal}";
            
-            GPWHelper.SetButtonText(_bankButton, "Bank", $"${_persistentData.BankAmount}");
-            GPWHelper.SetButtonText(_debtButton, "Debt", $"${_persistentData.DebtAmount}");
+            GPWHelper.SetChildTMPText(_bankButton, "Bank", $"${_persistentData.BankAmount}");
+            GPWHelper.SetChildTMPText(_debtButton, "Debt", $"${_persistentData.DebtAmount}");
          }
 
          if (_runtimeData != null)

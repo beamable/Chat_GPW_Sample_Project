@@ -1,5 +1,4 @@
-﻿using Beamable.Samples.Core.Exceptions;
-using Beamable.Samples.Core.UI;
+﻿using Beamable.Samples.Core.UI;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data.Storage;
 using TMPro;
@@ -21,9 +20,10 @@ namespace Beamable.Samples.GPW.Views
       public TMP_ScrollingText ScrollingText { get { return _scrollingText; } }
       public TMP_ChatInputUI ChatInputUI { get { return _chatInputUI ;}}
 
-      public Button GlobalChatButton { get { return _globalChatButton; } }
-      public Button LocationChatButton { get { return _locationChatButton; } }
-      public Button DirectChatButton { get { return _directChatButton; } } 
+      public ToggleGroup ToggleGroup { get { return _toggleGroup; } }
+      public Toggle GlobalChatToggle { get { return _globalChatToggle; } }
+      public Toggle LocationChatToggle { get { return _locationChatToggle; } }
+      public Toggle DirectChatToggle { get { return _directChatToggle; } } 
       
       public Button BackButton { get { return _backButton; } }
       
@@ -51,13 +51,16 @@ namespace Beamable.Samples.GPW.Views
       private TMP_ChatInputUI _chatInputUI = null;
       
       [SerializeField]
-      private Button _globalChatButton = null;
+      private ToggleGroup _toggleGroup = null;
+
+      [SerializeField]
+      private Toggle _globalChatToggle = null;
       
       [SerializeField]
-      private Button _locationChatButton = null;
+      private Toggle _locationChatToggle = null;
       
       [SerializeField]
-      private Button _directChatButton = null;
+      private Toggle _directChatToggle = null;
       
       [SerializeField]
       private Button _backButton = null;
@@ -70,15 +73,15 @@ namespace Beamable.Samples.GPW.Views
       protected override void Start()
       {
          base.Start();
+         Refresh();
       }
       
       //  Other Methods   ------------------------------
       public void Refresh()
       {
-         GPWHelper.SetButtonText(_globalChatButton, "Global", "Chat");
-         GPWHelper.SetButtonText(_directChatButton, "Direct", $"Chat");
-         GPWHelper.SetButtonText(_backButton, "Back");
-         
+         GPWHelper.SetChildTMPText(_globalChatToggle, "Global", "Chat");
+         GPWHelper.SetChildTMPText(_directChatToggle, "Direct", $"Chat");
+         GPWHelper.SetChildTMPText(_backButton, "Back");
          
          string title = "Location";
          if (_locationContentView != null)
@@ -87,7 +90,7 @@ namespace Beamable.Samples.GPW.Views
          }
          
          //Adjust spacing due to long names
-         GPWHelper.SetButtonText(_locationChatButton, 
+         GPWHelper.SetChildTMPText(_locationChatToggle, 
             $"<size=20>{title}</size>",
             "Chat", 12);
          
@@ -105,13 +108,13 @@ namespace Beamable.Samples.GPW.Views
             switch (_runtimeData.ChatMode)
             {
                case ChatMode.Global:
-                  _globalChatButton.Select();
+                  _globalChatToggle.Select();
                   break;
                case ChatMode.Location:
-                  _locationChatButton.Select();
+                  _locationChatToggle.Select();
                   break;
                case ChatMode.Direct:
-                  _directChatButton.Select();
+                  _directChatToggle.Select();
                   break;
                default:
                   //allow default

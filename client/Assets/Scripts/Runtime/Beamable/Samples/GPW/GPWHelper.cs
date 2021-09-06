@@ -320,18 +320,17 @@ namespace Beamable.Samples.GPW
             Application.Quit();
          }
       }
-
-      public static void SetButtonText(Button button, string line1, string line2, int spaceBetweenLines = 10)
+      public static void SetChildTMPText(Component component, string line1, string line2, int spaceBetweenLines = 10)
       {
-         button.GetComponentInChildren<TextMeshProUGUI>().text = 
+         component.GetComponentInChildren<TextMeshProUGUI>().text = 
             $"{line1}"+
             $"<size={spaceBetweenLines}>\n  \n</size>"+
             $"<size=20>{line2}</size>";
       }
       
-      public static void SetButtonText(Button button, string line1)
+      public static void SetChildTMPText(Component component, string line1)
       {
-         button.GetComponentInChildren<TextMeshProUGUI>().text = $"{line1}";
+         component.GetComponentInChildren<TextMeshProUGUI>().text = $"{line1}";
       }
 
       private static string GetPluralized(string titleSingular, string titlePlural, int amountCurrent)
@@ -534,21 +533,27 @@ namespace Beamable.Samples.GPW
                   GPWHelper.PlayAudioClipSecondaryClick();
 
                   nextLocationIndex += deltaIndex;
-                  nextLocationIndex = Mathf.Min(nextLocationIndex, maxLocationIndex);
+                  if (nextLocationIndex > maxLocationIndex)
+                  {
+                     nextLocationIndex = 0;
+                  }
                   dialogSystem.CurrentDialogUI.BodyText.text = getBodyText(nextLocationIndex);
                }),
                new DialogButtonData($"▲", delegate
                {
                   GPWHelper.PlayAudioClipSecondaryClick();
                   nextLocationIndex -= deltaIndex;
-                  nextLocationIndex = Mathf.Max(nextLocationIndex, 0);
+                  if (nextLocationIndex < 0)
+                  {
+                     nextLocationIndex = maxLocationIndex;
+                  }
                   dialogSystem.CurrentDialogUI.BodyText.text = getBodyText(nextLocationIndex);
 
                }),
                new DialogButtonData(GPWHelper.Ok, async delegate
                {
                   GPWHelper.PlayAudioClipSecondaryClick();
-                  onChangeLocationIndex.Invoke(deltaIndex);
+                  onChangeLocationIndex.Invoke(nextLocationIndex);
                   await dialogSystem.HideDialogBoxImmediate();
                })
             });

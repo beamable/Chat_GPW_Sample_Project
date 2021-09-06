@@ -25,6 +25,7 @@ namespace Beamable.Samples.GPW
       private Scene02GameUIView _scene02GameUIView = null;
       private bool _isReadyRuntimeDataStorage = false;
       private bool _isReadyProductContentList = false;
+      private bool _isReadyProductContentListFirstTime = false;
       private bool _isReadyInventoryView = false;
       
       //  Unity Methods   ------------------------------
@@ -80,14 +81,16 @@ namespace Beamable.Samples.GPW
       
       private async void CheckIsSceneReady()
       {
-         if (_isReadyRuntimeDataStorage &&
-             _isReadyInventoryView)
+         if (_isReadyRuntimeDataStorage && _isReadyInventoryView)
          {
             // Likely often. That's ok
             RefreshProductContentList();
             
-            if (_isReadyProductContentList)
+            // Limit this to one time ever per session per-this-scene
+            if (!_isReadyProductContentListFirstTime && _isReadyProductContentList)
             {
+               _isReadyProductContentListFirstTime = true;
+               
                // Likely once when scene starts
                await _scene02GameUIView.DialogSystem.HideDialogBox();
             }
@@ -185,7 +188,7 @@ namespace Beamable.Samples.GPW
             {
                if (currentLocationIndex != nextLocationIndex)
                {
-                  GPWController.Instance.SetLocationIndexSafe(nextLocationIndex);
+                  GPWController.Instance.SetLocationIndexSafe(nextLocationIndex, true);
                }
             });
       }
@@ -285,6 +288,12 @@ namespace Beamable.Samples.GPW
          PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
          _scene02GameUIView.PersistentData = persistentDataStorage.PersistentData;
          _scene02GameUIView.LocationContentView = GPWController.Instance.LocationContentViewCurrent;
+         
+         // When changes occur (e.g. CashAmount), refresh
+         // list so buy/sell interactable can toggle properly
+         RefreshProductContentList();
+         
+         // When PersistentData changes, check "is last turn?"
          CheckIsGameOver();
       }
      
