@@ -22,6 +22,7 @@ namespace Beamable.Samples.GPW
          SetupBeamable();
       }
       
+      
       //  Other Methods   ------------------------------
       private async void SetupBeamable()
       {
@@ -32,6 +33,7 @@ namespace Beamable.Samples.GPW
          }
       }
 
+      
       //  Event Handlers -------------------------------
       private void BackButton_OnClicked()
       {

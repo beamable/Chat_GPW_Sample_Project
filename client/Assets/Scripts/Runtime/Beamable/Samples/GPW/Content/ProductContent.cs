@@ -2,8 +2,6 @@
 using Beamable.Common.Api.Inventory;
 using Beamable.Common.Content;
 using Beamable.Common.Inventory;
-using UnityEngine;
-using Random = System.Random;
 
 namespace Beamable.Samples.GPW.Content
 {

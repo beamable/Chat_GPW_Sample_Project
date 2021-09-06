@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using Beamable.Common.Api.Inventory;
 using Beamable.Samples.Core.Utilities;
 using Beamable.Samples.GPW.Views;
@@ -90,8 +88,6 @@ namespace Beamable.Samples.GPW
       }
 
 
-
-
       /// <summary>
       /// Render the user-facing text with success or helpful errors.
       /// </summary>
@@ -113,6 +109,7 @@ namespace Beamable.Samples.GPW
          _scene01IntroUIView.ButtonsCanvasGroup.interactable = _isConnected && _inventoryView != null;
       }
 
+      
       private async void StartGame()
       {
          // Wait
@@ -126,12 +123,14 @@ namespace Beamable.Samples.GPW
             _scene01IntroUIView.Configuration.DelayBeforeLoadScene));
       }
       
+      
       private void ResetGame()
       {
          GPWHelper.PlayAudioClipSecondaryClick();
          GameObject.Destroy(GPWController.Instance.gameObject);
          ExampleProjectHacks.ClearDeviceUsersAndReloadScene();
       }
+      
       
       //  Event Handlers -------------------------------
       private async void ConnectivityService_OnConnectivityChanged(bool isConnected)
@@ -142,13 +141,15 @@ namespace Beamable.Samples.GPW
          await _scene01IntroUIView.DialogSystem.HideDialogBox();
       }
 
+      
       private void InventoryService_OnChanged(InventoryView inventoryView)
       {
          _inventoryView = inventoryView;
          RenderUI();
       }
 
-      private async void StartGameButton_OnClicked()
+      
+      private void StartGameButton_OnClicked()
       {
          int itemsCount = 0;
          if (_inventoryView != null)
@@ -177,9 +178,7 @@ namespace Beamable.Samples.GPW
          }
       }
 
-
-
-
+      
       private void LeaderboardButton_OnClicked()
       {
          _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
@@ -188,6 +187,7 @@ namespace Beamable.Samples.GPW
             _scene01IntroUIView.Configuration.Scene04LeaderboardName,
             _scene01IntroUIView.Configuration.DelayBeforeLoadScene));
       }
+      
       
       private void ResetButton_OnClicked()
       {
@@ -199,6 +199,7 @@ namespace Beamable.Samples.GPW
                ResetGame();
             });
       }
+      
       
       private void QuitButton_OnClicked()
       {

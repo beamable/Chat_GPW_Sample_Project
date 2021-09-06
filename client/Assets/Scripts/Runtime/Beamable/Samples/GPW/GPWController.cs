@@ -220,6 +220,7 @@ namespace Beamable.Samples.GPW
             return false;
         }
 
+        
         public bool CanSellItem(ProductContentView productContentView, int amount)
         {
             int totalQuantity = productContentView.OwnedGoods.Quantity;
@@ -228,6 +229,7 @@ namespace Beamable.Samples.GPW
             return isQuanity;
         }
 
+        
         public async Task<bool> SellItem(ProductContentView productContentView, int amount)
         {
             if (CanSellItem(productContentView, amount))
@@ -340,7 +342,7 @@ namespace Beamable.Samples.GPW
         }
         
         
-        public async Task<EmptyResponse> RefreshCurrentProductContentViews()
+        public void RefreshCurrentProductContentViews()
         {
             if (HasLocationContentViewCurrent)
             {
@@ -361,7 +363,6 @@ namespace Beamable.Samples.GPW
                 }
             }
 
-            return new EmptyResponse();
         }
         
         

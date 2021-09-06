@@ -5,6 +5,7 @@ using Beamable.Common.Api;
 using Beamable.Samples.Core.Utilities;
 using Beamable.Samples.GPW;
 using Beamable.Samples.GPW.Data;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Beamable.Samples.Core.UI.DialogSystem
@@ -66,35 +67,46 @@ namespace Beamable.Samples.Core.UI.DialogSystem
             return _currentDialogUI as T;
         }
 
+        
         public async Task<EmptyResponse> HideDialogBox()
         {
             return await HideDialogBoxInternal(_delayBeforeHideDialogBox);
         }
+        
+        
         public async Task<EmptyResponse> HideDialogBoxImmediate()
         {
             return await HideDialogBoxInternal(0);
         }
+        
+        
         private async Task<EmptyResponse> HideDialogBoxInternal(int durationFadeIn)
         {
-            if (_currentDialogUI != null)
+            if (HasCurrentDialogUI)
             {
                 // For cosmetics have a short durationFadeIn
                 await Task.Delay(durationFadeIn);
 
                 // For cosmetics have a short durationFadeIn
-                TweenHelper.CanvasGroupDoFade(_dialogParentCanvasGroup,
-                    1, 0, _configuration.DelayFadeInUI , 0).onComplete = () =>
+                Tween tween = TweenHelper.CanvasGroupDoFade(_dialogParentCanvasGroup,
+                    1, 0, _configuration.DelayFadeInUI , 0);
+                tween.onComplete = () =>
                 {
                     GameObject.Destroy(_currentDialogUI.gameObject);
                     _currentDialogUI = null;
                 };
-
+                
+                //Properly wait for tween to finish before completing task
+                await tween.AsyncWaitForCompletion();
+                return new EmptyResponse();
             }
-            return new EmptyResponse();
+            else
+            {
+                return new EmptyResponse();
+            }
         }
         
-
-
+        
         /// <summary>
         /// Show "Are you sure?"
         /// </summary>
@@ -121,6 +133,7 @@ namespace Beamable.Samples.Core.UI.DialogSystem
                     })
                 });
         }
+        
         
         /// <summary>
         /// Show "Loading..."

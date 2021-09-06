@@ -24,7 +24,7 @@ namespace Beamable.Samples.GPW
       private Scene03ChatUIView _scene03ChatUIView = null;
       
       //  Unity Methods   ------------------------------
-      protected void Start()
+      protected async void Start()
       {
          
          // Clear UI
@@ -47,15 +47,13 @@ namespace Beamable.Samples.GPW
          // Load
          _scene03ChatUIView.DialogSystem.DelayBeforeHideDialogBox =
             (int)_scene03ChatUIView.Configuration.DelayAfterDataLoading * 1000;
-         ShowDialogBoxLoadingSafe();
+         
+         await ShowDialogBoxLoadingSafe();
          SetupBeamable();
       }
 
 
-
-
       //  Other Methods  -----------------------------
-
       private async void SetupBeamable()
       {
          // Setup Storage
@@ -75,6 +73,7 @@ namespace Beamable.Samples.GPW
          }
       }
 
+      
       private async Task<EmptyResponse> ShowDialogBoxLoadingSafe()
       {
          // Get roomname, and fallback to blank
@@ -89,7 +88,6 @@ namespace Beamable.Samples.GPW
          {
             await _scene03ChatUIView.DialogSystem.HideDialogBoxImmediate();
          }
-         
          _scene03ChatUIView.DialogSystem.ShowDialogBoxLoading(roomName);
          return new EmptyResponse();
       }
@@ -114,7 +112,6 @@ namespace Beamable.Samples.GPW
          GPWHelper.PlayAudioClipSecondaryClick();
          GPWController.Instance.RuntimeDataStorage.ForceRefresh();
       }
-      
       
       
       private async void RenderChatOutput()
@@ -180,6 +177,7 @@ namespace Beamable.Samples.GPW
          ChatInputUISelect();
       }
       
+      
       private void ChatInputUISelect()
       {
          //The ChatInputUI selects itself upon submit,
@@ -188,6 +186,7 @@ namespace Beamable.Samples.GPW
          _scene03ChatUIView.ChatInputUI.Select();
          
       }
+      
       
       //  Event Handlers -------------------------------
       private async void HyperlinkHandler_OnLinkClicked(string href)
@@ -204,6 +203,7 @@ namespace Beamable.Samples.GPW
          long dbid2 = long.Parse(href);
          await GPWController.Instance.GameServices.JoinDirectRoomWithOnly2Players(dbid1, dbid2);
       }
+      
       
       private async void ChatInputUI_OnValueSubmitted(string message)
       {

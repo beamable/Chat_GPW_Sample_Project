@@ -299,7 +299,7 @@ namespace Beamable.Samples.GPW.Data
 		public async Task<bool> SellItemInternal(ProductContentView productContentView, int amount)
 		{
 			string contentId = productContentView.ProductContent.Id;
-			List<ItemView> itemViews = await GetOwnedItemViews(contentId);
+			List<ItemView> itemViews = GetOwnedItemViews(contentId);
 
 			if (itemViews.Count < amount)
 			{
@@ -373,7 +373,7 @@ namespace Beamable.Samples.GPW.Data
 			return MockDataCreator.SetValueInPropertiesDictionary(propertiesDictionary, Price, value);
 		}
 		
-		private async Task<List<ItemView>> GetOwnedItemViews(string contentId)
+		private List<ItemView> GetOwnedItemViews(string contentId)
 		{
 			foreach (KeyValuePair<string, List<ItemView>> kvp in _inventoryView.items)
 			{

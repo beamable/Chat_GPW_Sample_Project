@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using Random = System.Random;
+﻿using Random = System.Random;
 
 namespace Beamable.Samples.GPW.Content
 {

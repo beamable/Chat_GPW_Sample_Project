@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Beamable.Common.Content;
 
 namespace Beamable.Samples.GPW.Content

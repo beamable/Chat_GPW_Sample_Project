@@ -103,12 +103,10 @@ namespace Beamable.Samples.Core.Data
       /// <param name="alias"></param>
       public static async Task<EmptyResponse> SetCurrentUserAlias(StatsService statsService, string alias)
       {
-         Debug.Log("before");
          await statsService.SetStats("public", new Dictionary<string, string>()
             {
                { Alias, alias },
             });
-         Debug.Log("after");
          return new EmptyResponse();
       }
       
