@@ -77,9 +77,6 @@ namespace Beamable.Samples.GPW
 
       private async Task<EmptyResponse> ShowDialogBoxLoadingSafe()
       {
-         Debug.Log("ShowDialogBoxLoadingSafe");
-         await HideDialogBoxLoadingSafe();
-         
          // Get roomname, and fallback to blank
          string roomName = "";
          if (!_scene03ChatUIView.DialogSystem.HasCurrentDialogUI && GPWController.Instance.HasCurrentRoomHandle)
@@ -92,26 +89,14 @@ namespace Beamable.Samples.GPW
          return new EmptyResponse();
       }
       
-      private async Task<EmptyResponse> HideDialogBoxLoadingSafe()
-      {
-         Debug.Log("HideDialogBoxLoadingSafe : " + _scene03ChatUIView.DialogSystem.HasCurrentDialogUI);
-         if (_scene03ChatUIView.DialogSystem.HasCurrentDialogUI)
-         {
-            await _scene03ChatUIView.DialogSystem.HideDialogBox();
-         }
-         
-         return new EmptyResponse();
-      }
       
-      private void SetChatMode(ChatMode chatMode)
+      private async void SetChatMode(ChatMode chatMode)
       {
-         Debug.Log("SetChatMode(): " + chatMode);
-         
          // Change mode
          GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode = chatMode;
          
          // Show mode specific prompt
-         ShowDialogBoxLoadingSafe();
+         await ShowDialogBoxLoadingSafe();
          
          // Update
          GPWHelper.PlayAudioClipSecondaryClick();
@@ -122,8 +107,6 @@ namespace Beamable.Samples.GPW
       
       private async void RenderChatOutput()
       {
-         Debug.Log("RenderChatOutput");
-         
          if (!GPWController.Instance.GameServices.HasChatView)
          {
             return;
@@ -181,10 +164,19 @@ namespace Beamable.Samples.GPW
          
          _scene03ChatUIView.ScrollingText.SetText(stringBuilder.ToString());
          
-         await HideDialogBoxLoadingSafe();
+         await _scene03ChatUIView.DialogSystem.HideDialogBox();
+         ChatInputUISelect();
       }
       
-
+      private void ChatInputUISelect()
+      {
+         //The ChatInputUI selects itself upon submit,
+         //but calling again here prevents a selection bug, so
+         //keep this here
+         _scene03ChatUIView.ChatInputUI.Select();
+         
+      }
+      
       //  Event Handlers -------------------------------
       private async void HyperlinkHandler_OnLinkClicked(string href)
       {
@@ -205,14 +197,10 @@ namespace Beamable.Samples.GPW
       {
          RoomHandle roomHandle = GPWController.Instance.GetCurrentRoomHandle();
          await GPWController.Instance.GameServices.SendMessage(roomHandle.Name, message);
-         
-         //The ChatInputUI selects itself upon submit,
-         //but calling again here prevents a selection bug, so
-         //keep this here
-         _scene03ChatUIView.ChatInputUI.Select();
+         ChatInputUISelect();
       }
-      
-      
+
+
       private void ChatInputUI_OnValueCleared()
       {
          GPWHelper.PlayAudioClipSecondaryClick();
@@ -221,7 +209,6 @@ namespace Beamable.Samples.GPW
          
       private void GlobalChatButton_OnClicked(bool isOn)
       {
-         Debug.Log("GlobalChatButton_OnClicked: " + isOn);
          if (isOn)
          {
             SetChatMode(ChatMode.Global);

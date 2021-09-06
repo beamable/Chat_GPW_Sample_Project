@@ -274,7 +274,6 @@ namespace Beamable.Samples.GPW.Data
 		public async void ForceRefresh()
 		{
 			_inventoryView = await _inventoryService.GetCurrent();
-			Debug.Log("_inventoryView: " + _inventoryView);
 			InventoryService_OnChanged(_inventoryView);
 		}
 		
@@ -467,8 +466,6 @@ namespace Beamable.Samples.GPW.Data
 		private void InventoryService_OnChanged(InventoryView inventoryView)
 		{
 			_inventoryView = inventoryView;
-			
-			Debug.Log("OnInventoryViewChanged");
 			OnInventoryViewChanged.Invoke(inventoryView);
 		}
 
@@ -476,12 +473,19 @@ namespace Beamable.Samples.GPW.Data
 		{
 			_chatView = chatView;
 
+			Debug.Log($"ChatService_OnChanged ()...");
+			
 			foreach (RoomHandle roomHandle in _chatView.roomHandles)
 			{
 				if (IsLocalPlayerInRoom(roomHandle.Name))
 				{
 					roomHandle.OnMessageReceived -= RoomHandle_MessageReceived;
 					roomHandle.OnMessageReceived += RoomHandle_MessageReceived;
+					Debug.Log($"ChatService_OnChanged () YES in room {roomHandle.Name}");
+				}
+				else
+				{
+					Debug.Log($"ChatService_OnChanged () NOT in room {roomHandle.Name}");
 				}
 			}
 

@@ -1,6 +1,8 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Beamable.Samples.Core.UI
@@ -48,6 +50,8 @@ namespace Beamable.Samples.Core.UI
       protected void Awake()
       {
          _inputField.onValueChanged.AddListener(ChatInput_OnValueChanged);
+         _inputField.onFocusSelectAll = false;
+         //
          _chatInputSubmitButton.onClick.AddListener(ChatInputSubmitButton_OnClicked);
          _chatInputClearButton.onClick.AddListener(ChatInputClearButton_OnClicked);
          Refresh();
@@ -59,7 +63,7 @@ namespace Beamable.Samples.Core.UI
          {
             if (Input.GetKeyDown(_keyCode))
             {
-               ChatInputSubmitButton_OnClicked();
+               _chatInputSubmitButton.onClick.Invoke();
                Refresh();
             }
          }
@@ -79,8 +83,17 @@ namespace Beamable.Samples.Core.UI
 
       public void Select()
       {
+         StartCoroutine(Select_Coroutine());
+      }
+      
+      private IEnumerator Select_Coroutine()
+      {
+         //KLUGE - select OFF, then select ON the input
+         _chatInputSubmitButton.Select();
+         yield return new WaitForEndOfFrame();
          _inputField.Select();
       }
+      
       
       //  Event Handlers   ------------------------------
       private void ChatInput_OnValueChanged(string message)
