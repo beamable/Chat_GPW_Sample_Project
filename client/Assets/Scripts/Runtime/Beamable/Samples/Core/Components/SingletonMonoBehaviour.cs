@@ -98,12 +98,12 @@ namespace Beamable.Samples.Core.Components
 		{
 			if (Application.isPlaying)
 			{
-				Debug.Log("Destroy() 1: " + _Instance.GetInstanceID());
+				Debug.LogWarning("SingletonMonobehavior.Destroy(): " + _Instance.GetInstanceID());
 				Destroy(go);
 			}
 			else
 			{
-				Debug.Log("Destroy() 2: " + _Instance.GetInstanceID());
+				Debug.LogWarning("SingletonMonobehavior.DestroyImmediate(): " + _Instance.GetInstanceID());
 				DestroyImmediate(go);
 			}
 		}

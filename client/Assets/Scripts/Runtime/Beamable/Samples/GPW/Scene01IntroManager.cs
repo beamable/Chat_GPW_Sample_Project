@@ -1,4 +1,5 @@
 ﻿using System;
+using Beamable.Common.Api.Inventory;
 using Beamable.Samples.Core.Utilities;
 using Beamable.Samples.GPW.Views;
 using UnityEngine;
@@ -19,12 +20,13 @@ namespace Beamable.Samples.GPW
       private bool _isConnected = false;
       private bool _isBeamableSDKInstalled = true;
       private string _isBeamableSDKInstalledErrorMessage = "";
+      private InventoryView _inventoryView = null;
 
       //  Unity Methods   ------------------------------
       protected void Start()
       {
          // Clear UI
-         _scene01IntroUIView.TitleText = "Beamable\nGlobal Price Wars";
+         _scene01IntroUIView.TitleText = "<size=40>Beamable</size>\nGlobal Price Wars";
          _scene01IntroUIView.BodyText = "";
          
          // Bottom Navigation
@@ -32,6 +34,7 @@ namespace Beamable.Samples.GPW
          _scene01IntroUIView.LeaderboardButton.onClick.AddListener(LeaderboardButton_OnClicked);
          _scene01IntroUIView.ResetButton.onClick.AddListener(ResetButton_OnClicked);
          _scene01IntroUIView.QuitButton.onClick.AddListener(QuitButton_OnClicked);
+         _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
          
          // Load
          _scene01IntroUIView.DialogSystem.ShowDialogBoxLoading(GPWHelper.Intro);
@@ -67,6 +70,10 @@ namespace Beamable.Samples.GPW
          
             _beamableAPI = await Beamable.API.Instance;
             
+            // Observe inventory items count
+            GPWController.Instance.GameServices.OnInventoryViewChanged.AddListener(InventoryService_OnChanged);
+            GPWController.Instance.GameServices.ForceRefresh();
+            
             // Handle any changes to the internet connectivity
             _beamableAPI.ConnectivityService.OnConnectivityChanged += ConnectivityService_OnConnectivityChanged;
             ConnectivityService_OnConnectivityChanged(_beamableAPI.ConnectivityService.HasConnectivity);
@@ -79,6 +86,8 @@ namespace Beamable.Samples.GPW
             ConnectivityService_OnConnectivityChanged(false);
          }
       }
+
+
 
 
       /// <summary>
@@ -99,10 +108,21 @@ namespace Beamable.Samples.GPW
             dbid, _isBeamableSDKInstalledErrorMessage);
          
          _scene01IntroUIView.BodyText = bodyText;
-         _scene01IntroUIView.ButtonsCanvasGroup.interactable = _isConnected;
+         _scene01IntroUIView.ButtonsCanvasGroup.interactable = _isConnected && _inventoryView != null;
       }
 
-      
+      private async void StartGame()
+      {
+         // Wait
+         _scene01IntroUIView.DialogSystem.ShowDialogBoxLoading(GPWHelper.Game);
+         
+         // Load Scene
+         await _scene01IntroUIView.DialogSystem.HideDialogBox();
+        
+         StartCoroutine(GPWHelper.LoadScene_Coroutine(
+            _scene01IntroUIView.Configuration.Scene02GameName,
+            _scene01IntroUIView.Configuration.DelayBeforeLoadScene));
+      }
 
       //  Event Handlers -------------------------------
       private async void ConnectivityService_OnConnectivityChanged(bool isConnected)
@@ -113,20 +133,39 @@ namespace Beamable.Samples.GPW
          await _scene01IntroUIView.DialogSystem.HideDialogBox();
       }
 
+      private void InventoryService_OnChanged(InventoryView inventoryView)
+      {
+         _inventoryView = inventoryView;
+         RenderUI();
+      }
 
       private async void StartGameButton_OnClicked()
       {
-         _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
-
-         // Wait
-         _scene01IntroUIView.DialogSystem.ShowDialogBoxLoading(GPWHelper.Game);
+         int itemsCount = 0;
+         if (_inventoryView != null)
+         {
+            itemsCount = _inventoryView.items.Count;
+         }
          
-         // Load Scene
-         await _scene01IntroUIView.DialogSystem.HideDialogBox();
-        
-         StartCoroutine(GPWHelper.LoadScene_Coroutine(
-            _scene01IntroUIView.Configuration.Scene02GameName,
-            _scene01IntroUIView.Configuration.DelayBeforeLoadScene));
+         if (itemsCount > 0)
+         {
+            _scene01IntroUIView.DialogSystem.ShowDialogBoxConfirmation(
+               delegate
+               {
+                  GPWHelper.PlayAudioClipSecondaryClick();
+                  ExampleProjectHacks.ClearDeviceUsersAndReloadScene();
+               });
+
+            _scene01IntroUIView.DialogSystem.CurrentDialogUI.BodyText.text = 
+               $"Player has {itemsCount} inventory {GPWHelper.GetPluralized("item", "items", itemsCount)}. " +
+               "The game does not store 'PersistentData' between game sessions (yet). " +
+               "Click 'Ok' to reset and try again.";
+         }
+         else
+         {
+            _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
+            StartGame();
+         }
       }
 
 
@@ -147,6 +186,7 @@ namespace Beamable.Samples.GPW
             delegate
             {
                GPWHelper.PlayAudioClipSecondaryClick();
+               GPWController.Destroy();
                ExampleProjectHacks.ClearDeviceUsersAndReloadScene();
             });
       }

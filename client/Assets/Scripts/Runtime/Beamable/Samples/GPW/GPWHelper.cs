@@ -333,7 +333,7 @@ namespace Beamable.Samples.GPW
          component.GetComponentInChildren<TextMeshProUGUI>().text = $"{line1}";
       }
 
-      private static string GetPluralized(string titleSingular, string titlePlural, int amountCurrent)
+      public static string GetPluralized(string titleSingular, string titlePlural, int amountCurrent)
       {
          amountCurrent = Mathf.Abs(amountCurrent);
          

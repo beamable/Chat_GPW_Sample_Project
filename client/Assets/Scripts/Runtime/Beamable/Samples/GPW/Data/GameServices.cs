@@ -274,6 +274,7 @@ namespace Beamable.Samples.GPW.Data
 		public async void ForceRefresh()
 		{
 			_inventoryView = await _inventoryService.GetCurrent();
+			Debug.Log("_inventoryView: " + _inventoryView);
 			InventoryService_OnChanged(_inventoryView);
 		}
 		
@@ -466,6 +467,8 @@ namespace Beamable.Samples.GPW.Data
 		private void InventoryService_OnChanged(InventoryView inventoryView)
 		{
 			_inventoryView = inventoryView;
+			
+			Debug.Log("OnInventoryViewChanged");
 			OnInventoryViewChanged.Invoke(inventoryView);
 		}
 
