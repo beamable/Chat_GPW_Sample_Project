@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Beamable.Common.Api;
 using Beamable.Experimental.Api.Chat;
-using Beamable.Samples.Core.Debugging;
+using Beamable.Samples.Core.Data;
 using Beamable.Samples.Core.UI;
 using Beamable.Samples.GPW.Data.Storage;
 using Beamable.Samples.GPW.Views;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Beamable.Samples.GPW
 {
    /// <summary>
-   /// Handles the main scene logic: Chat
+   /// Handles the main scene logic: RenderChatOutput
    /// </summary>
    public class Scene03ChatManager : MonoBehaviour
    {
@@ -120,18 +117,84 @@ namespace Beamable.Samples.GPW
          GPWHelper.PlayAudioClipSecondaryClick();
          GPWController.Instance.RuntimeDataStorage.ForceRefresh();
       }
+      
+      
+      
+      private async void RenderChatOutput()
+      {
+         Debug.Log("RenderChatOutput");
+         
+         if (!GPWController.Instance.GameServices.HasChatView)
+         {
+            return;
+         }
+         
+         if (!GPWController.Instance.HasCurrentRoomHandle)
+         {
+            return;
+         }
+         
+         RoomHandle roomHandle = GPWController.Instance.GetCurrentRoomHandle();
+
+         ChatMode chatMode = GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode;
+         StringBuilder stringBuilder = new StringBuilder();
+         stringBuilder.AppendLine("---- RenderChatOutput Room ----");
+         stringBuilder.AppendLine($"Title: {roomHandle.Name}");
+         stringBuilder.AppendLine($"Topic: {GPWHelper.GetChatRoomTopic (chatMode)}");
+         stringBuilder.AppendLine($"Players: {roomHandle.Players.Count}");
+         stringBuilder.AppendLine($"Messages: {roomHandle.Messages.Count}");
+         stringBuilder.AppendLine().AppendLine();
+         
+         foreach (Message message in roomHandle.Messages)
+         {
+            long playerDbid = message.gamerTag;
+            string alias = "";
+            try
+            {
+               alias = await GPWController.Instance.GameServices.GetOrCreateAlias(playerDbid);
+            }
+            catch (Exception e)
+            {
+               Debug.Log("E: " + e.Message);
+            }
+            
+            //Temporarily override alias to reduce confusion. Its by the local player but 
+            //from a previous account. 
+            if (!GPWController.Instance.GameServices.IsLocalPlayerDbid(playerDbid) &&
+                alias == GPWHelper.DefaultLocalAlias)
+            {
+               alias = MockDataCreator.CreateNewRandomAlias(GPWHelper.DefaultRemoteAliasPrefix);
+            }
+                         
+            if (GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode == ChatMode.Direct ||
+                GPWController.Instance.GameServices.IsLocalPlayerDbid(playerDbid))
+            {
+               stringBuilder.AppendLine($"[{alias}]: " + message.content);
+            }
+            else
+            {
+               // When NOT in direct chat, and NOT the local player, renders clickable text
+               // Clicks are handled above by "HyperlinkHandler_OnLinkClicked"
+               stringBuilder.AppendLine($"[{TMP_HyperlinkHandler.WrapTextWithLink(alias, playerDbid.ToString())}]: " + message.content);
+            }
+         }
+         
+         _scene03ChatUIView.ScrollingText.SetText(stringBuilder.ToString());
+         
+         await HideDialogBoxLoadingSafe();
+      }
+      
 
       //  Event Handlers -------------------------------
       private async void HyperlinkHandler_OnLinkClicked(string href)
       {
-         Debug.Log("href: " + href);
-
          if (GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode == ChatMode.Direct)
          {
             throw new Exception("HyperlinkHandler_OnLinkClicked() ChatMode cannot be ChatMode.Direct. ");
          }
 
          SetChatMode(ChatMode.Direct);
+         
          RoomHandle roomHandle = GPWController.Instance.GetCurrentRoomHandle();
          long dbid1 = GPWController.Instance.GameServices.LocalPlayerDbid;
          long dbid2 = long.Parse(href);
@@ -141,7 +204,7 @@ namespace Beamable.Samples.GPW
       private async void ChatInputUI_OnValueSubmitted(string message)
       {
          RoomHandle roomHandle = GPWController.Instance.GetCurrentRoomHandle();
-         bool isSuccess = await GPWController.Instance.GameServices.SendMessage(roomHandle.Name, message);
+         await GPWController.Instance.GameServices.SendMessage(roomHandle.Name, message);
          
          //The ChatInputUI selects itself upon submit,
          //but calling again here prevents a selection bug, so
@@ -165,6 +228,7 @@ namespace Beamable.Samples.GPW
          }
       }
       
+      
       private void LocationChatButton_OnClicked(bool isOn)
       {
          if (isOn)
@@ -172,6 +236,7 @@ namespace Beamable.Samples.GPW
             SetChatMode(ChatMode.Location);
          }
       }
+      
       
       private void DirectChatButton_OnClicked(bool isOn)
       {
@@ -195,7 +260,7 @@ namespace Beamable.Samples.GPW
          PersistentDataStorage persistentDataStorage = subStorage as PersistentDataStorage;
          _scene03ChatUIView.PersistentData = persistentDataStorage.PersistentData;
          _scene03ChatUIView.LocationContentView = GPWController.Instance.LocationContentViewCurrent;
-         Chat();
+         RenderChatOutput();
       }
       
       
@@ -203,75 +268,13 @@ namespace Beamable.Samples.GPW
       {
          RuntimeDataStorage runtimeDataStorage = subStorage as RuntimeDataStorage;
          _scene03ChatUIView.RuntimeData = runtimeDataStorage.RuntimeData;
-         Chat();
+         RenderChatOutput();
       }
       
       
       private void GameServices_OnChatViewChanged(ChatView chatView)
       {
-         Chat();
+         RenderChatOutput();
       }
-
-      
-      private async void Chat()
-      {
-         Debug.Log("Chat");
-         
-         if (!GPWController.Instance.GameServices.HasChatView)
-         {
-            return;
-         }
-         
-         if (!GPWController.Instance.HasCurrentRoomHandle)
-         {
-            return;
-         }
-         
-
-         
-  
-         RoomHandle roomHandle = GPWController.Instance.GetCurrentRoomHandle();
-
-         ChatMode chatMode = GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode;
-         StringBuilder stringBuilder = new StringBuilder();
-         stringBuilder.AppendLine("---- Chat Room ----");
-         stringBuilder.AppendLine($"Title: {roomHandle.Name}");
-         stringBuilder.AppendLine($"Topic: {GPWHelper.GetChatRoomTopic (chatMode)}");
-         stringBuilder.AppendLine($"Players: {roomHandle.Players.Count}");
-         stringBuilder.AppendLine($"Messages: {roomHandle.Messages.Count}");
-         stringBuilder.AppendLine().AppendLine();
-         
-         foreach (Message message in roomHandle.Messages)
-         {
-            long playerDbid = message.gamerTag;
-            string alias = "";
-            try
-            {
-               alias = await GPWController.Instance.GameServices.GetOrCreateAlias(playerDbid);
-            }
-            catch (Exception e)
-            {
-               Debug.Log("E: " + e.Message);
-            }
-                         
-            if (GPWController.Instance.RuntimeDataStorage.RuntimeData.ChatMode == ChatMode.Direct ||
-                GPWController.Instance.GameServices.IsLocalPlayerDbid(playerDbid))
-            {
-               stringBuilder.AppendLine($"[{alias}]: " + message.content);
-            }
-            else
-            {
-               // When NOT in direct chat, and NOT the local player, renders clickable text
-               // Clicks are handled above by "HyperlinkHandler_OnLinkClicked"
-               stringBuilder.AppendLine($"[{TMP_HyperlinkHandler.WrapTextWithLink(alias, playerDbid.ToString())}]: " + message.content);
-            }
-         }
-         
-         _scene03ChatUIView.ScrollingText.SetText(stringBuilder.ToString());
-         
-         Debug.Log("Chat2");
-         await HideDialogBoxLoadingSafe();
-      }
-      
    }
 }

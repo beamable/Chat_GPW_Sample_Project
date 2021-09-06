@@ -32,32 +32,6 @@ MonoBehaviour:
   _locationChatToggle: {fileID: 6186697080102969608}
   _directChatToggle: {fileID: 8552178975734929128}
   _backButton: {fileID: 4459205365934786043}
---- !u!114 &5641573201553047367
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6493331198724563371}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 10
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 1
-  m_ChildControlHeight: 1
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
 --- !u!114 &4033550463677450137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,6 +66,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &5641573201553047367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6493331198724563371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 10
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 1
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!114 &4354316249431100787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -758,7 +758,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4933405215131731759, guid: 9f4e19bf2d8570b4abeeb743a734b942, type: 3}
       propertyPath: m_Size
-      value: 1
+      value: 0.9999769
       objectReference: {fileID: 0}
     - target: {fileID: 4933405215131731759, guid: 9f4e19bf2d8570b4abeeb743a734b942, type: 3}
       propertyPath: m_Value
@@ -854,7 +854,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6860966593614725683, guid: 9f4e19bf2d8570b4abeeb743a734b942, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.00079345703
+      value: -0.00018310547
       objectReference: {fileID: 0}
     - target: {fileID: 7054666871656802728, guid: 9f4e19bf2d8570b4abeeb743a734b942, type: 3}
       propertyPath: m_VerticalAlignment
@@ -1548,12 +1548,28 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3840639666438260393, guid: 8c9c55f65f981134b8ee741b889dd684, type: 3}
+      propertyPath: m_Spacing
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3840639666438260393, guid: 8c9c55f65f981134b8ee741b889dd684, type: 3}
       propertyPath: m_Padding.m_Top
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3840639666438260393, guid: 8c9c55f65f981134b8ee741b889dd684, type: 3}
       propertyPath: m_ChildAlignment
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3840639666438260393, guid: 8c9c55f65f981134b8ee741b889dd684, type: 3}
+      propertyPath: m_Padding.m_Left
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3840639666438260393, guid: 8c9c55f65f981134b8ee741b889dd684, type: 3}
+      propertyPath: m_Padding.m_Right
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3840639666438260393, guid: 8c9c55f65f981134b8ee741b889dd684, type: 3}
+      propertyPath: m_Padding.m_Bottom
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3840639666438260393, guid: 8c9c55f65f981134b8ee741b889dd684, type: 3}
       propertyPath: m_ChildControlWidth
