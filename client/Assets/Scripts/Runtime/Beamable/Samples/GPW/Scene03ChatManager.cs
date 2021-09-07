@@ -12,7 +12,7 @@ using UnityEngine;
 namespace Beamable.Samples.GPW
 {
    /// <summary>
-   /// Handles the main scene logic: RenderChatOutput
+   /// Handles the main scene logic: Chat 
    /// </summary>
    public class Scene03ChatManager : MonoBehaviour
    {
@@ -174,17 +174,7 @@ namespace Beamable.Samples.GPW
          _scene03ChatUIView.ScrollingText.SetText(stringBuilder.ToString());
          
          await _scene03ChatUIView.DialogSystem.HideDialogBox();
-         ChatInputUISelect();
-      }
-      
-      
-      private void ChatInputUISelect()
-      {
-         //The ChatInputUI selects itself upon submit,
-         //but calling again here prevents a selection bug, so
-         //keep this here
          _scene03ChatUIView.ChatInputUI.Select();
-         
       }
       
       
@@ -209,7 +199,7 @@ namespace Beamable.Samples.GPW
       {
          RoomHandle roomHandle = GPWController.Instance.GetCurrentRoomHandle();
          await GPWController.Instance.GameServices.SendMessage(roomHandle.Name, message);
-         ChatInputUISelect();
+         _scene03ChatUIView.ChatInputUI.Select();
       }
 
 
