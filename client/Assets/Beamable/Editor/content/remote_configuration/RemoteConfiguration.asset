@@ -22,7 +22,7 @@ MonoBehaviour:
   BankInterestMax: 0.1
   CashTransactionMin: 100
   RandomSeed: 88
-  TurnsTotal: 10
+  TurnsTotal: 5
   ItemsMax: 100
   ProductContentRefs:
   - Id: items.product.Chocolate
