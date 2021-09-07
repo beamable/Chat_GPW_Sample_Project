@@ -312,11 +312,11 @@ namespace Beamable.Samples.GPW
             // Chat - Global Room
             await _gameServices.CreateRoomSafe(GPWHelper.ChatRoomNameGlobal);
             
-            // Chat - Direct Room - TODO: Should I use the existing 'DirectRooms' 
+            // Chat - Direct Room 
             // available on the chatView instance?
             await _gameServices.CreateRoomSafe(GPWHelper.GetChatRoomNameDirect());
             
-            // Chat - Location Rooms
+            // Chat - Location Room(s)
             foreach (LocationContentView locationContentView in _runtimeDataStorage.RuntimeData.LocationContentViews)
             {
                 await _gameServices.CreateRoomSafe(
