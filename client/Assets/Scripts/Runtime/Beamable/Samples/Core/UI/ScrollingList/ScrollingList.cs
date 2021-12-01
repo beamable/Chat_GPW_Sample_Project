@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using AirFishLab.ScrollingList;
 using Beamable.Common.Api;
-using Beamable.Extensions;
 using Beamable.Samples.GPW.Content;
 using UnityEngine;
 using UnityEngine.Events;

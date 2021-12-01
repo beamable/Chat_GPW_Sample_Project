@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Beamable.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -87,6 +86,22 @@ namespace Beamable.Samples.Core.UI.DialogSystem
                 dialogButtonUI.Button.onClick.AddListener(dialogButtonData.OnButtonClicked);
                 dialogButtonUI.Text.text = dialogButtonData.Text;
             }
+        }
+    }
+}
+
+
+//When upgrading from Beamable 0.15.0 to 0.17.4 the "ClearChildren" extension could not be found
+//so here is a local copy. The project works well now. - srivello
+public static class TransformExtensions2
+{
+    public static void ClearChildren(this Transform trans)
+    {
+        while (trans.childCount > 0)
+        {
+            Transform child = trans.GetChild(0);
+            child.SetParent((Transform) null);
+            Object.DestroyImmediate((Object) child.gameObject);
         }
     }
 }
