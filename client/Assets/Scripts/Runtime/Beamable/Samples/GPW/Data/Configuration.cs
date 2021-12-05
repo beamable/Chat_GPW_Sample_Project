@@ -26,7 +26,9 @@ namespace Beamable.Samples.GPW.Data
       public string Scene02GameName { get { return _scene02GameName; } }
 
       public string Scene03ChatName { get { return _scene03ChatName; } }
-      public string Scene04LeaderboardName { get { return _scene04LeaderboardName; } }
+      
+      public string Scene04SettingsName { get { return _scene04SettingsName; } }
+      public string Scene05LeaderboardName { get { return _scene05LeaderboardName; } }
       
       public float DelayBeforeLoadScene { get { return _delayBeforeLoadScene; } }
       public float DelayAfterDataLoading { get { return _delayAfterDataLoading; } }
@@ -58,7 +60,10 @@ namespace Beamable.Samples.GPW.Data
       private string _scene03ChatName = "";
       
       [SerializeField]
-      private string _scene04LeaderboardName = "";
+      private string _scene04SettingsName = "";
+
+      [SerializeField]
+      private string _scene05LeaderboardName = "";
 
       [Header("Content")] 
       [SerializeField]

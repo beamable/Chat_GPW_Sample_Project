@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Beamable.Common.Api.Inventory;
 using Beamable.Samples.GPW.Content;
+using Beamable.Samples.GPW.Data.Factories;
 
 namespace Beamable.Samples.GPW.Data.Storage
 {
@@ -80,44 +81,10 @@ namespace Beamable.Samples.GPW.Data.Storage
                 _runtimeData.LocationContentViews.Clear();
                 
                 ///////////////////////
-                // Get products
+                // FACTORY: Populate Locations, each with products
                 ///////////////////////
-                List<ProductContent> productContents = new List<ProductContent>();
-                foreach (var productContentRef in  _runtimeData.RemoteConfiguration.ProductContentRefs)
-                {
-                    ProductContent productContent = await productContentRef.Resolve();
-                    productContents.Add(productContent);
-                }
-                
-                //  Sort the product list from a to z
-                productContents.Sort((p1, p2) =>
-                {
-                    return string.Compare(p2.Title, p2.Title, 
-                        StringComparison.InvariantCulture);
-                });
-                
-                ///////////////////////
-                // Loop through locations, add a copy of the products to each
-                ///////////////////////
-                foreach (var locationContentRef in  _runtimeData.RemoteConfiguration.LocationContentRefs)
-                {
-                    LocationContent locationContent = await locationContentRef.Resolve();
-                    
-                    // Populate with new, generated client-side data
-                    LocationContentView locationContentView =
-                        new LocationContentView(locationContent, productContents);
-                    
-                    _runtimeData.LocationContentViews.Add(locationContentView);
-                }
-                
-                //  Sort the location list from a to z
-                _runtimeData.LocationContentViews.Sort((p1, p2) =>
-                {
-                    return string.Compare(p2.LocationContent.Title, p2.LocationContent.Title, 
-                        StringComparison.InvariantCulture);
-                });
-
-
+                await ResetGameData();
+   
                 ///////////////////////
                 // Money
                 ///////////////////////
@@ -136,6 +103,34 @@ namespace Beamable.Samples.GPW.Data.Storage
                 ForceRefresh();
                 IsInitialized = true;
             }
+        }
+
+        
+        /// <summary>
+        // FACTORY: Populate Locations, each with products
+        /// </summary>
+        public async Task ResetGameData()
+        {
+            ///////////////////////
+            // Get products
+            ///////////////////////
+            List<ProductContent> productContents = new List<ProductContent>();
+            foreach (var productContentRef in  _runtimeData.RemoteConfiguration.ProductContentRefs)
+            {
+                ProductContent productContent = await productContentRef.Resolve();
+                productContents.Add(productContent);
+            }
+                
+            //  Sort the product list from a to z
+            productContents.Sort((p1, p2) =>
+            {
+                return string.Compare(p2.Title, p2.Title, 
+                    StringComparison.InvariantCulture);
+            });
+            IDataFactory dataFactory = new BaseDataFactory();
+            _runtimeData.LocationContentViews = await dataFactory.CreateLocationContentView(
+                _runtimeData.RemoteConfiguration.LocationContentRefs, productContents);
+
         }
     }
 }

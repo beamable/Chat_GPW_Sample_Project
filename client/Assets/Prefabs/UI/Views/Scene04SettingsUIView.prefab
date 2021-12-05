@@ -168,7 +168,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2222544339756541584
 RectTransform:
   m_ObjectHideFlags: 0
@@ -184,10 +184,10 @@ RectTransform:
   m_Father: {fileID: 1018191582503360998}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 771.58826, y: -53.901314}
+  m_SizeDelta: {x: 138.13072, y: 107.80263}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &910561067785906426
 CanvasRenderer:
@@ -517,8 +517,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -588,7 +588,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 361388984452256304, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_Name
-      value: Scene01IntroUIView
+      value: Scene04SettingsUIView
       objectReference: {fileID: 0}
     - target: {fileID: 361388984452256308, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_Pivot.x
@@ -800,7 +800,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2917938402194097098, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_text
-      value: Leaderboard
+      value: '<size=27>Reset</size>
+
+        Player & Game Data
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2917938402194097098, guid: d349b26339919d940b7c37f7992492db, type: 3}
+      propertyPath: m_fontSize
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 2917938402194097098, guid: d349b26339919d940b7c37f7992492db, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 3407520637515950519, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_AnchorMax.y
@@ -852,7 +864,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3842297962134614670, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_MinWidth
-      value: 90
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3842297962134614670, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_LayoutPriority
@@ -860,7 +872,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3842297962134614670, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_PreferredWidth
-      value: 90
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3904987983782186929, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_AnchorMax.y
@@ -912,7 +924,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4355196425748989416, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_text
-      value: Settings
+      value: Back
+      objectReference: {fileID: 0}
+    - target: {fileID: 4355196425748989416, guid: d349b26339919d940b7c37f7992492db, type: 3}
+      propertyPath: m_fontSize
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 4355196425748989416, guid: d349b26339919d940b7c37f7992492db, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 5019638560985457376, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_AnchorMax.y
@@ -940,7 +960,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6616739809180709824, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_MinWidth
-      value: 50
+      value: 318.19
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616739809180709824, guid: d349b26339919d940b7c37f7992492db, type: 3}
+      propertyPath: m_FlexibleWidth
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7519960857281926753, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_AnchorMax.y
@@ -960,11 +984,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7900274295167429203, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_MinWidth
-      value: 40
+      value: 12.9
       objectReference: {fileID: 0}
     - target: {fileID: 7900274295167429203, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_FlexibleWidth
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8524379108623254409, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_AnchorMax.y
@@ -992,7 +1016,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9180924668842099545, guid: d349b26339919d940b7c37f7992492db, type: 3}
       propertyPath: m_text
-      value: Start
+      value: '<size=27>Reset</size>
+
+        Game Data
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 9180924668842099545, guid: d349b26339919d940b7c37f7992492db, type: 3}
+      propertyPath: m_fontSize
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 9180924668842099545, guid: d349b26339919d940b7c37f7992492db, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 32
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6075107867300129700, guid: d349b26339919d940b7c37f7992492db, type: 3}
@@ -1080,7 +1116,7 @@ CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 3920588769318341740, guid: d349b26339919d940b7c37f7992492db, type: 3}
   m_PrefabInstance: {fileID: 666492597041228740}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &731703152071924652
+--- !u!114 &1858299672278544268
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1089,7 +1125,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 881634746522008052}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8fbac6013f45e0449af862c8538c63a, type: 3}
+  m_Script: {fileID: 11500000, guid: c1dd5dc6f4c1dda428b119572db20d8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _configuration: {fileID: 11400000, guid: 28e7b012a002a51458322ba2fc05964d, type: 2}
@@ -1102,10 +1138,9 @@ MonoBehaviour:
   - {fileID: 2751108680671033993}
   - {fileID: 2603693929455394566}
   - {fileID: 619389629269812732}
-  _startGameButton: {fileID: 2855736710304857609}
-  _leaderboardButton: {fileID: 9128924344769729381}
-  _settingsButton: {fileID: 4292235835898887360}
-  _quitButton: {fileID: 7311292314210284531}
+  _resetGameDataButton: {fileID: 2855736710304857609}
+  _resetPlayerButton: {fileID: 9128924344769729381}
+  _backButton: {fileID: 4292235835898887360}
   _titleText: {fileID: 8589911116157925075}
   _bodyText: {fileID: 6209645908087980452}
   _buttonsCanvasGroup: {fileID: 4564224271694096296}

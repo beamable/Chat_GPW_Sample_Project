@@ -7,30 +7,28 @@ namespace Beamable.Samples.GPW.Views
    /// <summary>
    /// Handles the audio/graphics rendering logic: Intro UI
    /// </summary>
-   public class Scene01IntroUIView : BaseSceneUIView
+   public class Scene04SettingsUIView : BaseSceneUIView
    {
       //  Properties -----------------------------------
       public string TitleText { set { _titleText.text = value; } }
       public string BodyText { set { _bodyText.text = value; } }
-      public Button StartGameButton { get { return _startGameButton; } }
-      public Button LeaderboardButton { get { return _leaderboardButton; } }
-      public Button SettingsButton { get { return _settingsButton; } }
-      public Button QuitButton { get { return _quitButton; } }
+      public Button ResetGameDataButton { get { return _resetGameDataButton; } }
+      public Button ResetPlayerButton { get { return _resetPlayerButton; } }
+      
+      public Button BackButton { get { return _backButton; } }
       public CanvasGroup ButtonsCanvasGroup { get { return _buttonsCanvasGroup; } }
 
       //  Fields ---------------------------------------
       [Header("Child Properties")]
-      [SerializeField]
-      private Button _startGameButton = null;
-
-      [SerializeField]
-      private Button _leaderboardButton = null;
-
-      [SerializeField]
-      private Button _settingsButton = null;
       
       [SerializeField]
-      private Button _quitButton = null;
+      private Button _resetGameDataButton = null;
+
+      [SerializeField]
+      private Button _resetPlayerButton = null;
+
+      [SerializeField]
+      private Button _backButton = null;
 
       [SerializeField]
       private TMP_Text _titleText = null;

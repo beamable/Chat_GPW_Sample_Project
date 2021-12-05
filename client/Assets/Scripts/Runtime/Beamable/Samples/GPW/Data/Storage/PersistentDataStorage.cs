@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Beamable.Api.CloudSaving;
-using Beamable.Samples.GPW.Content;
 
 namespace Beamable.Samples.GPW.Data.Storage
 {

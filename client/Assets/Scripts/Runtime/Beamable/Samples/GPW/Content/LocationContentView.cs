@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 using Random = System.Random;
 
 namespace Beamable.Samples.GPW.Content
@@ -16,6 +17,7 @@ namespace Beamable.Samples.GPW.Content
          List<ProductContent> productContents)
       {
          LocationContent = locationContent;
+         Debug.Log($"----LocationContentView = {locationContent.Title}");
 
          ProductContentViews = new List<ProductContentView>();
          

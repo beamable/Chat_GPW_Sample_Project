@@ -26,13 +26,13 @@ namespace Beamable.Samples.GPW
       protected void Start()
       {
          // Clear UI
-         _scene01IntroUIView.TitleText = "<size=40>Beamable</size>\nGlobal Price Wars";
+         _scene01IntroUIView.TitleText = GPWHelper.GameTitle;
          _scene01IntroUIView.BodyText = "";
          
          // Bottom Navigation
          _scene01IntroUIView.StartGameButton.onClick.AddListener(StartGameButton_OnClicked);
          _scene01IntroUIView.LeaderboardButton.onClick.AddListener(LeaderboardButton_OnClicked);
-         _scene01IntroUIView.ResetButton.onClick.AddListener(ResetButton_OnClicked);
+         _scene01IntroUIView.SettingsButton.onClick.AddListener(SettingsButton_OnClicked);
          _scene01IntroUIView.QuitButton.onClick.AddListener(QuitButton_OnClicked);
          _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
          
@@ -123,15 +123,6 @@ namespace Beamable.Samples.GPW
             _scene01IntroUIView.Configuration.DelayBeforeLoadScene));
       }
       
-      
-      private void ResetGame()
-      {
-         GPWHelper.PlayAudioClipSecondaryClick();
-         GameObject.Destroy(GPWController.Instance.gameObject);
-         ExampleProjectHacks.ClearDeviceUsersAndReloadScene();
-      }
-      
-      
       //  Event Handlers -------------------------------
       private async void ConnectivityService_OnConnectivityChanged(bool isConnected)
       {
@@ -151,6 +142,8 @@ namespace Beamable.Samples.GPW
       
       private void StartGameButton_OnClicked()
       {
+         _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
+         
          int itemsCount = 0;
          if (_inventoryView != null)
          {
@@ -162,7 +155,7 @@ namespace Beamable.Samples.GPW
             _scene01IntroUIView.DialogSystem.ShowDialogBoxConfirmation(
                delegate
                {
-                  ResetGame();
+                  GPWController.Instance.ResetGameData();
           
                });
 
@@ -184,20 +177,19 @@ namespace Beamable.Samples.GPW
          _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
          
          StartCoroutine(GPWHelper.LoadScene_Coroutine(
-            _scene01IntroUIView.Configuration.Scene04LeaderboardName,
+            _scene01IntroUIView.Configuration.Scene05LeaderboardName,
             _scene01IntroUIView.Configuration.DelayBeforeLoadScene));
       }
       
       
-      private void ResetButton_OnClicked()
+      private void SettingsButton_OnClicked()
       {
          GPWHelper.PlayAudioClipPrimaryClick();
-         
-         _scene01IntroUIView.DialogSystem.ShowDialogBoxConfirmation(
-            delegate
-            {
-               ResetGame();
-            });
+                  
+         StartCoroutine(GPWHelper.LoadScene_Coroutine(
+            _scene01IntroUIView.Configuration.Scene04SettingsName,
+            _scene01IntroUIView.Configuration.DelayBeforeLoadScene));
+
       }
       
       

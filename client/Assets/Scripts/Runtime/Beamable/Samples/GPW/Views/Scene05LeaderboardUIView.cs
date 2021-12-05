@@ -6,7 +6,7 @@ namespace Beamable.Samples.GPW.Views
    /// <summary>
    /// Handles the audio/graphics rendering logic: Leaderboard
    /// </summary>
-   public class Scene04LeaderboardUIView : BaseSceneUIView
+   public class Scene05LeaderboardUIView : BaseSceneUIView
    {
       //  Properties -----------------------------------
       public Button BackButton { get { return _backButton; } }

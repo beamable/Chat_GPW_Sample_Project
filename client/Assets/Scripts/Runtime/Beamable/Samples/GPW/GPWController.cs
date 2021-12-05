@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Beamable.Common.Api;
 using Beamable.Common.Api.Inventory;
 using Beamable.Experimental.Api.Chat;
 using Beamable.Samples.Core.Components;
 using Beamable.Samples.Core.Debugging;
+using Beamable.Samples.Core.Utilities;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Data.Storage;
@@ -72,10 +74,11 @@ namespace Beamable.Samples.GPW
                 _gameServices.OnInventoryViewChanged.AddListener(InventoryService_OnChanged);
                 _runtimeDataStorage.OnChanged.AddListener(RuntimeDataStorage_OnChanged);
                 _persistentDataStorage.OnChanged.AddListener(PersistentDataStorage_OnChanged);
-                await ResetGame();
+                await ResetController();
                 IsInitialized = true;
             }
         }
+
         
         public void SetLocationIndexSafe(int nextIndex, bool willIncrementTurn)
         {
@@ -280,7 +283,30 @@ namespace Beamable.Samples.GPW
             return _gameServices.GetRoom(currentRoomName);
         }
         
-        public async Task<EmptyResponse> ResetGame()
+        /// <summary>
+        /// Recreates the user account thus behaving like a first
+        /// time player
+        /// </summary>
+        public void ResetPlayerData()
+        {
+            //NOTE: This is a bit hacky and it resets heavy-handed
+            GPWHelper.PlayAudioClipSecondaryClick();
+            GameObject.Destroy(GPWController.Instance.gameObject);
+            ExampleProjectHacks.ClearDeviceUsersAndReloadScene();
+        }
+        
+        /// <summary>
+        /// Recreates the location/product/price data
+        /// </summary>
+        public async void ResetGameData()
+        {
+            ///////////////////////
+            // FACTORY: Populate Locations, each with products
+            ///////////////////////
+            await _runtimeDataStorage.ResetGameData();
+        }
+        
+        private async Task<EmptyResponse> ResetController()
         {
             /////////////////////////////
             // Systems

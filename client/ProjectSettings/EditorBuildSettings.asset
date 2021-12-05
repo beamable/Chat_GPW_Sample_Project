@@ -15,7 +15,10 @@ EditorBuildSettings:
     path: Assets/Scenes/Scene03Chat.unity
     guid: a92302eb5bb682643b2215f8e9eb4690
   - enabled: 1
-    path: Assets/Scenes/Scene04Leaderboard.unity
+    path: Assets/Scenes/Scene04Settings.unity
+    guid: 4ece3464ff8761a4fb127b6114acfa82
+  - enabled: 1
+    path: Assets/Scenes/Scene05Leaderboard.unity
     guid: 1911288d606429c4db0466ded5ac41f1
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 965d7377834909d4e850a99fef275663, type: 2}

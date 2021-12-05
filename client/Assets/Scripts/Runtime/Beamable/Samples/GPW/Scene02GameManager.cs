@@ -211,7 +211,7 @@ namespace Beamable.Samples.GPW
         private void LeaderboardButton_OnClicked()
         {
             StartCoroutine(GPWHelper.LoadScene_Coroutine(
-                _scene02GameUIView.Configuration.Scene04LeaderboardName,
+                _scene02GameUIView.Configuration.Scene05LeaderboardName,
                 _scene02GameUIView.Configuration.DelayBeforeLoadScene));
         }
       

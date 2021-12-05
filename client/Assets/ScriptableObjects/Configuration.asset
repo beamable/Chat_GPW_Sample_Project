@@ -16,7 +16,8 @@ MonoBehaviour:
   _scene01IntroName: Scene01Intro
   _scene02GameName: Scene02Game
   _scene03ChatName: Scene03Chat
-  _scene04LeaderboardName: Scene04Leaderboard
+  _scene04SettingsName: Scene04Settings
+  _scene05LeaderboardName: Scene05Leaderboard
   _remoteConfigurationRef:
     Id: remote_configuration.RemoteConfiguration
   _leaderboardRef:

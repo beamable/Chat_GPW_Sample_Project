@@ -1,4 +1,5 @@
-﻿using Random = System.Random;
+﻿using UnityEngine;
+using Random = System.Random;
 
 namespace Beamable.Samples.GPW.Content
 {
@@ -36,6 +37,8 @@ namespace Beamable.Samples.GPW.Content
          // Update Mkt
          MarketGoods.Price = (int)priceRangePercent;
          MarketGoods.Quantity = random.Next(1, 10);
+         
+         Debug.Log($"ProductContentView = {ProductContent.Title}, MarketGoods = {MarketGoods}");
       }
 
       public override string ToString()

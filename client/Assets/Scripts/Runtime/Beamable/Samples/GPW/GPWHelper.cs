@@ -24,10 +24,11 @@ namespace Beamable.Samples.GPW
    /// </summary>
    public static class GPWHelper
    {
-      
       public const int UnsetValue = -1;
       
       // Chat
+      public static string GameTitle = "<size=40>Beamable</size>\nGlobal Price Wars";
+      public static string SettingsTitle = "<size=40>Global Price Wars</size>\nSettings";
       public static string ChatRoomNameGlobal = "Global";
       private static string ChatRoomNameLocation = "Location";
       private static string ChatRoomNameDirect = "Direct";
@@ -37,10 +38,12 @@ namespace Beamable.Samples.GPW
       public static string Intro = "Intro";
       public static string Reset = "Reset";
       public static string Game = "Game";
+      public static string Settings = "Settings";
       public static string Ok = "Ok";
       public static string Cancel = "Cancel";
       public static string SubmitScore = "Submit Score";
       public static string Quit = "Cancel";
+
       
       public static string GetChatRoomNameGlobal()
       {
@@ -155,7 +158,30 @@ namespace Beamable.Samples.GPW
          return text;
       }
 
-
+      public static string GetSettingsBodyText()
+      {
+         string text = "";
+         text += "(For Debugging Only)"; 
+         text += "\n\n";
+         text +=  "These settings help game makers with understanding, experimentation, and further development.";
+         text += "\n\n";
+         text += GPWHelper.GetBulletList("Reset Game Data", new List<string>
+         {
+            $"Reset data for Locations",
+            $"Reset data for Products",
+            $"Reset data for Prices"
+         });
+         text += "\n";
+         text += GPWHelper.GetBulletList("Reset Player & Game Data", new List<string>
+         {
+            $"(Everything above)",
+            $"Create new player account",
+            $"Use new player account",
+            $"Restart Unity play session"
+         });
+         return text;
+      }
+      
       /// <summary>
       /// Return a random item from the list. 
       /// This provides cosmetic variety.
