@@ -410,14 +410,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2396270109914163214, guid: 115832aa033f5a44d8610290d7dcbb3d, type: 3}
-      propertyPath: m_text
-      value: '<size=27>Reset</size>
-
-        Player & Game Data
-
-'
-      objectReference: {fileID: 0}
     - target: {fileID: 2771449397582660211, guid: 115832aa033f5a44d8610290d7dcbb3d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -513,14 +505,6 @@ PrefabInstance:
     - target: {fileID: 5518754323459590436, guid: 115832aa033f5a44d8610290d7dcbb3d, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8527259318182324381, guid: 115832aa033f5a44d8610290d7dcbb3d, type: 3}
-      propertyPath: m_text
-      value: '<size=27>Reset</size>
-
-        Game Data
-
-'
       objectReference: {fileID: 0}
     - target: {fileID: 9183814764219983949, guid: 115832aa033f5a44d8610290d7dcbb3d, type: 3}
       propertyPath: m_AnchorMax.y
