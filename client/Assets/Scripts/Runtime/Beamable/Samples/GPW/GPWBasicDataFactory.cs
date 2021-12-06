@@ -1,31 +1,29 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Beamable.Samples.GPW.Content;
-using UnityEngine;
+using Beamable.Samples.GPW.Data.Factories;
 
-namespace Beamable.Samples.GPW.Data.Factories
+#pragma warning disable 1998
+namespace Beamable.Samples.GPW
 {
    /// <summary>
    /// Client-side factory for the loaded data content
    /// </summary>
-   public class BaseDataFactory : IDataFactory
+   public class GPWBasicDataFactory : IDataFactory
    {
       //  Fields ---------------------------------------
       
       //  Other Methods -----------------------------------
       public async Task<List<LocationContentView>> CreateLocationContentView(
-         List<LocationContentRef> locationContentRefs, List<ProductContent> productContents)
+         List<LocationContent> locationContents, List<ProductContent> productContents)
       {
          // Create list
          List<LocationContentView> locationContentViews = new List<LocationContentView>();
          
          // Populate List
-         foreach (var locationContentRef in  locationContentRefs)
+         foreach (var locationContent in  locationContents)
          {
-            LocationContent locationContent = await locationContentRef.Resolve();
-                    
             // Populate with new, generated client-side data
             LocationContentView locationContentView =
                new LocationContentView(locationContent, productContents);

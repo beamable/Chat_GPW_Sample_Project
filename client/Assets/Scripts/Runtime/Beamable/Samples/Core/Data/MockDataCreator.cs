@@ -5,13 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Beamable.Api.Auth;
 using Beamable.Api.Leaderboard;
-using Beamable.Api.Payments;
 using Beamable.Api.Stats;
 using Beamable.Common.Api;
 using Beamable.Common.Api.Leaderboards;
 using Beamable.Common.Leaderboards;
-using Beamable.Samples.GPW;
-using UnityEngine;
 using Random = System.Random;
 
 namespace Beamable.Samples.Core.Data
@@ -75,7 +72,7 @@ namespace Beamable.Samples.Core.Data
            
                // Submit mock score for NEW user
                double mockScore = UnityEngine.Random.Range(leaderboardScoreMin, leaderboardScoreMax);
-               mockScore = GPWHelper.GetRoundedScore(mockScore);
+               mockScore = CoreHelper.GetRoundedScore(mockScore);
                await leaderboardService.SetScore(leaderboardContent.Id, mockScore);
 
                loggingResult.AppendLine($"* During, Created Mock User. Alias={alias}, score:{mockScore}");

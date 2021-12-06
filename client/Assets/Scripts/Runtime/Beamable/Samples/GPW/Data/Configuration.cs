@@ -1,6 +1,7 @@
 ﻿using Beamable.Common.Leaderboards;
 using Beamable.Samples.Core.Data;
 using Beamable.Samples.GPW.Content;
+using Beamable.Samples.GPW.Data.Factories;
 using UnityEngine;
 
 namespace Beamable.Samples.GPW.Data
@@ -20,7 +21,7 @@ namespace Beamable.Samples.GPW.Data
       private const string Title = "Configuration";
 
       //  Properties -----------------------------------
-      
+      public DataFactoryType DataFactoryType { get { return _dataFactoryType; } }
       public string Scene01IntroName { get { return _scene01IntroName; } }
 
       public string Scene02GameName { get { return _scene02GameName; } }
@@ -65,6 +66,11 @@ namespace Beamable.Samples.GPW.Data
       [SerializeField]
       private string _scene05LeaderboardName = "";
 
+      [Header("Data Factory Type")] 
+      
+      [SerializeField]
+      private DataFactoryType _dataFactoryType = DataFactoryType.None;
+      
       [Header("Content")] 
       [SerializeField]
       private RemoteConfigurationRef _remoteConfigurationRef = null;

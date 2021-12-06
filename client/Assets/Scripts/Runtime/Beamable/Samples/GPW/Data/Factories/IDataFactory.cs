@@ -13,6 +13,6 @@ namespace Beamable.Samples.GPW.Data.Factories
       
       //  Other Methods -----------------------------------
       public Task<List<LocationContentView>> CreateLocationContentView(
-         List<LocationContentRef> locationContentRefs, List<ProductContent> productContents);
+         List<LocationContent> locationContent, List<ProductContent> productContents);
    }
 }

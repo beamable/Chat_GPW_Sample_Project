@@ -6,9 +6,11 @@ using Beamable.Common.Api.Inventory;
 using Beamable.Experimental.Api.Chat;
 using Beamable.Samples.Core.Components;
 using Beamable.Samples.Core.Debugging;
+using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.Core.Utilities;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
+using Beamable.Samples.GPW.Data.Factories;
 using Beamable.Samples.GPW.Data.Storage;
 using UnityEngine;
 
@@ -298,21 +300,46 @@ namespace Beamable.Samples.GPW
         /// <summary>
         /// Recreates the location/product/price data
         /// </summary>
-        public async void ResetGameData()
+        public async void ResetGameDataViaDataFactory()
         {
             ///////////////////////
             // FACTORY: Populate Locations, each with products
             ///////////////////////
-            await _runtimeDataStorage.ResetGameData();
+            await _runtimeDataStorage.ResetGameDataViaDataFactory();
         }
         
         private async Task<EmptyResponse> ResetController()
         {
             /////////////////////////////
+            // DataFactoryType
+            /////////////////////////////
+            IDataFactory _dataFactory = null;
+            
+            // There are multiple repos to show various features
+            switch (_configuration.DataFactoryType)
+            {
+                case DataFactoryType.BasicDataFactory:
+                    // Use this as the required value for this project
+                    _dataFactory = new GPWBasicDataFactory();
+                    break;
+                case DataFactoryType.MicroStorage:
+                    throw new Exception(
+                        
+                        "The project (https://github.com/beamable/Chat_GPW_Sample_Project) " +
+                        "does not support Beamable MicroStorage. " +
+                        
+                        "Instead see project " +
+                        "(https://github.com/beamable/Chat_GPW_2_With_MicroStorage_Sample_Project).");
+                default:
+                    // Must set this value properly via Configuration via inspector
+                    throw new SwitchDefaultException(_configuration.DataFactoryType);
+            }
+            
+            /////////////////////////////
             // Systems
             /////////////////////////////
             await _gameServices.Initialize(_configuration);
-            await _runtimeDataStorage.Initialize(_configuration);
+            await _runtimeDataStorage.Initialize(_configuration, _dataFactory);
             await _persistentDataStorage.Initialize(_configuration);
         
             /////////////////////////////

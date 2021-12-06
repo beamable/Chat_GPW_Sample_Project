@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Beamable.Common.Api.Inventory;
+using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data.Factories;
+using UnityEngine.Assertions;
 
 namespace Beamable.Samples.GPW.Data.Storage
 {
@@ -67,14 +69,19 @@ namespace Beamable.Samples.GPW.Data.Storage
   
         //  Fields  --------------------------------------
         private RuntimeData _runtimeData = new RuntimeData();
+        private IDataFactory _dataFactory = null;
         
         //  Unity Methods  --------------------------------
 
         //  Other Methods  --------------------------------
-        public override async Task Initialize(Configuration configuration)
+        public override async Task Initialize(Configuration configuration, IDataFactory dataFactory)
         {
             if (!IsInitialized)
             {
+
+                _dataFactory = dataFactory;
+                Assert.IsNotNull(_dataFactory, "_dataFactory must exist. Set via Configuration via inspector.");
+                
                 IBeamableAPI beamableAPI = await Beamable.API.Instance;
                 
                 _runtimeData.RemoteConfiguration = await configuration.RemoteConfigurationRef.Resolve();
@@ -83,7 +90,7 @@ namespace Beamable.Samples.GPW.Data.Storage
                 ///////////////////////
                 // FACTORY: Populate Locations, each with products
                 ///////////////////////
-                await ResetGameData();
+                await ResetGameDataViaDataFactory();
    
                 ///////////////////////
                 // Money
@@ -106,13 +113,13 @@ namespace Beamable.Samples.GPW.Data.Storage
         }
 
         
-        /// <summary>
-        // FACTORY: Populate Locations, each with products
-        /// </summary>
-        public async Task ResetGameData()
+          /// <summary>
+          /// FACTORY: Populate Locations, each with products
+          /// </summary>
+        public async Task ResetGameDataViaDataFactory()
         {
             ///////////////////////
-            // Get products
+            // Get ProductContent
             ///////////////////////
             List<ProductContent> productContents = new List<ProductContent>();
             foreach (var productContentRef in  _runtimeData.RemoteConfiguration.ProductContentRefs)
@@ -127,9 +134,19 @@ namespace Beamable.Samples.GPW.Data.Storage
                 return string.Compare(p2.Title, p2.Title, 
                     StringComparison.InvariantCulture);
             });
-            IDataFactory dataFactory = new BaseDataFactory();
-            _runtimeData.LocationContentViews = await dataFactory.CreateLocationContentView(
-                _runtimeData.RemoteConfiguration.LocationContentRefs, productContents);
+            
+            ///////////////////////
+            // Get LocationContent
+            ///////////////////////
+            List<LocationContent> locationContents = new List<LocationContent>();
+            foreach (var locationContentRef in  _runtimeData.RemoteConfiguration.LocationContentRefs)
+            {
+                LocationContent locationContent = await locationContentRef.Resolve();
+                locationContents.Add(locationContent);
+            }
+            
+            _runtimeData.LocationContentViews = await _dataFactory.CreateLocationContentView (
+                locationContents, productContents);
 
         }
     }

@@ -155,7 +155,7 @@ namespace Beamable.Samples.GPW
             _scene01IntroUIView.DialogSystem.ShowDialogBoxConfirmation(
                delegate
                {
-                  GPWController.Instance.ResetGameData();
+                  GPWController.Instance.ResetGameDataViaDataFactory();
           
                });
 

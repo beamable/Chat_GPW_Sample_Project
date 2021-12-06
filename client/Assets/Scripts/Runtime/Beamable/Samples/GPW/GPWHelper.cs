@@ -9,7 +9,6 @@ using Beamable.Samples.Core.UI;
 using Beamable.Samples.Core.UI.DialogSystem;
 using Beamable.Samples.Core.Utilities;
 using Beamable.Samples.GPW.Content;
-using Beamable.Samples.GPW.Data;
 using Beamable.Samples.GPW.Data.Storage;
 using Beamable.UI.Scripts;
 using TMPro;
@@ -171,7 +170,6 @@ namespace Beamable.Samples.GPW
             $"Reset data for Products",
             $"Reset data for Prices"
          });
-         text += "\n";
          text += GPWHelper.GetBulletList("Reset Player & Game Data", new List<string>
          {
             $"(Everything above)",
@@ -217,35 +215,6 @@ namespace Beamable.Samples.GPW
             return text;
          }
       }
-
-
-      /// <summary>
-      /// Convert the <see cref="float"/> to a <see cref="string"/>
-      /// with rounding like "10.1";
-      /// </summary>
-      public static string GetRoundedTime(float value)
-      {
-         return string.Format("{0:0.0}", value);
-      }
-
-
-      /// <summary>
-      /// Convert the <see cref="double"/> to a whole number like an <see cref="int"/>.
-      /// </summary>
-      public static double GetRoundedScore(double score)
-      {
-         return (int)score;
-      }
-
-
-      /// <summary>
-      /// Convert the <see cref="string"/> to a whole number like an <see cref="int"/>.
-      /// </summary>
-      public static double GetRoundedScore(string score)
-      {
-         return GetRoundedScore(Double.Parse(score));
-      }
-
 
       private static string GameInstructionsText
       {

@@ -1,0 +1,32 @@
+{
+    "name": "Beamable.Samples.Editor",
+    "rootNamespace": "",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.Beamable.Runtime.Common",
+        "Unity.Beamable",
+        "Beamable.SmallerJSON",
+        "Beamable.Platform",
+        "Beamable.Service",
+        "Beamable.Config",
+        "Beamable.ConsoleCommands",
+        "Unity.TextMeshPro",
+        "Beamable.JsonSerializable",
+        "Unity.Beamable.Samples.Editor",
+        "Unity.Beamable.Samples.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

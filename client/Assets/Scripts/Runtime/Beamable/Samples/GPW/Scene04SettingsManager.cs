@@ -50,7 +50,7 @@ namespace Beamable.Samples.GPW
       //  Event Handlers -------------------------------
       private void ResetPlayerButton_OnClicked()
       {
-         GPWHelper.PlayAudioClipPrimaryClick();
+         GPWHelper.PlayAudioClipSecondaryClick();
          
          _scene04SettingsUIView.DialogSystem.ShowDialogBoxConfirmation(
             delegate
@@ -61,13 +61,13 @@ namespace Beamable.Samples.GPW
       
       private void ResetGameDataButton_OnClicked()
       {
-         GPWHelper.PlayAudioClipPrimaryClick();
+         GPWHelper.PlayAudioClipSecondaryClick();
          
          _scene04SettingsUIView.DialogSystem.ShowDialogBoxConfirmation(
             delegate
             {
                // Reset and return to intro scene
-               GPWController.Instance.ResetGameData();
+               GPWController.Instance.ResetGameDataViaDataFactory();
                BackButton_OnClicked();
             });
       }

@@ -18,6 +18,7 @@ MonoBehaviour:
   _scene03ChatName: Scene03Chat
   _scene04SettingsName: Scene04Settings
   _scene05LeaderboardName: Scene05Leaderboard
+  _dataFactoryType: 1
   _remoteConfigurationRef:
     Id: remote_configuration.RemoteConfiguration
   _leaderboardRef:

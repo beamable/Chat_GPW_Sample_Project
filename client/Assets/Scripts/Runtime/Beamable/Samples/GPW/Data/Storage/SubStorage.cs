@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Beamable.Samples.GPW.Data.Factories;
 using UnityEngine.Events;
 
 namespace Beamable.Samples.GPW.Data.Storage
@@ -22,7 +23,15 @@ namespace Beamable.Samples.GPW.Data.Storage
 		private bool _isInitialized = false;
 
 		//  Other Methods  --------------------------------
+		
+		//Used by most Substorage
 		public virtual Task Initialize(Configuration configuration)
+		{
+			return null;
+		}
+		
+		//Used by some Substorage
+		public virtual Task Initialize(Configuration configuration, IDataFactory dataFactory)
 		{
 			return null;
 		}
