@@ -1,5 +1,5 @@
 {
-    "name": "Beamable.Samples.Runtime",
+    "name": "Beamable.Samples.GPW.Runtime",
     "rootNamespace": "",
     "references": [
         "GUID:00eca15b508debc41be5fe5efa982bef",
@@ -11,13 +11,26 @@
         "GUID:4673b71569f1a4362863f0dccc4ecfa9",
         "GUID:6055be8ebefd69e48b49212b09b47b2f",
         "GUID:b60f98dcf3c668141b74fe1cdfe299ea",
-        "GUID:9e24947de15b9834991c9d8411ea37cf"
+        "GUID:9e24947de15b9834991c9d8411ea37cf",
+        "GUID:e17286d323c5f4117923b68624a6c13c",
+        "GUID:ec8759ed81aca4752b7e9ded6e302fd7",
+        "GUID:20e4ce401f1601a429289370705510d4"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "DnsClient.dll",
+        "MongoDB.Bson.dll",
+        "MongoDB.Driver.Core.dll",
+        "MongoDB.Driver.dll",
+        "MongoDB.Libmongocrypt.dll",
+        "System.Buffers.dll",
+        "System.Runtime.CompilerServices.Unsafe.dll",
+        "SharpCompress.dll",
+        "DOTween.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],

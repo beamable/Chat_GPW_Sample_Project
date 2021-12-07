@@ -145,7 +145,7 @@ namespace Beamable.Samples.GPW.Data.Storage
                 locationContents.Add(locationContent);
             }
             
-            _runtimeData.LocationContentViews = await _dataFactory.CreateLocationContentView (
+            _runtimeData.LocationContentViews = await _dataFactory.CreateLocationContentViews (
                 locationContents, productContents);
 
         }

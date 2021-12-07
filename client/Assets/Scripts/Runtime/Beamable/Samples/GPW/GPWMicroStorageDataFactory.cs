@@ -10,7 +10,7 @@ namespace Beamable.Samples.GPW
    /// <summary>
    /// Client-side factory for the loaded data content
    /// </summary>
-   public class GPWBasicDataFactory : IDataFactory
+   public class GPWMicroStorageDataFactory : IDataFactory
    {
       //  Fields ---------------------------------------
       
@@ -18,18 +18,18 @@ namespace Beamable.Samples.GPW
       public async Task<List<LocationContentView>> CreateLocationContentViews(
          List<LocationContent> locationContents, List<ProductContent> productContents)
       {
+         
          // Create list
-         List<LocationContentView> locationContentViews = new List<LocationContentView>();
          
          // Populate List
-         foreach (var locationContent in  locationContents)
+         GPWDataServiceClient gpwDataServiceClient = new GPWDataServiceClient();
+         
+         if (await gpwDataServiceClient.HasLocationContentViews())
          {
-            // Populate with new, generated client-side data
-            LocationContentView locationContentView =
-               new LocationContentView(locationContent, productContents);
-
-            locationContentViews.Add(locationContentView);
+            //gpwDataServiceClient.CreateLocationContentViews(locationContents, productContents);
          }
+         
+         List<LocationContentView> locationContentViews = null; //await gpwDataServiceClient.GetLocationContentViews();;
          
          //  Sort list: A to Z
          locationContentViews.Sort((p1, p2) =>
@@ -39,7 +39,8 @@ namespace Beamable.Samples.GPW
          });
 
          // Return List
-         return locationContentViews;
+         return null;
       }
    }
+
 }

@@ -1,0 +1,33 @@
+{
+    "name": "Beamable.Samples.GPW.Tests.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:27619889b8ba8c24980f49ee34dbb44a",
+        "GUID:0acc523941302664db1f4e527237feb3",
+        "GUID:8096aa2f7644d40f08b1fed854463288",
+        "GUID:3140025892ece41f1bca5bdb43c5b512",
+        "GUID:ff53a48214edf435c89e955a020bb894",
+        "GUID:bec9e071b8bd74037abed99b77129431",
+        "GUID:a37b4db9718aa4a578146fae3d79f26f",
+        "GUID:4673b71569f1a4362863f0dccc4ecfa9",
+        "GUID:75693986531614bf89cec6c6ab276dc1",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:32d05d1e545454e15a8f35553a71733a",
+        "GUID:3038b49c9e1cedd44b318e892360ecd2"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
