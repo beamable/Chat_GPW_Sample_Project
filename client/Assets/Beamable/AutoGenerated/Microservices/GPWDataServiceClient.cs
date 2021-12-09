@@ -18,5 +18,15 @@ namespace Beamable.Server.Clients
     /// <summary> A generated client for <see cref="Beamable.Server.GPWDataService"/> </summary
     public sealed class GPWDataServiceClient : Beamable.Server.MicroserviceClient
     {
+        
+        /// <summary>
+        /// Call the ServerCall method on the GPWDataService microservice
+        /// <see cref="Beamable.Server.GPWDataService.ServerCall"/>
+        /// </summary>
+        public Beamable.Common.Promise<Beamable.Common.Unit> ServerCall()
+        {
+            string[] serializedFields = new string[0];
+            return this.Request<Beamable.Common.Unit>("GPWDataService", "ServerCall", serializedFields);
+        }
     }
 }
