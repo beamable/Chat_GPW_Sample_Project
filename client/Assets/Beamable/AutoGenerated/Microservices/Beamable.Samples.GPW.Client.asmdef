@@ -1,12 +1,13 @@
 {
-    "name": "AirFishLab.Editor",
+    "name": "Beamable.Samples.GPW.Client",
     "rootNamespace": "",
     "references": [
-        "AirFishLab.Runtime"
+        "GUID:34a227119f4e47547832746d1c7212e7",
+        "GUID:bec9e071b8bd74037abed99b77129431",
+        "GUID:e17286d323c5f4117923b68624a6c13c",
+        "GUID:8096aa2f7644d40f08b1fed854463288"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

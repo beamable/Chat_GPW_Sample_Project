@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data.Factories;
+using Beamable.Server.Clients;
+using UnityEngine;
 
 #pragma warning disable 1998
 namespace Beamable.Samples.GPW
@@ -19,17 +21,27 @@ namespace Beamable.Samples.GPW
          List<LocationContent> locationContents, List<ProductContent> productContents)
       {
          
-         // Create list
+         GPWDataServiceClient gpwDataServiceClient = new GPWDataServiceClient();
+
+         bool hasLocationContentViews = await gpwDataServiceClient.HasLocationContentViews();
+         
+         if (!hasLocationContentViews)
+         {
+            // Create list
+            await gpwDataServiceClient.CreateLocationContentViews(locationContents, productContents);
+         }
          
          // Populate List
-         // GPWDataServiceClient gpwDataServiceClient = new GPWDataServiceClient();
-         //
-         // if (await gpwDataServiceClient.HasLocationContentViews())
-         // {
-         //    gpwDataServiceClient.CreateLocationContentViews(locationContents, productContents);
-         // }
+         List<LocationContentView> locationContentViews = await gpwDataServiceClient.GetTestWithoutFactory(locationContents, productContents);
+
+         Debug.Log($"GetTestWithoutFactory() outside with Count= {locationContentViews?.Count}");
          
-         List<LocationContentView> locationContentViews = null; //await gpwDataServiceClient.GetLocationContentViews();;
+         //todo rEMOVE
+         if (locationContentViews == null)
+         {
+            Debug.Log("NOTHING FOUND");
+            return null;
+         }
          
          //  Sort list: A to Z
          locationContentViews.Sort((p1, p2) =>
@@ -42,5 +54,4 @@ namespace Beamable.Samples.GPW
          return null;
       }
    }
-
 }

@@ -20,13 +20,65 @@ namespace Beamable.Server.Clients
     {
         
         /// <summary>
-        /// Call the ServerCall method on the GPWDataService microservice
-        /// <see cref="Beamable.Server.GPWDataService.ServerCall"/>
+        /// Call the HasLocationContentViews method on the GPWDataService microservice
+        /// <see cref="Beamable.Server.GPWDataService.HasLocationContentViews"/>
         /// </summary>
-        public Beamable.Common.Promise<Beamable.Common.Unit> ServerCall()
+        public Beamable.Common.Promise<bool> HasLocationContentViews()
         {
             string[] serializedFields = new string[0];
-            return this.Request<Beamable.Common.Unit>("GPWDataService", "ServerCall", serializedFields);
+            return this.Request<bool>("GPWDataService", "HasLocationContentViews", serializedFields);
+        }
+        
+        /// <summary>
+        /// Call the CreateLocationContentViews method on the GPWDataService microservice
+        /// <see cref="Beamable.Server.GPWDataService.CreateLocationContentViews"/>
+        /// </summary>
+        public Beamable.Common.Promise<bool> CreateLocationContentViews(System.Collections.Generic.List<Beamable.Samples.GPW.Content.LocationContent> locationContents, System.Collections.Generic.List<Beamable.Samples.GPW.Content.ProductContent> productContents)
+        {
+            string serialized_locationContents = this.SerializeArgument<System.Collections.Generic.List<Beamable.Samples.GPW.Content.LocationContent>>(locationContents);
+            string serialized_productContents = this.SerializeArgument<System.Collections.Generic.List<Beamable.Samples.GPW.Content.ProductContent>>(productContents);
+            string[] serializedFields = new string[] {
+                    serialized_locationContents,
+                    serialized_productContents};
+            return this.Request<bool>("GPWDataService", "CreateLocationContentViews", serializedFields);
+        }
+        
+        /// <summary>
+        /// Call the GetLocationContentViews method on the GPWDataService microservice
+        /// <see cref="Beamable.Server.GPWDataService.GetLocationContentViews"/>
+        /// </summary>
+        public Beamable.Common.Promise<System.Collections.Generic.List<Beamable.Samples.GPW.Content.LocationContentView>> GetLocationContentViews()
+        {
+            string[] serializedFields = new string[0];
+            return this.Request<System.Collections.Generic.List<Beamable.Samples.GPW.Content.LocationContentView>>("GPWDataService", "GetLocationContentViews", serializedFields);
+        }
+        
+        /// <summary>
+        /// Call the GetTestWithoutDB method on the GPWDataService microservice
+        /// <see cref="Beamable.Server.GPWDataService.GetTestWithoutDB"/>
+        /// </summary>
+        public Beamable.Common.Promise<System.Collections.Generic.List<Beamable.Samples.GPW.Content.LocationContentView>> GetTestWithoutDB(System.Collections.Generic.List<Beamable.Samples.GPW.Content.LocationContent> locationContents, System.Collections.Generic.List<Beamable.Samples.GPW.Content.ProductContent> productContents)
+        {
+            string serialized_locationContents = this.SerializeArgument<System.Collections.Generic.List<Beamable.Samples.GPW.Content.LocationContent>>(locationContents);
+            string serialized_productContents = this.SerializeArgument<System.Collections.Generic.List<Beamable.Samples.GPW.Content.ProductContent>>(productContents);
+            string[] serializedFields = new string[] {
+                    serialized_locationContents,
+                    serialized_productContents};
+            return this.Request<System.Collections.Generic.List<Beamable.Samples.GPW.Content.LocationContentView>>("GPWDataService", "GetTestWithoutDB", serializedFields);
+        }
+        
+        /// <summary>
+        /// Call the GetTestWithoutFactory method on the GPWDataService microservice
+        /// <see cref="Beamable.Server.GPWDataService.GetTestWithoutFactory"/>
+        /// </summary>
+        public Beamable.Common.Promise<System.Collections.Generic.List<Beamable.Samples.GPW.Content.LocationContentView>> GetTestWithoutFactory(System.Collections.Generic.List<Beamable.Samples.GPW.Content.LocationContent> locationContents, System.Collections.Generic.List<Beamable.Samples.GPW.Content.ProductContent> productContents)
+        {
+            string serialized_locationContents = this.SerializeArgument<System.Collections.Generic.List<Beamable.Samples.GPW.Content.LocationContent>>(locationContents);
+            string serialized_productContents = this.SerializeArgument<System.Collections.Generic.List<Beamable.Samples.GPW.Content.ProductContent>>(productContents);
+            string[] serializedFields = new string[] {
+                    serialized_locationContents,
+                    serialized_productContents};
+            return this.Request<System.Collections.Generic.List<Beamable.Samples.GPW.Content.LocationContentView>>("GPWDataService", "GetTestWithoutFactory", serializedFields);
         }
     }
 }

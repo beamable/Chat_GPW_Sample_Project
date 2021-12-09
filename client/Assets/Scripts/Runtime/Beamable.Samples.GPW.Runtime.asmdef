@@ -1,33 +1,31 @@
 {
-    "name": "Beamable.Samples.GPW.Tests.Editor",
+    "name": "Beamable.Samples.GPW.Runtime",
     "rootNamespace": "",
     "references": [
-        "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner",
+        "AirFishLab.Runtime",
         "Unity.Beamable.Runtime.Common",
         "Unity.Beamable",
         "Beamable.SmallerJSON",
         "Beamable.Platform",
         "Beamable.Service",
         "Beamable.Config",
-        "Beamable.ConsoleCommands",
         "Unity.TextMeshPro",
-        "Beamable.JsonSerializable",
-        "Beamable.Samples.GPW.Runtime"
+        "DOTween.Modules",
+        "Unity.Addressables",
+        "Unity.Beamable.Server.Runtime",
+        "Unity.Beamable.Server.Runtime.Shared",
+        "Beamable.Samples.GPW.Shared",
+        "Beamable.Samples.GPW.Client"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "nunit.framework.dll"
+        "DOTween.dll"
     ],
-    "autoReferenced": false,
-    "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
-    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false
 }

@@ -1,13 +1,14 @@
 {
     "name": "Unity.Beamable.Runtime.UserStorageObject.gpwdatastorage",
+    "rootNamespace": "",
     "references": [
         "Unity.Beamable.Runtime.Common",
         "Unity.Beamable.Server.Runtime",
         "Unity.Beamable.Server.Runtime.Shared",
         "Unity.Beamable",
-        "Beamable.SmallerJSON"
+        "Beamable.SmallerJSON",
+        "Beamable.Samples.GPW.Shared"
     ],
-    "optionalUnityReferences": [],
     "includePlatforms": [
         "Editor"
     ],
@@ -25,5 +26,7 @@
         "SharpCompress.dll"
     ],
     "autoReferenced": false,
-    "defineConstraints": []
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
