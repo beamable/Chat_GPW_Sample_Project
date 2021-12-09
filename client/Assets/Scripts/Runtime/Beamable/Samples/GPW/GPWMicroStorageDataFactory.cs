@@ -22,12 +22,12 @@ namespace Beamable.Samples.GPW
          // Create list
          
          // Populate List
-         GPWDataServiceClient gpwDataServiceClient = new GPWDataServiceClient();
-         
-         if (await gpwDataServiceClient.HasLocationContentViews())
-         {
-            //gpwDataServiceClient.CreateLocationContentViews(locationContents, productContents);
-         }
+         // GPWDataServiceClient gpwDataServiceClient = new GPWDataServiceClient();
+         //
+         // if (await gpwDataServiceClient.HasLocationContentViews())
+         // {
+         //    gpwDataServiceClient.CreateLocationContentViews(locationContents, productContents);
+         // }
          
          List<LocationContentView> locationContentViews = null; //await gpwDataServiceClient.GetLocationContentViews();;
          
