@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Asia
   m_EditorClassIdentifier: 
   _tags: []
-  Title: Asia
-  RandomSeed: 3
+  LocationData:
+    Title: Asia
+    RandomSeed: 3

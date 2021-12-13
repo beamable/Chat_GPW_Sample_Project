@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Antarctica
   m_EditorClassIdentifier: 
   _tags: []
-  Title: Antarctica
-  RandomSeed: 2
+  LocationData:
+    Title: Antarctica
+    RandomSeed: 2

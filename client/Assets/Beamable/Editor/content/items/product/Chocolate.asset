@@ -21,6 +21,13 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   clientPermission:
     writeSelf: 1
-  Title: Chocolate
-  PriceMin: 10
-  PriceMax: 20
+  ProductData:
+    Id: 
+    icon:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    Title: Chocolate
+    PriceMin: 10
+    PriceMax: 20

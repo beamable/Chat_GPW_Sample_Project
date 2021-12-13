@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Europe
   m_EditorClassIdentifier: 
   _tags: []
-  Title: Europe
-  RandomSeed: 5
+  LocationData:
+    Title: Europe
+    RandomSeed: 5

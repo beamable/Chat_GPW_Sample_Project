@@ -40,6 +40,19 @@ namespace Beamable.Samples.GPW.Data
          Id = id;
          icon = newIcon;
       }
+
+      public ProductData Clone()
+      {
+         ProductData productData = new ProductData
+         {
+            Id = Id,
+            icon = icon,
+            Title = Title,
+            PriceMin = PriceMin,
+            PriceMax = PriceMax
+         };
+         return productData;
+      }
    }
 }
 

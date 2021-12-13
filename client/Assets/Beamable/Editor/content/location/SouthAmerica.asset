@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: SouthAmerica
   m_EditorClassIdentifier: 
   _tags: []
-  Title: South America
-  RandomSeed: 7
+  LocationData:
+    Title: SouthAmerica
+    RandomSeed: 7

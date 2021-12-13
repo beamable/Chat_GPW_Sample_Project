@@ -1,9 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = System.Random;
 
 namespace Beamable.Samples.GPW.Data
 {
+   [Serializable]
+   public class LocationContentViewCollection
+   {
+      public List<LocationContentView> LocationContentViews = new List<LocationContentView>();
+   }
+   
+   [Serializable]
    /// <summary>
    /// Client-side wrapper for the loaded data content
    /// </summary>

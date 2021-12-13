@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Africa
   m_EditorClassIdentifier: 
   _tags: []
-  Title: Africa
-  RandomSeed: 1
+  LocationData:
+    Title: Africa
+    RandomSeed: 1

@@ -126,7 +126,9 @@ namespace Beamable.Samples.GPW.Data.Storage
             foreach (var productContentRef in  _runtimeData.RemoteConfiguration.ProductContentRefs)
             {
                 ProductContent productContent = await productContentRef.Resolve();
-                ProductData productData = productContent.ProductData;
+                
+                // Clone here for several reasons: Including to avoid dirtying the ContentManager
+                ProductData productData = productContent.ProductData.Clone();
                 productData.Initialize(productContent.Id, productContent.icon);
                 productDatas.Add(productData);
             }
@@ -145,7 +147,9 @@ namespace Beamable.Samples.GPW.Data.Storage
             foreach (var locationContentRef in  _runtimeData.RemoteConfiguration.LocationContentRefs)
             {
                 LocationContent locationContent = await locationContentRef.Resolve();
-                LocationData locationData = locationContent.LocationData;
+                
+                // Clone here for several reasons: Including to avoid dirtying the ContentManager
+                LocationData locationData = locationContent.LocationData.Clone();
                 locationdatas.Add(locationData);
             }
             

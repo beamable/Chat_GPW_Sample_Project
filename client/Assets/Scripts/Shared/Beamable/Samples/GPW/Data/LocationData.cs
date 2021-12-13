@@ -14,5 +14,15 @@ namespace Beamable.Samples.GPW.Data
       public string Title = "";
       [SerializeField]
       public int RandomSeed = 1;
+
+      public LocationData Clone()
+      {
+         LocationData locationData = new LocationData
+         {
+            Title = Title,
+            RandomSeed = RandomSeed
+         };
+         return locationData;
+      }
    }
 }

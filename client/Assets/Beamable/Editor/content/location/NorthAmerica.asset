@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: NorthAmerica
   m_EditorClassIdentifier: 
   _tags: []
-  Title: North America
-  RandomSeed: 6
+  LocationData:
+    Title: NorthAmerica
+    RandomSeed: 6

@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Australia
   m_EditorClassIdentifier: 
   _tags: []
-  Title: Australia
-  RandomSeed: 5
+  LocationData:
+    Title: Australia
+    RandomSeed: 4

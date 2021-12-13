@@ -21,6 +21,13 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   clientPermission:
     writeSelf: 1
-  Title: Coffee
-  PriceMin: 30
-  PriceMax: 60
+  ProductData:
+    Id: 
+    icon:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    Title: Coffee
+    PriceMin: 30
+    PriceMax: 60
