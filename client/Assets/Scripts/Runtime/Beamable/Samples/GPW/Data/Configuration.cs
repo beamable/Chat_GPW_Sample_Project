@@ -1,6 +1,7 @@
 ﻿using Beamable.Common.Leaderboards;
 using Beamable.Samples.Core.Data;
 using Beamable.Samples.GPW.Content;
+using Beamable.Samples.GPW.Data.Content;
 using Beamable.Samples.GPW.Data.Factories;
 using UnityEngine;
 

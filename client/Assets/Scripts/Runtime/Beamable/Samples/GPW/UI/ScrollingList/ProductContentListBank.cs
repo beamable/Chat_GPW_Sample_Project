@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using AirFishLab.ScrollingList;
 using Beamable.Samples.GPW.Content;
+using Beamable.Samples.GPW.Data;
+using Beamable.Samples.GPW.Data.Content;
 
 namespace Beamable.Samples.Core.UI.ScrollingList
 {

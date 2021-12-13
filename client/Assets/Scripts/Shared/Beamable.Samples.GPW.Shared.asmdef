@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "Unity.Beamable.Runtime.Common",
-        "Beamable.SmallerJSON"
+        "Beamable.SmallerJSON",
+        "Unity.Addressables"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

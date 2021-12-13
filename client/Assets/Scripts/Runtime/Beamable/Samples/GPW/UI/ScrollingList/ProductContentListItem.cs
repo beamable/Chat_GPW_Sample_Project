@@ -1,6 +1,9 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using AirFishLab.ScrollingList;
 using Beamable.Samples.GPW.Content;
+using Beamable.Samples.GPW.Data;
+using Beamable.Samples.GPW.Data.Content;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -49,9 +52,13 @@ namespace Beamable.Samples.GPW.UI.ScrollingList
         protected override void UpdateDisplayContent(object content)
         {
             _productContentView = (ProductContentView)content;
-            
-            GPWHelper.AddressablesLoadAssetAsync(_productContentView.ProductContent.icon, _iconImage);
-            _titleText.text = _productContentView.ProductContent.Title;
+
+            if (!_productContentView.ProductData.IsInitialized)
+            {
+                throw new Exception("Must be initialized");
+            }
+            GPWHelper.AddressablesLoadAssetAsync(_productContentView.ProductData.icon, _iconImage);
+            _titleText.text = _productContentView.ProductData.Title;
 
             StringBuilder stringBuilder = new StringBuilder();
             int countThem = _productContentView.MarketGoods.Quantity;

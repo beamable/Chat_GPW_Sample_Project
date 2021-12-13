@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Beamable.Common.Api.Inventory;
 using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.GPW.Content;
+using Beamable.Samples.GPW.Data.Content;
 using Beamable.Samples.GPW.Data.Factories;
 using UnityEngine.Assertions;
 
@@ -119,34 +120,37 @@ namespace Beamable.Samples.GPW.Data.Storage
         public async Task ResetGameDataViaDataFactory()
         {
             ///////////////////////
-            // Get ProductContent
+            // Get ProductData
             ///////////////////////
-            List<ProductContent> productContents = new List<ProductContent>();
+            List<ProductData> productDatas = new List<ProductData>();
             foreach (var productContentRef in  _runtimeData.RemoteConfiguration.ProductContentRefs)
             {
                 ProductContent productContent = await productContentRef.Resolve();
-                productContents.Add(productContent);
+                ProductData productData = productContent.ProductData;
+                productData.Initialize(productContent.Id, productContent.icon);
+                productDatas.Add(productData);
             }
                 
             //  Sort the product list from a to z
-            productContents.Sort((p1, p2) =>
+            productDatas.Sort((p1, p2) =>
             {
                 return string.Compare(p2.Title, p2.Title, 
                     StringComparison.InvariantCulture);
             });
             
             ///////////////////////
-            // Get LocationContent
+            // Get LocationData
             ///////////////////////
-            List<LocationContent> locationContents = new List<LocationContent>();
+            List<LocationData> locationdatas = new List<LocationData>();
             foreach (var locationContentRef in  _runtimeData.RemoteConfiguration.LocationContentRefs)
             {
                 LocationContent locationContent = await locationContentRef.Resolve();
-                locationContents.Add(locationContent);
+                LocationData locationData = locationContent.LocationData;
+                locationdatas.Add(locationData);
             }
             
             _runtimeData.LocationContentViews = await _dataFactory.CreateLocationContentViews (
-                locationContents, productContents);
+                locationdatas, productDatas);
 
         }
     }

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Beamable.Samples.GPW.Content;
+using Beamable.Samples.GPW.Data;
+using Beamable.Samples.GPW.Data.Content;
 using MongoDB.Bson;
 
 namespace Beamable.Server

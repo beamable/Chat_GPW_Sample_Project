@@ -11,6 +11,7 @@ using Beamable.Experimental.Api.Chat;
 using Beamable.Samples.Core.Data;
 using Beamable.Samples.Core.Debugging;
 using Beamable.Samples.GPW.Content;
+using Beamable.Samples.GPW.Data.Content;
 using Beamable.Samples.GPW.Data.Storage;
 using UnityEngine;
 using UnityEngine.Events;
@@ -278,7 +279,7 @@ namespace Beamable.Samples.GPW.Data
 		
 		public async Task<bool> BuyItemInternal(ProductContentView productContentView, int amount)
 		{
-			string contentId = productContentView.ProductContent.Id;
+			string contentId = productContentView.ProductData.Id;
 			int price = productContentView.MarketGoods.Price;
 			InventoryUpdateBuilder inventoryUpdateBuilder = new InventoryUpdateBuilder();
 			for (int i = 0; i < amount; i++)
@@ -298,7 +299,7 @@ namespace Beamable.Samples.GPW.Data
 
 		public async Task<bool> SellItemInternal(ProductContentView productContentView, int amount)
 		{
-			string contentId = productContentView.ProductContent.Id;
+			string contentId = productContentView.ProductData.Id;
 			List<ItemView> itemViews = GetOwnedItemViews(contentId);
 
 			if (itemViews.Count < amount)

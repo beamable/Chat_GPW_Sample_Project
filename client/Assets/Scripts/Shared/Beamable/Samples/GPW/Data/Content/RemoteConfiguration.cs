@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using Beamable.Common.Content;
 using UnityEngine;
 
-namespace Beamable.Samples.GPW.Content
+namespace Beamable.Samples.GPW.Data.Content
 {
     [Serializable]
     public class RemoteConfigurationRef : ContentRef<RemoteConfiguration> {}
-   
+    
     /// <summary>
     /// Store the data: Represents core game data
     /// </summary>

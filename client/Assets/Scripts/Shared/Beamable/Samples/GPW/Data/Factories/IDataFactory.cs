@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Beamable.Samples.GPW.Content;
+using Beamable.Samples.GPW.Data.Content;
 
 namespace Beamable.Samples.GPW.Data.Factories
 {
@@ -13,6 +14,6 @@ namespace Beamable.Samples.GPW.Data.Factories
       
       //  Other Methods -----------------------------------
       public Task<List<LocationContentView>> CreateLocationContentViews(
-         List<LocationContent> locationContent, List<ProductContent> productContents);
+         List<LocationData> locationDatas, List<ProductData> productDatas);
    }
 }

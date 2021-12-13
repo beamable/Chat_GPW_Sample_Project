@@ -10,6 +10,7 @@ using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.Core.Utilities;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
+using Beamable.Samples.GPW.Data.Content;
 using Beamable.Samples.GPW.Data.Factories;
 using Beamable.Samples.GPW.Data.Storage;
 using UnityEngine;
@@ -262,7 +263,7 @@ namespace Beamable.Samples.GPW
                     break;
                 case ChatMode.Location:
                     currentRoomName = GPWHelper.GetChatRoomNameLocation(
-                        LocationContentViewCurrent.LocationContent);
+                        LocationContentViewCurrent.LocationData);
                     break;
                 case ChatMode.Direct:
                     currentRoomName = GPWHelper.GetChatRoomNameDirect();
@@ -378,7 +379,7 @@ namespace Beamable.Samples.GPW
             foreach (LocationContentView locationContentView in _runtimeDataStorage.RuntimeData.LocationContentViews)
             {
                 await _gameServices.CreateRoomSafe(
-                    GPWHelper.GetChatRoomNameLocation(locationContentView.LocationContent));
+                    GPWHelper.GetChatRoomNameLocation(locationContentView.LocationData));
             }
             
             // When running this scene directly, go back to intro scene
@@ -415,7 +416,7 @@ namespace Beamable.Samples.GPW
                     productContentView.CanBuy = CanBuyItem(productContentView, 1);
                     productContentView.CanSell = CanSellItem(productContentView, 1);
                 
-                    string contentId = productContentView.ProductContent.Id;
+                    string contentId = productContentView.ProductData.Id;
                     productContentView.OwnedGoods.Quantity = _gameServices.GetOwnedItemQuantity(contentId);
                     productContentView.OwnedGoods.Price = _gameServices.GetOwnedItemAveragePrice(contentId);
                 }

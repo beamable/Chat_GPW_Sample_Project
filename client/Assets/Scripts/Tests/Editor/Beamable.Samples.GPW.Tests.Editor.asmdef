@@ -13,7 +13,8 @@
         "Beamable.ConsoleCommands",
         "Unity.TextMeshPro",
         "Beamable.JsonSerializable",
-        "Beamable.Samples.GPW.Runtime"
+        "Beamable.Samples.GPW.Runtime",
+        "Beamable.Samples.GPW.Shared"
     ],
     "includePlatforms": [
         "Editor"

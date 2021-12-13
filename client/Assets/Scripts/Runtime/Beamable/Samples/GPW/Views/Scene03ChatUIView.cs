@@ -1,5 +1,7 @@
 ﻿using Beamable.Samples.Core.UI;
 using Beamable.Samples.GPW.Content;
+using Beamable.Samples.GPW.Data;
+using Beamable.Samples.GPW.Data.Content;
 using Beamable.Samples.GPW.Data.Storage;
 using TMPro;
 using UnityEngine;
@@ -86,7 +88,7 @@ namespace Beamable.Samples.GPW.Views
          string title = "Location";
          if (_locationContentView != null)
          {
-            title = _locationContentView.LocationContent.Title;
+            title = _locationContentView.LocationData.Title;
          }
          
          //Adjust spacing due to long names

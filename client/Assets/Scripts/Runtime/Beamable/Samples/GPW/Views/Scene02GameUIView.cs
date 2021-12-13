@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using Beamable.Samples.Core.UI.ScrollingList;
 using Beamable.Samples.GPW.Content;
+using Beamable.Samples.GPW.Data;
+using Beamable.Samples.GPW.Data.Content;
 using Beamable.Samples.GPW.Data.Storage;
 using TMPro;
 using UnityEngine;
@@ -89,7 +91,7 @@ namespace Beamable.Samples.GPW.Views
 
          if (_locationContentView != null)
          {
-            GPWHelper.SetChildTMPText(_travelButton, "Travel", _locationContentView.LocationContent.Title);
+            GPWHelper.SetChildTMPText(_travelButton, "Travel", _locationContentView.LocationData.Title);
          }
          else
          {

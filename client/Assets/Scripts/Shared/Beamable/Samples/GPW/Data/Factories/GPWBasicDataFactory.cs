@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Beamable.Samples.GPW.Content;
+using Beamable.Samples.GPW.Data;
+using Beamable.Samples.GPW.Data.Content;
 using Beamable.Samples.GPW.Data.Factories;
 
 #pragma warning disable 1998
@@ -16,17 +18,17 @@ namespace Beamable.Samples.GPW
       
       //  Other Methods -----------------------------------
       public async Task<List<LocationContentView>> CreateLocationContentViews(
-         List<LocationContent> locationContents, List<ProductContent> productContents)
+         List<LocationData> locationDatas, List<ProductData> productDatas)
       {
          // Create list
          List<LocationContentView> locationContentViews = new List<LocationContentView>();
          
          // Populate List
-         foreach (var locationContent in  locationContents)
+         foreach (var locationContent in  locationDatas)
          {
             // Populate with new, generated client-side data
             LocationContentView locationContentView =
-               new LocationContentView(locationContent, productContents);
+               new LocationContentView(locationContent, productDatas);
 
             locationContentViews.Add(locationContentView);
          }
@@ -34,7 +36,7 @@ namespace Beamable.Samples.GPW
          //  Sort list: A to Z
          locationContentViews.Sort((p1, p2) =>
          {
-            return string.Compare(p2.LocationContent.Title, p2.LocationContent.Title, 
+            return string.Compare(p2.LocationData.Title, p2.LocationData.Title, 
                StringComparison.InvariantCulture);
          });
 

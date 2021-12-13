@@ -1,13 +1,13 @@
 ﻿using System;
-using Beamable.Common.Api.Inventory;
 using Beamable.Common.Content;
 using Beamable.Common.Inventory;
+using UnityEngine;
 
-namespace Beamable.Samples.GPW.Content
+namespace Beamable.Samples.GPW.Data.Content
 {
    [Serializable]
    public class ProductContentRef : ContentRef<ProductContent> {}
-
+   
    /// <summary>
    /// Server-side data: Represents a commodity for buy/sell
    /// </summary>
@@ -15,8 +15,8 @@ namespace Beamable.Samples.GPW.Content
    public class ProductContent : ItemContent
    {
       //  Fields ---------------------------------------
-      public string Title = "";
-      public int PriceMin = 1;
-      public int PriceMax = 10;
+      [SerializeField]
+      public ProductData ProductData = null;
    }
 }
+

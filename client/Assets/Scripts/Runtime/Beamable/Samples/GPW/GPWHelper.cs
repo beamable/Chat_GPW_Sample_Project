@@ -9,6 +9,8 @@ using Beamable.Samples.Core.UI;
 using Beamable.Samples.Core.UI.DialogSystem;
 using Beamable.Samples.Core.Utilities;
 using Beamable.Samples.GPW.Content;
+using Beamable.Samples.GPW.Data;
+using Beamable.Samples.GPW.Data.Content;
 using Beamable.Samples.GPW.Data.Storage;
 using Beamable.UI.Scripts;
 using TMPro;
@@ -49,7 +51,7 @@ namespace Beamable.Samples.GPW
          return ChatRoomNameGlobal;
       }
       
-      public static string GetChatRoomNameLocation(LocationContent locationContent)
+      public static string GetChatRoomNameLocation(LocationData locationContent)
       {
          return ChatRoomNameLocation +
                 ChatRoomNameSeparator +
@@ -355,7 +357,7 @@ namespace Beamable.Samples.GPW
 
          dialogSystem.ShowDialogBox<DialogUI>(
             dialogSystem.DialogUIPrefab,
-            $"{productContentView.ProductContent.Title}: You own {productContentView.OwnedGoods.Quantity:000} at ${productContentView.OwnedGoods.Price:000}.",
+            $"{productContentView.ProductData.Title}: You own {productContentView.OwnedGoods.Quantity:000} at ${productContentView.OwnedGoods.Price:000}.",
             getBodyText(amount),
             new List<DialogButtonData>
             {
@@ -397,7 +399,7 @@ namespace Beamable.Samples.GPW
 
          dialogSystem.ShowDialogBox<DialogUI>(
             dialogSystem.DialogUIPrefab,
-            $"{productContentView.ProductContent.Title}: You own {productContentView.OwnedGoods.Quantity:000} at ${productContentView.OwnedGoods.Price:000}.",
+            $"{productContentView.ProductData.Title}: You own {productContentView.OwnedGoods.Quantity:000} at ${productContentView.OwnedGoods.Price:000}.",
             getBodyText(amount),
             new List<DialogButtonData>
             {
@@ -503,11 +505,11 @@ namespace Beamable.Samples.GPW
                index++;
                if (index == bodyIndex)
                {
-                  stringBuilder.AppendLine(" → <b>" + locationContentView.LocationContent.Title + "</b> ← ");
+                  stringBuilder.AppendLine(" → <b>" + locationContentView.LocationData.Title + "</b> ← ");
                }
                else
                {
-                  stringBuilder.AppendLine(locationContentView.LocationContent.Title);
+                  stringBuilder.AppendLine(locationContentView.LocationData.Title);
                }
                
             }
