@@ -313,7 +313,7 @@ namespace Beamable.Samples.GPW
             {
                 GPWController.Instance.RefreshCurrentProductContentViews();
             
-                List<ProductContentView> list = GPWController.Instance.LocationContentViewCurrent.ProductContentViews;
+                List<ProductContentView> list = GPWController.Instance.LocationContentViewCurrent.ProductContentViewCollection.ProductContentViews;
          
                 // This rebuilds the list...
                 // 1. Keeps vertical list scroll. Good!

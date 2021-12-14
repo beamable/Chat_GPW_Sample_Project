@@ -1,12 +1,21 @@
-﻿using Beamable.Samples.GPW.Content;
+﻿using System;
+using System.Collections.Generic;
+using Beamable.Samples.GPW.Content;
 using UnityEngine;
 using Random = System.Random;
 
 namespace Beamable.Samples.GPW.Data
 {
+   [Serializable]
+   public class ProductContentViewCollection
+   {
+      public List<ProductContentView> ProductContentViews = new List<ProductContentView>();
+   }
+   
    /// <summary>
    /// Client-side wrapper for the loaded data content
    /// </summary>
+   [Serializable]
    public class ProductContentView 
    {
       //  Fields ---------------------------------------

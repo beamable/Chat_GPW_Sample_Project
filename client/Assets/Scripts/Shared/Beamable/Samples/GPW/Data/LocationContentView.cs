@@ -11,23 +11,31 @@ namespace Beamable.Samples.GPW.Data
       public List<LocationContentView> LocationContentViews = new List<LocationContentView>();
    }
    
-   [Serializable]
    /// <summary>
    /// Client-side wrapper for the loaded data content
    /// </summary>
+   [Serializable]
    public class LocationContentView 
    {
       //  Fields ---------------------------------------
       public LocationData LocationData = null;
-      public List<ProductContentView> ProductContentViews = null;
-      
+      public ProductContentViewCollection ProductContentViewCollection = new ProductContentViewCollection();
+
+      public LocationContentView()
+      {
+         Debug.Log("CONSTRUCTOR 1");
+      }
+         
       public LocationContentView(LocationData locationData, 
          List<ProductData> productDatas)
       {
+         
+         Debug.Log("CONSTRUCTOR 2");
          LocationData = locationData;
          Debug.Log($"----LocationContentView = {locationData.Title}");
+         Debug.Log($"----productDatas.couht = {productDatas.Count}");
 
-         ProductContentViews = new List<ProductContentView>();
+         ProductContentViewCollection.ProductContentViews = new List<ProductContentView>();
          
          // Set a Price, RANDOMLY within the permitted data range, that
          // is DETERMINISTIC (same) for all game clients
@@ -37,7 +45,7 @@ namespace Beamable.Samples.GPW.Data
          // location for uniqueness.
          foreach (ProductData productData in productDatas)
          {
-            ProductContentViews.Add(
+            ProductContentViewCollection.ProductContentViews.Add(
                new ProductContentView(productData, random));
          }
       }

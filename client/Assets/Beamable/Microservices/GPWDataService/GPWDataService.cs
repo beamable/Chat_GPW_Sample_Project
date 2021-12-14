@@ -32,7 +32,7 @@ namespace Beamable.Server
         [ClientCallable]
         public async Task<bool> HasLocationContentViews()
         {
-            var locationContentViews = await GetLocationContentViews_Internal(false);
+            var locationContentViews = await GetLocationContentViews_Internal(true);
             return locationContentViews != null &&
                    locationContentViews.LocationContentViews != null
                    && locationContentViews.LocationContentViews.Count > 0;
@@ -89,8 +89,6 @@ namespace Beamable.Server
                 }
             }
         
-            Debug.Log("so... 4");
-            
             LocationContentViewCollection locationContentViewCollection = new LocationContentViewCollection();
             locationContentViewCollection.LocationContentViews = locationContentViews;
             return locationContentViewCollection;
@@ -114,43 +112,44 @@ namespace Beamable.Server
         public async Task<bool> CreateLocationContentViews(
             List<LocationData> locationDatas, List<ProductData> productDatas)
         {
-            //TODO: MAKE SURE it does not create If THERE IS ALREADY A DB
-
+            //NOTE: For ease-of-use for this sample project, this GPWBasicDataFactory
+            //is reused here to create the data which will be inserted into the database
             IDataFactory dataFactory = new GPWBasicDataFactory();
-        
             List<LocationContentView> locationContentViews =
                 await dataFactory.GetLocationContentViews(locationDatas, productDatas);
         
+            
             bool isSuccess = false;
             try
             {
+                Debug.Log("here 1");
                 var db = Storage.GetDatabase<GPWDataStorage>();
                 
                 // This section is verbose but...
-                
+                Debug.Log("here 2");
                 //The wrapper helps the DB
                 var collection = db.GetCollection<LocationContentViewsWrapper>(CollectionName);
-
+                Debug.Log("here 3");
                 // Delete any/all previous data
                 await collection.DeleteManyAsync(_ => true);
-                
+                Debug.Log("here 4");
                 //And this custom collection helps some method-return-value serialization
                 LocationContentViewCollection locationContentViewCollection = new LocationContentViewCollection();
                 locationContentViewCollection.LocationContentViews = locationContentViews;
-                
+                Debug.Log("here 5");
                 // Insert the one new value
                 collection.InsertOne(new LocationContentViewsWrapper()
                 {
                     LocationContentViewCollection = locationContentViewCollection
                 });
-        
+                Debug.Log("here 6");
                 isSuccess = true;
             }
             catch (Exception e)
             {
                 Debug.LogError(e.Message);
             }
-        
+            Debug.Log("here 7");
             return isSuccess;
         }
     }

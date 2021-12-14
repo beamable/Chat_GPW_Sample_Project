@@ -1,9 +1,12 @@
 ﻿   
+using System;
+
 namespace Beamable.Samples.GPW.Content
 {
    /// <summary>
    /// Client-side wrapper for the loaded data content
    /// </summary>
+   [Serializable]
    public class Goods
    {
       public int Price;

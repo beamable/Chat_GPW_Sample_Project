@@ -6,7 +6,9 @@ using Beamable.Samples.Core.Exceptions;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data.Content;
 using Beamable.Samples.GPW.Data.Factories;
+using UnityEngine;
 using UnityEngine.Assertions;
+using Random = System.Random;
 
 namespace Beamable.Samples.GPW.Data.Storage
 {
@@ -155,6 +157,21 @@ namespace Beamable.Samples.GPW.Data.Storage
             
             _runtimeData.LocationContentViews = await _dataFactory.GetLocationContentViews (
                 locationdatas, productDatas);
+            
+            Debug.Log($"GetLocationContentViews() success. LocationContentViews.Count = " +
+                      $"{_runtimeData.LocationContentViews.Count}");
+
+            foreach (var locationContentView in _runtimeData.LocationContentViews)
+            {
+                Debug.Log("\tlocationContentView: " + locationContentView.LocationData.Title);
+                Debug.Log("\t count: " + locationContentView.ProductContentViewCollection.ProductContentViews.Count);
+                foreach (var productContentView in locationContentView.ProductContentViewCollection.ProductContentViews)
+                {
+                    Debug.Log("\t\tproductContentView t: " + productContentView.ProductData.Title);
+                    Debug.Log("\t\tproductContentView p : " + productContentView.MarketGoods.Price);
+                    Debug.Log("\t\tproductContentView q: " + productContentView.MarketGoods.Quantity);
+                }
+            }
 
         }
     }

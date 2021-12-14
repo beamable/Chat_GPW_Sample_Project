@@ -63,8 +63,6 @@ namespace Beamable.Samples.GPW
             });
 
             // Return List
-            Debug.Log($"GetLocationContentViews() success. LocationContentViews.Count = " +
-                $"{locationContentViewCollection.LocationContentViews.Count}");
             return locationContentViewCollection.LocationContentViews;
         }
     }
