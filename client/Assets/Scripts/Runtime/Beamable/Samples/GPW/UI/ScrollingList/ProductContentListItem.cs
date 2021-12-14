@@ -53,11 +53,7 @@ namespace Beamable.Samples.GPW.UI.ScrollingList
         {
             _productContentView = (ProductContentView)content;
 
-            if (!_productContentView.ProductData.IsInitialized)
-            {
-                throw new Exception("Must be initialized");
-            }
-            GPWHelper.AddressablesLoadAssetAsync(_productContentView.ProductData.icon, _iconImage);
+            GPWHelper.AddressablesLoadAssetAsync(_productContentView.ProductData.IconAssetReferenceSprite, _iconImage);
             _titleText.text = _productContentView.ProductData.Title;
 
             StringBuilder stringBuilder = new StringBuilder();

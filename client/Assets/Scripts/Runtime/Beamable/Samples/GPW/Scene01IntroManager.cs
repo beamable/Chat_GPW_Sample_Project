@@ -1,6 +1,5 @@
 ﻿using System;
 using Beamable.Common.Api.Inventory;
-using Beamable.Samples.Core.Utilities;
 using Beamable.Samples.GPW.Views;
 using UnityEngine;
 
@@ -142,8 +141,6 @@ namespace Beamable.Samples.GPW
       
       private void StartGameButton_OnClicked()
       {
-         _scene01IntroUIView.ButtonsCanvasGroup.interactable = false;
-         
          int itemsCount = 0;
          if (_inventoryView != null)
          {
@@ -156,6 +153,8 @@ namespace Beamable.Samples.GPW
                delegate
                {
                   GPWController.Instance.ResetGameDataViaDataFactory();
+                  GPWController.Instance.ResetPlayerData();
+                  _scene01IntroUIView.ButtonsCanvasGroup.interactable = true;
           
                });
 

@@ -407,7 +407,6 @@ namespace Beamable.Samples.GPW
             {
                 List<ProductContentView> list = LocationContentViewCurrent.ProductContentViewCollection.ProductContentViews;
 
-                Debug.Log("list: " + list.Count + " for " + LocationContentViewCurrent.LocationData.Title);
                 Configuration.Debugger.Log("RefreshCurrentProductContentViews()", DebugLogLevel.Verbose);
             
                 // Refresh the UI buttons for buy/sell

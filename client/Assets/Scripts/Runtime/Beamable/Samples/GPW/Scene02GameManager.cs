@@ -318,7 +318,7 @@ namespace Beamable.Samples.GPW
                 // This rebuilds the list...
                 // 1. Keeps vertical list scroll. Good!
                 // 2. but refreshes the contents based on the ProductContentViews. Good!
-                await _scene02GameUIView.ProductContentList.InitializeOnDelay(list, 100);
+                await _scene02GameUIView.ProductContentList.InitializeOnDelay(list, 300);
                 _scene02GameUIView.ProductContentList.Refresh();
          
                 if (!_scene02GameUIView.ProductContentList.IsVisible)

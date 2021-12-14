@@ -58,7 +58,13 @@ namespace Beamable.Server
                 var result = await mongoCollection.FindAsync(_ => true);
                 var locationContentViewsWrappers = result.ToList();
 
-                if (locationContentViewsWrappers.Count == 1)
+                // This means there is no db data. Sometimes that is ok
+                if (locationContentViewsWrappers.Count == 0)
+                {
+                    return null;
+                }
+                // This means there is exactly 1 db data. Sometimes ideal
+                else if (locationContentViewsWrappers.Count == 1)
                 {
                     var locationContentViewsWrapper = locationContentViewsWrappers[0];
                 
@@ -72,6 +78,7 @@ namespace Beamable.Server
                         Debug.LogError($"GetLocationContentViews_Internal() failed.");
                     }
                 }
+                // This means there is exactly > 1 db data. That is never expected.
                 else
                 {
                     Debug.LogError($"GetLocationContentViews_Internal() failed. " +

@@ -19,7 +19,7 @@ namespace Beamable.Samples.GPW.Data.Storage
         Location,
         Direct
     }
-    
+
     public class RuntimeData
     {
         //  Properties  ----------------------------------
@@ -35,18 +35,20 @@ namespace Beamable.Samples.GPW.Data.Storage
                         itemsCurrent += kvp.Value.Count;
                     }
                 }
+
                 return itemsCurrent;
-            } 
+            }
         }
-        
+
         public int ItemsMax
         {
             get
-            {  
+            {
                 if (RemoteConfiguration == null)
                 {
                     return 0;
                 }
+
                 return RemoteConfiguration.ItemsMax;
             }
         }
@@ -61,19 +63,22 @@ namespace Beamable.Samples.GPW.Data.Storage
         public int CashTransactionMin;
         public string PreviousSceneName = "";
     }
-        
+
     /// <summary>
     /// Store game-related data which survives across scenes
     /// </summary>
     public class RuntimeDataStorage : SubStorage<RuntimeDataStorage>
     {
         //  Properties  ----------------------------------
-        public RuntimeData RuntimeData { get { return _runtimeData; } }
-  
+        public RuntimeData RuntimeData
+        {
+            get { return _runtimeData; }
+        }
+
         //  Fields  --------------------------------------
         private RuntimeData _runtimeData = new RuntimeData();
         private IDataFactory _dataFactory = null;
-        
+
         //  Unity Methods  --------------------------------
 
         //  Other Methods  --------------------------------
@@ -81,20 +86,19 @@ namespace Beamable.Samples.GPW.Data.Storage
         {
             if (!IsInitialized)
             {
-
                 _dataFactory = dataFactory;
                 Assert.IsNotNull(_dataFactory, "_dataFactory must exist. Set via Configuration via inspector.");
-                
+
                 IBeamableAPI beamableAPI = await Beamable.API.Instance;
-                
+
                 _runtimeData.RemoteConfiguration = await configuration.RemoteConfigurationRef.Resolve();
                 _runtimeData.LocationContentViews.Clear();
-                
+
                 ///////////////////////
                 // FACTORY: Populate Locations, each with products
                 ///////////////////////
                 await ResetGameDataViaDataFactory();
-   
+
                 ///////////////////////
                 // Money
                 ///////////////////////
@@ -102,77 +106,88 @@ namespace Beamable.Samples.GPW.Data.Storage
                 // or may not be needed for these specific values - srivello
                 Random random = new System.Random(_runtimeData.RemoteConfiguration.RandomSeed);
                 double BankInterestCurrent = _runtimeData.RemoteConfiguration.BankInterestMin +
-                                            random.NextDouble() * _runtimeData.RemoteConfiguration.BankInterestMax;
+                                             random.NextDouble() * _runtimeData.RemoteConfiguration.BankInterestMax;
                 double DebtInterestCurrent = _runtimeData.RemoteConfiguration.DebtInterestMin +
                                              random.NextDouble() * _runtimeData.RemoteConfiguration.DebtInterestMax;
 
                 _runtimeData.BankInterestCurrent = (float)Math.Round(BankInterestCurrent, 2);
                 _runtimeData.DebtInterestCurrent = (float)Math.Round(DebtInterestCurrent, 2);
                 _runtimeData.CashTransactionMin = _runtimeData.RemoteConfiguration.CashTransactionMin;
-                
+
                 ForceRefresh();
                 IsInitialized = true;
             }
         }
 
-        
-          /// <summary>
-          /// FACTORY: Populate Locations, each with products
-          /// </summary>
+
+        /// <summary>
+        /// FACTORY: Populate Locations, each with products
+        /// </summary>
         public async Task ResetGameDataViaDataFactory()
         {
             ///////////////////////
             // Get ProductData
             ///////////////////////
             List<ProductData> productDatas = new List<ProductData>();
-            foreach (var productContentRef in  _runtimeData.RemoteConfiguration.ProductContentRefs)
+            foreach (var productContentRef in _runtimeData.RemoteConfiguration.ProductContentRefs)
             {
                 ProductContent productContent = await productContentRef.Resolve();
-                
+
                 // Clone here for several reasons: Including to avoid dirtying the ContentManager
                 ProductData productData = productContent.ProductData.Clone();
                 productData.Initialize(productContent.Id, productContent.icon);
                 productDatas.Add(productData);
             }
-                
+
             //  Sort the product list from a to z
             productDatas.Sort((p1, p2) =>
             {
-                return string.Compare(p2.Title, p2.Title, 
+                return string.Compare(p2.Title, p2.Title,
                     StringComparison.InvariantCulture);
             });
-            
+
             ///////////////////////
             // Get LocationData
             ///////////////////////
             List<LocationData> locationdatas = new List<LocationData>();
-            foreach (var locationContentRef in  _runtimeData.RemoteConfiguration.LocationContentRefs)
+            foreach (var locationContentRef in _runtimeData.RemoteConfiguration.LocationContentRefs)
             {
                 LocationContent locationContent = await locationContentRef.Resolve();
-                
+
                 // Clone here for several reasons: Including to avoid dirtying the ContentManager
                 LocationData locationData = locationContent.LocationData.Clone();
                 locationdatas.Add(locationData);
             }
-            
-            _runtimeData.LocationContentViews = await _dataFactory.GetLocationContentViews (
-                locationdatas, productDatas);
-            
-            Debug.Log($"GetLocationContentViews() success. LocationContentViews.Count = " +
-                      $"{_runtimeData.LocationContentViews.Count}");
 
-            foreach (var locationContentView in _runtimeData.LocationContentViews)
+            // Get Data            
+            List<LocationContentView> freshLocationContentViews = await _dataFactory.GetLocationContentViews(
+                locationdatas, productDatas);
+
+            // Check Data
+            ValidateLocationContentViews(freshLocationContentViews);
+
+            // Store Data for Runtime usage
+            _runtimeData.LocationContentViews = freshLocationContentViews;
+        }
+
+        private void ValidateLocationContentViews(List<LocationContentView> locationContentViews)
+        {
+            Assert.IsNotNull(locationContentViews);
+            Assert.AreNotEqual(locationContentViews.Count, 0);
+
+            foreach (var lcv in locationContentViews)
             {
-                Debug.Log("\tlocationContentView: " + locationContentView.LocationData.Title);
-                Debug.Log("\t count: " + locationContentView.ProductContentViewCollection.ProductContentViews.Count);
-                foreach (var productContentView in locationContentView.ProductContentViewCollection.ProductContentViews)
+                Assert.AreNotEqual(lcv.LocationData.Title, "");
+                Assert.AreNotEqual(lcv.LocationData.RandomSeed, 0);
+                Assert.IsNotNull(lcv.ProductContentViewCollection, "");
+                Assert.AreNotEqual(lcv.ProductContentViewCollection.ProductContentViews.Count, 0);
+                foreach (var productContentView in lcv.ProductContentViewCollection.ProductContentViews)
                 {
-                    Debug.Log("\t\tproductContentView t: " + productContentView.ProductData.Title);
-                    Debug.Log("\t\tproductContentView p : " + productContentView.MarketGoods.Price);
-                    Debug.Log("\t\tproductContentView q: " + productContentView.MarketGoods.Quantity);
+                    Assert.AreNotEqual(productContentView.ProductData.Title, "");
+                    Assert.AreNotEqual(productContentView.ProductData.IconAssetGUID, "");
+                    Assert.AreNotEqual(productContentView.MarketGoods.Price, 0);
                 }
             }
-
         }
     }
 }

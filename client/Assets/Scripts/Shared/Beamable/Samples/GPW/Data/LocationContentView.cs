@@ -21,20 +21,11 @@ namespace Beamable.Samples.GPW.Data
       public LocationData LocationData = null;
       public ProductContentViewCollection ProductContentViewCollection = new ProductContentViewCollection();
 
-      public LocationContentView()
-      {
-         Debug.Log("CONSTRUCTOR 1");
-      }
-         
       public LocationContentView(LocationData locationData, 
          List<ProductData> productDatas)
       {
          
-         Debug.Log("CONSTRUCTOR 2");
          LocationData = locationData;
-         Debug.Log($"----LocationContentView = {locationData.Title}");
-         Debug.Log($"----productDatas.couht = {productDatas.Count}");
-
          ProductContentViewCollection.ProductContentViews = new List<ProductContentView>();
          
          // Set a Price, RANDOMLY within the permitted data range, that

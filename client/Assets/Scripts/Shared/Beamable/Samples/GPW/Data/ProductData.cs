@@ -17,8 +17,21 @@ namespace Beamable.Samples.GPW.Data
       public string Id = "";
       
       //At runtime, Store this value from the ProductContent
+      //Using type string since apparently type AssetReferenceSprite does not serialize
       [HideInInspector]
-      public AssetReferenceSprite icon;
+      public string IconAssetGUID = "";
+
+      public AssetReferenceSprite IconAssetReferenceSprite
+      {
+         get
+         {
+            if (string.IsNullOrEmpty(IconAssetGUID))
+            {
+               throw new Exception(("IconAssetGUID must be NOT IsNullOrEmpty"));
+            }
+            return new AssetReferenceSprite(IconAssetGUID);
+         }
+      }
       
       public string Title = "";
       public int PriceMin = 1;
@@ -38,7 +51,7 @@ namespace Beamable.Samples.GPW.Data
 
          IsInitialized = true;
          Id = id;
-         icon = newIcon;
+         IconAssetGUID = newIcon.AssetGUID;
       }
 
       public ProductData Clone()
@@ -46,7 +59,7 @@ namespace Beamable.Samples.GPW.Data
          ProductData productData = new ProductData
          {
             Id = Id,
-            icon = icon,
+            IconAssetGUID = IconAssetGUID,
             Title = Title,
             PriceMin = PriceMin,
             PriceMax = PriceMax

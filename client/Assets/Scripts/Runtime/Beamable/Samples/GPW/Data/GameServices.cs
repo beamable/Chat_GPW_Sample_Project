@@ -327,7 +327,7 @@ namespace Beamable.Samples.GPW.Data
 			
 			return true;
 		}
-
+		
 		public int GetOwnedItemQuantity(string contentId)
 		{
 			if (_inventoryView != null)
@@ -507,6 +507,7 @@ namespace Beamable.Samples.GPW.Data
 			                            $" room = {roomName}, message = {message.roomId}");
 			OnChatViewChanged.Invoke(_chatView);
 		}
+
 
 
 	}
