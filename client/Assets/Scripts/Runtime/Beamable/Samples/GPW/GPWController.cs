@@ -320,21 +320,8 @@ namespace Beamable.Samples.GPW
             switch (_configuration.DataFactoryType)
             {
                 case DataFactoryType.BasicDataFactory:
-                    
-                    //TODO: Remove this
-                    _dataFactory = new GPWBasicDataFactory();
-                    break;
-                    
-                    //TODO: Throw error instead
-                    // throw new Exception(
-                    //     "The project (https://github.com/beamable/Chat_GPW_2_With_MicroStorage_Sample_Project ) " +
-                    //     "does not support Beamable BasicDataFactory. " +
-                    //     
-                    //     "Instead see project " +
-                    //     "(https://github.com/beamable/Chat_GPW_Sample_Project).");
-                case DataFactoryType.MicroStorage:
                     // Use this as the required value for this project
-                    _dataFactory = new GPWMicroStorageDataFactory();
+                    _dataFactory = new GPWBasicDataFactory();
                     break;
                 default:
                     // Must set this value properly via Configuration via inspector

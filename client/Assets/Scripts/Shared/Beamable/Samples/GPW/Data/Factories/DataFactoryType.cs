@@ -6,14 +6,8 @@ namespace Beamable.Samples.GPW.Data.Factories
     /// </summary>
     public enum DataFactoryType 
     {
-        None,
-        
         // Basic Setup
         // Randomized on the client
         BasicDataFactory,
-        
-        // Advanced Setup
-        // Stored in a Beamable Microservices MicroStorage Database
-        MicroStorage
     }
 }

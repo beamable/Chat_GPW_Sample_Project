@@ -70,7 +70,7 @@ namespace Beamable.Samples.GPW.Data
       [Header("Data Factory Type")] 
       
       [SerializeField]
-      private DataFactoryType _dataFactoryType = DataFactoryType.None;
+      private DataFactoryType _dataFactoryType = DataFactoryType.BasicDataFactory;
       
       [Header("Content")] 
       [SerializeField]
