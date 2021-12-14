@@ -17,7 +17,7 @@ namespace Beamable.Samples.GPW
       //  Fields ---------------------------------------
       
       //  Other Methods -----------------------------------
-      public async Task<List<LocationContentView>> CreateLocationContentViews(
+      public async Task<List<LocationContentView>> GetLocationContentViews(
          List<LocationData> locationDatas, List<ProductData> productDatas)
       {
          // Create list

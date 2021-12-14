@@ -153,7 +153,7 @@ namespace Beamable.Samples.GPW.Data.Storage
                 locationdatas.Add(locationData);
             }
             
-            _runtimeData.LocationContentViews = await _dataFactory.CreateLocationContentViews (
+            _runtimeData.LocationContentViews = await _dataFactory.GetLocationContentViews (
                 locationdatas, productDatas);
 
         }

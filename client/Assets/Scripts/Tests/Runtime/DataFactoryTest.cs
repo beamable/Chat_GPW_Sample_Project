@@ -28,7 +28,7 @@
 //             productContents.Add(ScriptableObject.CreateInstance<ProductContent>());
 //             
 //             // Act
-//             var promise = dataFactory.CreateLocationContentViews(locationContents, productContents);
+//             var promise = dataFactory.GetLocationContentViews(locationContents, productContents);
 //             yield return promise.ToPromise().ToYielder();
 //             List<LocationContentView> locationContentViews = promise.Result;
 //             
@@ -50,7 +50,7 @@
 //             productContents.Add(ScriptableObject.CreateInstance<ProductContent>());
 //             
 //             // Act
-//             var promise = dataFactory.CreateLocationContentViews(locationContents, productContents);
+//             var promise = dataFactory.GetLocationContentViews(locationContents, productContents);
 //             yield return promise.ToPromise().ToYielder();
 //             List<LocationContentView> locationContentViews = promise.Result;
 //             
@@ -72,7 +72,7 @@
 //             productContents.Add(ScriptableObject.CreateInstance<ProductContent>());
 //             
 //             // Act
-//             var promise = dataFactory.CreateLocationContentViews(locationContents, productContents);
+//             var promise = dataFactory.GetLocationContentViews(locationContents, productContents);
 //             yield return promise.ToPromise().ToYielder();
 //             List<LocationContentView> locationContentViews = promise.Result;
 //             
@@ -94,7 +94,7 @@
 //             productContents.Add(ScriptableObject.CreateInstance<ProductContent>());
 //             
 //             // Act
-//             var promise = dataFactory.CreateLocationContentViews(locationContents, productContents);
+//             var promise = dataFactory.GetLocationContentViews(locationContents, productContents);
 //             yield return promise.ToPromise().ToYielder();
 //             List<LocationContentView> locationContentViews = promise.Result;
 //             

@@ -20,13 +20,23 @@ namespace Beamable.Server.Clients
     {
         
         /// <summary>
-        /// Call the GetTestBool method on the GPWDataService microservice
-        /// <see cref="Beamable.Server.GPWDataService.GetTestBool"/>
+        /// Call the IsMicroServiceReady method on the GPWDataService microservice
+        /// <see cref="Beamable.Server.GPWDataService.IsMicroServiceReady"/>
         /// </summary>
-        public Beamable.Common.Promise<bool> GetTestBool()
+        public Beamable.Common.Promise<bool> IsMicroServiceReady()
         {
             string[] serializedFields = new string[0];
-            return this.Request<bool>("GPWDataService", "GetTestBool", serializedFields);
+            return this.Request<bool>("GPWDataService", "IsMicroServiceReady", serializedFields);
+        }
+        
+        /// <summary>
+        /// Call the IsMicroStorageReady method on the GPWDataService microservice
+        /// <see cref="Beamable.Server.GPWDataService.IsMicroStorageReady"/>
+        /// </summary>
+        public Beamable.Common.Promise<bool> IsMicroStorageReady()
+        {
+            string[] serializedFields = new string[0];
+            return this.Request<bool>("GPWDataService", "IsMicroStorageReady", serializedFields);
         }
         
         /// <summary>
@@ -40,17 +50,27 @@ namespace Beamable.Server.Clients
         }
         
         /// <summary>
-        /// Call the GetLocationContentViewsWithoutDB method on the GPWDataService microservice
-        /// <see cref="Beamable.Server.GPWDataService.GetLocationContentViewsWithoutDB"/>
+        /// Call the GetLocationContentViews method on the GPWDataService microservice
+        /// <see cref="Beamable.Server.GPWDataService.GetLocationContentViews"/>
         /// </summary>
-        public Beamable.Common.Promise<Beamable.Samples.GPW.Data.LocationContentViewCollection> GetLocationContentViewsWithoutDB(System.Collections.Generic.List<Beamable.Samples.GPW.Data.LocationData> locationDatas, System.Collections.Generic.List<Beamable.Samples.GPW.Data.ProductData> productDatas)
+        public Beamable.Common.Promise<Beamable.Samples.GPW.Data.LocationContentViewCollection> GetLocationContentViews()
+        {
+            string[] serializedFields = new string[0];
+            return this.Request<Beamable.Samples.GPW.Data.LocationContentViewCollection>("GPWDataService", "GetLocationContentViews", serializedFields);
+        }
+        
+        /// <summary>
+        /// Call the CreateLocationContentViews method on the GPWDataService microservice
+        /// <see cref="Beamable.Server.GPWDataService.CreateLocationContentViews"/>
+        /// </summary>
+        public Beamable.Common.Promise<bool> CreateLocationContentViews(System.Collections.Generic.List<Beamable.Samples.GPW.Data.LocationData> locationDatas, System.Collections.Generic.List<Beamable.Samples.GPW.Data.ProductData> productDatas)
         {
             string serialized_locationDatas = this.SerializeArgument<System.Collections.Generic.List<Beamable.Samples.GPW.Data.LocationData>>(locationDatas);
             string serialized_productDatas = this.SerializeArgument<System.Collections.Generic.List<Beamable.Samples.GPW.Data.ProductData>>(productDatas);
             string[] serializedFields = new string[] {
                     serialized_locationDatas,
                     serialized_productDatas};
-            return this.Request<Beamable.Samples.GPW.Data.LocationContentViewCollection>("GPWDataService", "GetLocationContentViewsWithoutDB", serializedFields);
+            return this.Request<bool>("GPWDataService", "CreateLocationContentViews", serializedFields);
         }
     }
 }
