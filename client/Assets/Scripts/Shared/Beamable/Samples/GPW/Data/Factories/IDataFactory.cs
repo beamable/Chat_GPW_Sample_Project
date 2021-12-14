@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Beamable.Samples.GPW.Content;
-using Beamable.Samples.GPW.Data.Content;
 
 namespace Beamable.Samples.GPW.Data.Factories
 {

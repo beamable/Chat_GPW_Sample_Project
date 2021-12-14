@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data;
-using Beamable.Samples.GPW.Data.Content;
 using Beamable.Samples.GPW.Data.Factories;
 
 #pragma warning disable 1998

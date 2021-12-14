@@ -37,7 +37,6 @@ namespace Beamable.Samples.GPW.Data
          MarketGoods.Price = (int)priceRangePercent;
          MarketGoods.Quantity = random.Next(1, 10);
          
-         Debug.Log($"ProductContentView = {ProductData.Title}, MarketGoods = {MarketGoods}");
       }
 
       public override string ToString()

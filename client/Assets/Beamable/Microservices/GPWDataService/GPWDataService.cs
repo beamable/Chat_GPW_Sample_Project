@@ -129,34 +129,29 @@ namespace Beamable.Server
             bool isSuccess = false;
             try
             {
-                Debug.Log("here 1");
                 var db = Storage.GetDatabase<GPWDataStorage>();
                 
-                // This section is verbose but...
-                Debug.Log("here 2");
                 //The wrapper helps the DB
                 var collection = db.GetCollection<LocationContentViewsWrapper>(CollectionName);
-                Debug.Log("here 3");
+
                 // Delete any/all previous data
                 await collection.DeleteManyAsync(_ => true);
-                Debug.Log("here 4");
+
                 //And this custom collection helps some method-return-value serialization
                 LocationContentViewCollection locationContentViewCollection = new LocationContentViewCollection();
                 locationContentViewCollection.LocationContentViews = locationContentViews;
-                Debug.Log("here 5");
+
                 // Insert the one new value
                 collection.InsertOne(new LocationContentViewsWrapper()
                 {
                     LocationContentViewCollection = locationContentViewCollection
                 });
-                Debug.Log("here 6");
                 isSuccess = true;
             }
             catch (Exception e)
             {
                 Debug.LogError(e.Message);
             }
-            Debug.Log("here 7");
             return isSuccess;
         }
     }
