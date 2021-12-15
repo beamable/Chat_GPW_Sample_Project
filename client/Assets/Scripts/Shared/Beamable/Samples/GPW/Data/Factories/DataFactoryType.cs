@@ -6,8 +6,6 @@ namespace Beamable.Samples.GPW.Data.Factories
     /// </summary>
     public enum DataFactoryType 
     {
-        None,
-        
         // Basic Setup
         // Randomized on the client
         BasicDataFactory,
