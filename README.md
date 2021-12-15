@@ -1,6 +1,15 @@
 # Details: Beamable Sample Project
 
-This sample project demonstrates specific [Beamable](https://beamable.com/) features and services.
+This sample project demonstrates specific [Beamable](https://beamable.com/) features and services including [Beamable Chat](https://docs.beamable.com/docs/chat-feature).
+
+### Variations Of Examples
+
+There are several sample projects related to Chat.
+1. [Chat_GPW_Sample_Project](https://github.com/beamable/Chat_GPW_Sample_Project) - This is a great place to start. It focuses on vanilla chat.
+1. [Chat_GPW_2_With_MicroStorage_Sample_Project](https://github.com/beamable/Chat_GPW_2_With_MicroStorage_Sample_Project) - This is just like #1 above, plus it includes Beamable Microservices and Beamable MicroStorage.
+
+
+-----
 
 **Project Configuration**
 * `Unity Target` - Standalone MAC/PC
