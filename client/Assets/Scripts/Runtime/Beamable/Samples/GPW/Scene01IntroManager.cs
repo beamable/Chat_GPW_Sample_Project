@@ -15,7 +15,7 @@ namespace Beamable.Samples.GPW
       [SerializeField]
       private Scene01IntroUIView _scene01IntroUIView = null;
 
-      private IBeamableAPI _beamableAPI = null;
+      private BeamContext _beamContext;
       private bool _isConnected = false;
       private bool _isBeamableSDKInstalled = true;
       private string _isBeamableSDKInstalledErrorMessage = "";
@@ -41,13 +41,10 @@ namespace Beamable.Samples.GPW
       }
 
 
-      protected void OnDestroy()
+      protected async void OnDestroy()
       {
-         Beamable.API.Instance.Then(de =>
-         {
-            _beamableAPI = null;
-            de.ConnectivityService.OnConnectivityChanged -= ConnectivityService_OnConnectivityChanged;
-         });
+         _beamContext.Api.ConnectivityService.OnConnectivityChanged -= ConnectivityService_OnConnectivityChanged;
+         await _beamContext.ClearPlayerAndStop();
       }
 
 
@@ -67,15 +64,16 @@ namespace Beamable.Samples.GPW
                await GPWController.Instance.Initialize(_scene01IntroUIView.Configuration);
             }
          
-            _beamableAPI = await Beamable.API.Instance;
-            
+            _beamContext = BeamContext.Default;
+            await _beamContext.OnReady;
+
             // Observe inventory items count
             GPWController.Instance.GameServices.OnInventoryViewChanged.AddListener(InventoryService_OnChanged);
             GPWController.Instance.GameServices.ForceRefresh();
             
             // Handle any changes to the internet connectivity
-            _beamableAPI.ConnectivityService.OnConnectivityChanged += ConnectivityService_OnConnectivityChanged;
-            ConnectivityService_OnConnectivityChanged(_beamableAPI.ConnectivityService.HasConnectivity);
+            _beamContext.Api.ConnectivityService.OnConnectivityChanged += ConnectivityService_OnConnectivityChanged;
+            ConnectivityService_OnConnectivityChanged(_beamContext.Api.ConnectivityService.HasConnectivity);
          }
          catch (Exception e)
          {
@@ -96,7 +94,7 @@ namespace Beamable.Samples.GPW
          long dbid = 0;
          if (_isConnected)
          {
-            dbid = _beamableAPI.User.id;
+            dbid = _beamContext.PlayerId;
          }
 
          string bodyText = GPWHelper.GetIntroAboutBodyText(

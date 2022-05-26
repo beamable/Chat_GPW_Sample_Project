@@ -10,8 +10,6 @@ using Beamable.Common.Leaderboards;
 using Beamable.Experimental.Api.Chat;
 using Beamable.Samples.Core.Data;
 using Beamable.Samples.Core.Debugging;
-using Beamable.Samples.GPW.Content;
-using Beamable.Samples.GPW.Data.Content;
 using Beamable.Samples.GPW.Data.Storage;
 using UnityEngine;
 using UnityEngine.Events;
@@ -44,8 +42,7 @@ namespace Beamable.Samples.GPW.Data
 		//
 		private ChatService _chatService = null;
 		private ChatView _chatView = null;
-		private IBeamableAPI _beamableAPI = null;
-		private InventoryService _inventoryService = null;
+		private BeamContext _beamContext;
 		private LeaderboardService _leaderboardService = null;
 		private LeaderboardContent _leaderboardContent = null;
 		private InventoryView _inventoryView = null;
@@ -61,25 +58,25 @@ namespace Beamable.Samples.GPW.Data
 		{
 			if (!_isInitialized)
 			{
-				_beamableAPI = await Beamable.API.Instance;
-				_localPlayerDbid = _beamableAPI.User.id;
+				_beamContext = BeamContext.Default;
+				await _beamContext.OnReady;
+				_localPlayerDbid = _beamContext.PlayerId;
 
 				/////////////////////////////
 				// ChatService
 				/////////////////////////////
-				_chatService = _beamableAPI.Experimental.ChatService;
+				_chatService = _beamContext.Api.Experimental.ChatService;
 				_chatService.Subscribe(ChatService_OnChanged);
 
 				/////////////////////////////
 				// InventoryService
 				/////////////////////////////
-				_inventoryService = _beamableAPI.InventoryService;
-				_inventoryService.Subscribe(ContentType, InventoryService_OnChanged);
+				_beamContext.Api.InventoryService.Subscribe(ContentType, InventoryService_OnChanged);
 
 				/////////////////////////////
 				// Leaderboard
 				/////////////////////////////
-				_leaderboardService = _beamableAPI.LeaderboardService;
+				_leaderboardService = _beamContext.Api.LeaderboardService;
 
 				_leaderboardContent = await configuration.LeaderboardRef.Resolve();
 				await PopulateLeaderboardWithMockData(configuration);
@@ -236,7 +233,7 @@ namespace Beamable.Samples.GPW.Data
 				// Disallow (or prompt Player to resubmit)
 				messageToSend = "[Message Not Allowed]";
 			}
-
+			
 			await GetRoom(roomName).SendMessage(messageToSend);
 			return true;
 		}
@@ -250,7 +247,7 @@ namespace Beamable.Samples.GPW.Data
 			bool isProfanityText = true;
 			try
 			{
-				var result = await _beamableAPI.Experimental.ChatService.ProfanityAssert(text);
+				var result = await _beamContext.Api.Experimental.ChatService.ProfanityAssert(text);
 				isProfanityText = false;
 			}
 			catch
@@ -270,7 +267,9 @@ namespace Beamable.Samples.GPW.Data
 		/// </summary>
 		public async void ForceRefresh()
 		{
-			_inventoryView = await _inventoryService.GetCurrent();
+			var beamContext = BeamContext.Default;
+			await beamContext.OnReady;
+			_inventoryView = await _beamContext.Api.InventoryService.GetCurrent();
 			InventoryService_OnChanged(_inventoryView);
 			
 			_chatView = await _chatService.Subscribable.GetCurrent();
@@ -289,7 +288,7 @@ namespace Beamable.Samples.GPW.Data
 				inventoryUpdateBuilder.AddItem(contentId, properties);
 			}
 
-			await _inventoryService.Update(inventoryUpdateBuilder);
+			await _beamContext.Api.InventoryService.Update(inventoryUpdateBuilder);
 			
 			//Update Mkt
 			productContentView.MarketGoods.Quantity -= amount;
@@ -320,7 +319,7 @@ namespace Beamable.Samples.GPW.Data
 				inventoryUpdateBuilder.DeleteItem(contentId, itemView.id);
 			}
 
-			await _inventoryService.Update(inventoryUpdateBuilder);
+			await _beamContext.Api.InventoryService.Update(inventoryUpdateBuilder);
 			
 			//Update Mkt
 			productContentView.MarketGoods.Quantity += amount;
@@ -395,7 +394,7 @@ namespace Beamable.Samples.GPW.Data
 		/// <param name="configuration"></param>
 		private async Task PopulateLeaderboardWithMockData(Configuration configuration)
 		{
-			string loggingResult = await MockDataCreator.PopulateLeaderboardWithMockData(_beamableAPI,
+			string loggingResult = await MockDataCreator.PopulateLeaderboardWithMockData(_beamContext,
 				_leaderboardContent,
 				configuration.LeaderboardRowCountMin,
 				configuration.LeaderboardScoreMin,
@@ -414,7 +413,7 @@ namespace Beamable.Samples.GPW.Data
 			if (string.IsNullOrEmpty(alias))
 			{
 				alias = await MockDataCreator.GetCurrentUserAlias(
-					_beamableAPI.StatsService, dbid);
+					_beamContext.Api.StatsService, dbid);
 			}
 				
 			// Missing? Create new, and write to stats
@@ -424,7 +423,7 @@ namespace Beamable.Samples.GPW.Data
 				{
 					// Only WRITE the local player
 					alias = GPWHelper.DefaultLocalAlias;
-					await MockDataCreator.SetCurrentUserAlias(_beamableAPI.StatsService, alias);
+					await MockDataCreator.SetCurrentUserAlias(_beamContext.Api.StatsService, alias);
 				}
 				else
 				{

@@ -89,7 +89,8 @@ namespace Beamable.Samples.GPW.Data.Storage
                 _dataFactory = dataFactory;
                 Assert.IsNotNull(_dataFactory, "_dataFactory must exist. Set via Configuration via inspector.");
 
-                IBeamableAPI beamableAPI = await Beamable.API.Instance;
+                var beamContext = BeamContext.Default;
+                await beamContext.OnReady;
 
                 _runtimeData.RemoteConfiguration = await configuration.RemoteConfigurationRef.Resolve();
                 _runtimeData.LocationContentViews.Clear();

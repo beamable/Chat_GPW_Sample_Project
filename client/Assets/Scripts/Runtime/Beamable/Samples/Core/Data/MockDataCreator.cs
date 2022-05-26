@@ -29,21 +29,21 @@ namespace Beamable.Samples.Core.Data
       /// to populate the Leaderboard with some mock users scores for
       /// cosmetic reasons
       /// </summary>
-      /// <param name="beamableAPI"></param>
+      /// <param name="beamContext"></param>
       /// <param name="leaderboardContent"></param>
       /// <param name="leaderboardRowCountMin"></param>
       /// <param name="leaderboardScoreMin"></param>
       /// <param name="leaderboardScoreMax"></param>
-      public static async Task<string> PopulateLeaderboardWithMockData(IBeamableAPI beamableAPI,
+      public static async Task<string> PopulateLeaderboardWithMockData(BeamContext beamContext,
          LeaderboardContent leaderboardContent, 
          int leaderboardRowCountMin, int leaderboardScoreMin, int leaderboardScoreMax)
       {
-         LeaderboardService leaderboardService = beamableAPI.LeaderboardService;
-         StatsService statsService = beamableAPI.StatsService;
-         IAuthService authService = beamableAPI.AuthService;
+         LeaderboardService leaderboardService = beamContext.Api.LeaderboardService;
+         StatsService statsService = beamContext.Api.StatsService;
+         IAuthService authService = beamContext.Api.AuthService;
 
          // Capture current user
-         var localDbid = beamableAPI.User.id;
+         var localDbid = beamContext.PlayerId;
 
          // Check Leaderboard
          LeaderBoardView leaderboardView = await leaderboardService.GetBoard(leaderboardContent.Id, 0, 100);
@@ -64,7 +64,7 @@ namespace Beamable.Samples.Core.Data
             {
                // Create NEW user
                // Login as NEW user (Required before using "SetScore")
-               await authService.CreateUser().FlatMap(beamableAPI.ApplyToken);
+               await authService.CreateUser().FlatMap(beamContext.Api.ApplyToken);
 
                // Rename NEW user
                string alias = CreateNewRandomAlias("User");
@@ -86,9 +86,9 @@ namespace Beamable.Samples.Core.Data
          loggingResult.AppendLine().AppendLine();
          
          // Login again as local user
-         var deviceUsers = await beamableAPI.GetDeviceUsers();
+         var deviceUsers = await beamContext.Api.GetDeviceUsers();
          var user = deviceUsers.First(bundle => bundle.User.id == localDbid);
-         await beamableAPI.ApplyToken(user.Token);
+         await beamContext.Api.ApplyToken(user.Token);
 
          return loggingResult.ToString();
       }

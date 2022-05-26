@@ -72,7 +72,8 @@ namespace Beamable.Samples.GPW
                 /////////////////////////////
                 // GameServices
                 /////////////////////////////
-                IBeamableAPI beamableAPI = await Beamable.API.Instance;
+                var beamContext = BeamContext.Default;
+                await beamContext.OnReady;
                 _configuration = configuration2;
                 _gameServices.OnInventoryViewChanged.AddListener(InventoryService_OnChanged);
                 _runtimeDataStorage.OnChanged.AddListener(RuntimeDataStorage_OnChanged);

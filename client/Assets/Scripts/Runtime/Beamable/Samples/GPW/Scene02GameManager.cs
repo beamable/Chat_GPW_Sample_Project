@@ -11,6 +11,7 @@ using Beamable.Samples.GPW.Data.Storage;
 using Beamable.Samples.GPW.UI.ScrollingList;
 using Beamable.Samples.GPW.Views;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Beamable.Samples.GPW
 {
@@ -52,9 +53,9 @@ namespace Beamable.Samples.GPW
                 (int)_scene02GameUIView.Configuration.DelayAfterDataLoading * 1000;
             _scene02GameUIView.DialogSystem.ShowDialogBoxLoading(GPWHelper.Game);
             SetupBeamable();
-         
+            SceneManager.activeSceneChanged += OnActiveSceneChanged;
         }
-      
+
 
         //  Other Methods  -----------------------------
         private async void SetupBeamable()
@@ -361,6 +362,11 @@ namespace Beamable.Samples.GPW
         {
             _isReadyInventoryView = true;
             CheckIsSceneReady();
+        }
+
+        private void OnActiveSceneChanged(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.Scene scene)
+        {
+            SetupBeamable();
         }
     }
 }
