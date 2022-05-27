@@ -269,6 +269,9 @@ namespace Beamable.Samples.GPW
                         bool isSuccessful = await GPWController.Instance.BuyItem(productContentView, updatedAmount);
                     }
                     await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
+                    GPWController.Instance.PersistentDataStorage.ForceRefresh();
+                    GPWController.Instance.GameServices.ForceRefresh();
+                    _scene02GameUIView.Refresh();
                 });
         }
       
@@ -289,6 +292,9 @@ namespace Beamable.Samples.GPW
                     }
                
                     await _scene02GameUIView.DialogSystem.HideDialogBoxImmediate();
+                    GPWController.Instance.PersistentDataStorage.ForceRefresh();
+                    GPWController.Instance.GameServices.ForceRefresh();
+                    _scene02GameUIView.Refresh();
                 });
         }
       

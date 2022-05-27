@@ -42,6 +42,7 @@ namespace Beamable.Samples.GPW.Data.Storage
 			if (!IsInitialized)
 			{
 				var beamContext = BeamContext.Default;
+				await beamContext.OnReady;
 				_cloudSavingService = beamContext.Api.CloudSavingService;
 				IsInitialized = true;
 			}

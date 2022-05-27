@@ -83,7 +83,7 @@ namespace Beamable.Samples.GPW.Views
          Refresh();
       }
       
-      private void Refresh()
+      public void Refresh()
       {
          _bankButton.interactable = _persistentData != null && !_persistentData.IsGameOver;
          _travelButton.interactable = _persistentData != null && !_persistentData.IsGameOver;

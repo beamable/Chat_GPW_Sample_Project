@@ -231,7 +231,7 @@ namespace Beamable.Samples.GPW
             text += GPWHelper.GetBulletList("Resources", new List<string>
             {
                "Overview: " + TMP_HyperlinkHandler.WrapTextWithLink("Chat (GPW) Sample", "https://docs.beamable.com/docs/chat-gpw-sample-project"),
-               "Feature: " + TMP_HyperlinkHandler.WrapTextWithLink("Chat", "https://docs.beamable.com/docs/chat-feature")
+               "Feature: " + TMP_HyperlinkHandler.WrapTextWithLink("Chat", "https://docs.beamable.com/docs/chat-feature-overview")
             });
 
             return text;

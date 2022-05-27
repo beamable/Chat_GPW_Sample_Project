@@ -290,7 +290,7 @@ namespace Beamable.Samples.GPW.Data
 
 			await _beamContext.Api.InventoryService.Update(inventoryUpdateBuilder);
 			
-			//Update Mkt
+			//Update Market
 			productContentView.MarketGoods.Quantity -= amount;
 
 			return true;
@@ -312,16 +312,17 @@ namespace Beamable.Samples.GPW.Data
 			int deletedAlready = 0;
 			foreach (ItemView itemView in itemViews)
 			{
-				if (deletedAlready++ > amount)
+				if (deletedAlready >= amount)
 				{
 					break;
 				}
 				inventoryUpdateBuilder.DeleteItem(contentId, itemView.id);
+				deletedAlready++;
 			}
 
 			await _beamContext.Api.InventoryService.Update(inventoryUpdateBuilder);
 			
-			//Update Mkt
+			//Update Market
 			productContentView.MarketGoods.Quantity += amount;
 			
 			return true;
