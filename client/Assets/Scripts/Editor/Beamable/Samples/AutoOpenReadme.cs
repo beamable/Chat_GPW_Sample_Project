@@ -42,7 +42,6 @@ namespace Beamable.Samples.GPW
 		{
 			// Reset SessionState if/when MenuItem is used
 			SessionState.SetBool(SessionStateKeyWasAlreadyShown, false);
-			// Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(AssetDatabase.GetAssetPath(modelPrefab));
 			return ReadmeEditor.SelectReadme(FindAssetsFilter, FindAssetsFolders);
 		}
 	}
