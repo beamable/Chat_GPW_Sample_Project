@@ -3,6 +3,7 @@ using Beamable.Api;
 using Beamable.Common;
 using Beamable.Service;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Beamable.Samples.Core.Utilities
 { 
@@ -21,12 +22,10 @@ namespace Beamable.Samples.Core.Utilities
         /// <summary>
         /// Clears all data related to the active runtime user(s)
         /// </summary>
-        public static async Promise ClearDeviceUsersAndReloadScene()
+        public static void ClearDeviceUsersAndReloadScene()
         {
-            // Reset the system. Then reload the current scene
-            await BeamContext.Default.OnReady;
-            BeamContext.Default.Api.ClearDeviceUsers();
-            await Beam.ClearAndStopAllContexts();
+            Beam.ClearAndStopAllContexts()
+                .FlatMap(_ => Beam.ResetToScene(SceneManager.GetSceneByBuildIndex(0).name));
         }
     }
 }
