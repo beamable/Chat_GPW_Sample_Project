@@ -9,19 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcf7219bab7fe46a1ad266029b2fee19, type: 3}
+  m_Script: {fileID: 11500000, guid: 09e6e9b8c5e3b5443a76e883b4f1d426, type: 3}
   m_Name: ReadMe
   m_EditorClassIdentifier: 
   icon: {fileID: 2800000, guid: d9139a2683873cb4cb5e86cb4fcf0670, type: 3}
   title: 'Beamable Sample Project: Chat - Global Price Wars (GPW)'
   sections:
   - heading: What is "Global Price Wars"?
-    text: Buy low, sell high! Finish rich and be top on the Leaderboard. This sample project demonstrates Beamable's Chat feature.
+    text: Buy low, sell high! Finish rich and be top on the Leaderboard. This sample
+      project demonstrates Beamable's Chat feature.
     linkText: Chat GPW - Sample Project
     url: https://docs.beamable.com/docs/chat-gpw-sample-project
   - heading: What is Beamable?
-    text: Beamable is the low-code option for rapidly adding social, commerce, and
-      content management features to your live game. Learn how to do that with Beamable's
+    text: Beamable is the low-code option for rapidly adding social, commerce, and      
+      content management features to your live game. Learn how to do that with Beamable's      
       online product documentation.
     linkText: docs.beamable.com
     url: https://docs.beamable.com/

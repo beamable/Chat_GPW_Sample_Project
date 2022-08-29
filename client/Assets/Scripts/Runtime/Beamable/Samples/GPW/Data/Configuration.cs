@@ -1,4 +1,5 @@
-﻿using Beamable.Common.Leaderboards;
+﻿using Beamable.Common;
+using Beamable.Common.Leaderboards;
 using Beamable.Samples.Core.Data;
 using Beamable.Samples.GPW.Content;
 using Beamable.Samples.GPW.Data.Content;
@@ -13,9 +14,9 @@ namespace Beamable.Samples.GPW.Data
    /// </summary>
    [CreateAssetMenu(
       fileName = Title,
-      menuName = BeamableConstants.MENU_ITEM_PATH_ASSETS_BEAMABLE_SAMPLES + "/" +
+      menuName = Constants.MenuItems.Assets.Paths.MENU_ITEM_PATH_ASSETS_BEAMABLE_SAMPLES + "/" +
       "Multiplayer/Create New " + Title,
-      order = BeamableConstants.MENU_ITEM_PATH_ASSETS_BEAMABLE_ORDER_1)]
+      order = Constants.MenuItems.Assets.Orders.MENU_ITEM_PATH_ASSETS_BEAMABLE_ORDER_1)]
    public class Configuration : BaseConfiguration
    {
       //  Constants  -----------------------------------

@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using Beamable.Api;
+using Beamable.Common;
 using Beamable.Service;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Beamable.Samples.Core.Utilities
 { 
@@ -22,10 +24,8 @@ namespace Beamable.Samples.Core.Utilities
         /// </summary>
         public static void ClearDeviceUsersAndReloadScene()
         {
-            // Reset the system. Then reload the current scene
-            PlatformService platformService = ServiceManager.Resolve<PlatformService>();
-            platformService.ClearDeviceUsers();
-            ServiceManager.OnTeardown();
+            Beam.ClearAndStopAllContexts()
+                .FlatMap(_ => Beam.ResetToScene(SceneManager.GetSceneByBuildIndex(0).name));
         }
     }
 }

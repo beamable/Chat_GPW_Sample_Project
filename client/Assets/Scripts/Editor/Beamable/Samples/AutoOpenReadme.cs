@@ -1,4 +1,4 @@
-﻿using Beamable.Samples.SampleProjectBase;
+﻿using Beamable.Common;
 using UnityEditor;
 
 namespace Beamable.Samples.GPW
@@ -22,7 +22,7 @@ namespace Beamable.Samples.GPW
 
 		static AutoOpenReadme()
 		{
-			EditorApplication.delayCall += SelectReadmeAutomatically;
+			EditorApplication.delayCall += SelectReadmeAutomatically; 
 		}
 
 		private static void SelectReadmeAutomatically()
@@ -35,9 +35,9 @@ namespace Beamable.Samples.GPW
 		}
 
 		[MenuItem(
-			BeamableConstants.MENU_ITEM_PATH_WINDOW_BEAMABLE_SAMPLES + ReadmeSubfolder +
-			BeamableConstants.OPEN + " " + ReadmeName,
-			priority = BeamableConstants.MENU_ITEM_PATH_WINDOW_PRIORITY_4)]
+			Constants.MenuItems.Windows.Paths.MENU_ITEM_PATH_WINDOW_BEAMABLE_SAMPLES + ReadmeSubfolder +
+			Constants.Commons.OPEN + " " + ReadmeName,
+			priority = Constants.MenuItems.Windows.Orders.MENU_ITEM_PATH_WINDOW_PRIORITY_4)]
 		private static Readme SelectSpecificReadmeMenuItem()
 		{
 			// Reset SessionState if/when MenuItem is used

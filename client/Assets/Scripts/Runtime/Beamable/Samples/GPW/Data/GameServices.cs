@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Beamable.Api.Inventory;
 using Beamable.Api.Leaderboard;
+using Beamable.Common;
 using Beamable.Common.Api;
 using Beamable.Common.Api.Inventory;
 using Beamable.Common.Leaderboards;
@@ -268,12 +269,19 @@ namespace Beamable.Samples.GPW.Data
 		/// Called manually when a scene loads and all data is already fresh
 		/// and we want to manually re-invoke the events
 		/// </summary>
-		public async void ForceRefresh()
+		public async Promise ForceRefresh()
 		{
 			_inventoryView = await _inventoryService.GetCurrent();
 			InventoryService_OnChanged(_inventoryView);
 			
 			_chatView = await _chatService.Subscribable.GetCurrent();
+
+			foreach (var room in _chatView.roomHandles)
+			{
+				await room.Unsubscribe();
+				await room.Subscribe();
+			}
+			
 			ChatService_OnChanged(_chatView);
 		}
 		
