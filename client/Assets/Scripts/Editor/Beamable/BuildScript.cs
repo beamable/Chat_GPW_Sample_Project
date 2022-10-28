@@ -4,8 +4,6 @@ using UnityEditor.Build.Reporting;
 using System.IO;
 using System.Linq;
 using UnityEditor;
-using UnityEditor.AddressableAssets.Build;
-using UnityEditor.AddressableAssets.Settings;
 using UnityEngine;
 
 namespace Beamable.Editor
@@ -60,11 +58,12 @@ namespace Beamable.Editor
 
                 if (buildAddressables)
                 {
-                    AddressableAssetSettings.BuildPlayerContent(out AddressablesPlayerBuildResult result);
-                    if (!string.IsNullOrWhiteSpace(result.Error))
-                    {
-                        throw new BuildFailedException($"Addressables build error encountered: {result.Error}");
-                    }
+                    // UnityEditor.AddressableAssets.Settings.AddressableAssetSettings.BuildPlayerContent(
+                    //     out UnityEditor.AddressableAssets.Build.AddressablesPlayerBuildResult result);
+                    // if (!string.IsNullOrWhiteSpace(result.Error))
+                    // {
+                    //     throw new BuildFailedException($"Addressables build error encountered: {result.Error}");
+                    // }
                 }
 
                 //Build
