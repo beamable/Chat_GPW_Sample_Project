@@ -58,12 +58,12 @@ namespace Beamable.Editor
 
                 if (buildAddressables)
                 {
-                    // UnityEditor.AddressableAssets.Settings.AddressableAssetSettings.BuildPlayerContent(
-                    //     out UnityEditor.AddressableAssets.Build.AddressablesPlayerBuildResult result);
-                    // if (!string.IsNullOrWhiteSpace(result.Error))
-                    // {
-                    //     throw new BuildFailedException($"Addressables build error encountered: {result.Error}");
-                    // }
+                    UnityEditor.AddressableAssets.Settings.AddressableAssetSettings.BuildPlayerContent(
+                        out UnityEditor.AddressableAssets.Build.AddressablesPlayerBuildResult result);
+                    if (!string.IsNullOrWhiteSpace(result.Error))
+                    {
+                        throw new BuildFailedException($"Addressables build error encountered: {result.Error}");
+                    }
                 }
 
                 //Build
