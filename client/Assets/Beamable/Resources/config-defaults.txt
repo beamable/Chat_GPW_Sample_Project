@@ -1,0 +1,8 @@
+{
+    "cid": "1548169235487765",
+    "alias": "beamableexamples",
+    "pid": "DE_1548169235487768",
+    "platform": "https://api.beamable.com",
+    "socket": "https://api.beamable.com",
+    "containerPrefix": ""
+}
