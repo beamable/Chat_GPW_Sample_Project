@@ -23,6 +23,12 @@ jobs:
             client/Temp
             client/obj
           key: Library-WebGL
+      - name: Get Beam version
+        id: beamable_updater
+        uses: beamable/package-update-action@main
+        with:
+          dry-run: true
+          project-path: "client"
       - name: Build WebGL client
         id: build
         uses: game-ci/unity-builder@v2.0.4
@@ -34,6 +40,9 @@ jobs:
           targetPlatform: WebGL
           projectPath: "client"
           allowDirtyBuild: true
+          buildsPath: dist
+          versioning: Custom
           buildMethod: Beamable.Editor.BuildScript.ReleaseWebGLBuild
+          version: ${{ steps.beamable_updater.outputs.local_version }}
       - name: upload
-        run: AWS_ACCESS_KEY_ID=${{secrets.AWS_KEY_ID}} AWS_SECRET_ACCESS_KEY=${{secrets.AWS_SECRET_ACCESS_KEY}} AWS_REGION=us-west-2 aws s3 cp --recursive ./dist/WebGL s3://${{secrets.AWS_BUCKET_BUILDS}}/uploads/${{github.sha}} --acl public-read
+        run: AWS_ACCESS_KEY_ID=${{secrets.AWS_KEY_ID}} AWS_SECRET_ACCESS_KEY=${{secrets.AWS_SECRET_ACCESS_KEY}} AWS_REGION=us-west-2 aws s3 cp --recursive ./dist/WebGL s3://${{secrets.AWS_BUCKET_BUILDS}}/uploads/chat_gpw --acl public-read
