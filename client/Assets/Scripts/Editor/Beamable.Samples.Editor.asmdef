@@ -14,7 +14,8 @@
         "Unity.TextMeshPro",
         "Beamable.JsonSerializable",
         "Unity.Beamable.Samples.Editor",
-        "Unity.Beamable.Samples.Runtime"
+        "Unity.Beamable.Samples.Runtime",
+        "Unity.Addressables.Editor"
     ],
     "includePlatforms": [
         "Editor"
